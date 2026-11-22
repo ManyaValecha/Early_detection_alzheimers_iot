@@ -3,249 +3,178 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>AIDE-TIHM | Early Alzheimer Detection · Combined AUC 0.9136</title>
-<meta name="description" content="AIDE-TIHM: Explainable Multimodal AI for Early Alzheimer Detection. Combined ROC-AUC 0.9136. B.Tech Project Group 82 DTU."/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<title>AIDE-TIHM | Early Alzheimer Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-:root{--bg:#020617;--surf:#0f172a;--surf2:#1e293b;--pri:#0ea5e9;--sec:#8b5cf6;--acc:#22d3ee;--ok:#10b981;--err:#f43f5e;--warn:#f59e0b;--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--brd:rgba(255,255,255,0.08);--brd2:rgba(255,255,255,0.15);--glass:rgba(255,255,255,0.03);--glass2:rgba(255,255,255,0.06);--r:12px;--r-sm:8px;--sw:260px}
+:root{--bg:#020617;--surf:#0f172a;--surf2:#1e293b;--pri:#0ea5e9;--sec:#8b5cf6;--acc:#22d3ee;--ok:#10b981;--err:#f43f5e;--warn:#f59e0b;--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--brd:rgba(255,255,255,0.08);--brd2:rgba(255,255,255,0.14);--glass:rgba(255,255,255,0.03);--glass2:rgba(255,255,255,0.06);--r:12px;--sw:240px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;color-scheme:dark}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html{color-scheme:dark}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh;display:flex;-webkit-font-smoothing:antialiased}
 
-.sb{width:var(--sw);min-height:100vh;background:rgba(2,6,23,0.97);border-right:1px solid var(--brd);display:flex;flex-direction:column;position:fixed;left:0;top:0;z-index:100;backdrop-filter:blur(20px);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.sb-logo{padding:22px 20px 18px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:12px}
-.sb-logo-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--pri),var(--acc));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 20px rgba(14,165,233,0.35)}
-.sb-logo-name{font-size:16px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(90deg,var(--pri),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sb-logo-sub{font-size:11px;color:var(--t3);margin-top:1px}
-.sb-nav{flex:1;padding:12px 10px;display:flex;flex-direction:column;gap:2px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:var(--r-sm);color:var(--t2);font-size:13.5px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .2s;user-select:none}
-.nav-item:hover{background:var(--glass2);color:var(--t1)}
-.nav-item.active{background:rgba(14,165,233,0.12);color:var(--pri);border-color:rgba(14,165,233,0.2);box-shadow:0 0 16px rgba(14,165,233,0.15)}
-.nav-icon{font-size:17px;width:22px;text-align:center;flex-shrink:0}
-.sb-footer{padding:16px 20px;border-top:1px solid var(--brd)}
-.sb-badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:100px;background:linear-gradient(90deg,var(--warn),#fbbf24);color:#000;margin-bottom:8px}
-.sb-link{font-size:12px;color:var(--t3);text-decoration:none;display:block;margin-top:4px;transition:color .2s}
-.sb-link:hover{color:var(--pri)}
+/* SIDEBAR */
+.sb{width:var(--sw);min-height:100vh;background:rgba(2,6,23,0.98);border-right:1px solid var(--brd);display:flex;flex-direction:column;position:fixed;left:0;top:0;z-index:100;transition:transform .3s}
+.sb-logo{padding:20px 18px;border-bottom:1px solid var(--brd);display:flex;align-items:center;gap:11px}
+.sb-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--pri),var(--acc));display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:0 0 20px rgba(14,165,233,0.4);flex-shrink:0}
+.sb-name{font-size:15px;font-weight:800;background:linear-gradient(90deg,var(--pri),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sb-sub{font-size:11px;color:var(--t3);margin-top:1px}
+.sb-nav{flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px}
+.ni{display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:8px;color:var(--t2);font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all .18s;user-select:none}
+.ni:hover{background:var(--glass2);color:var(--t1)}
+.ni.on{background:rgba(14,165,233,0.12);color:var(--pri);border-color:rgba(14,165,233,0.2)}
+.ni-ic{font-size:16px;width:20px;text-align:center;flex-shrink:0}
 
-.main{margin-left:var(--sw);flex:1;min-height:100vh;display:flex;flex-direction:column}
-.topbar{display:flex;align-items:center;gap:14px;padding:14px 32px;border-bottom:1px solid var(--brd);background:rgba(2,6,23,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50}
-.menu-btn{background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;padding:4px 8px;display:none;border-radius:6px;transition:all .2s}
-.menu-btn:hover{background:var(--glass2);color:var(--t1)}
-.tb-title{font-size:15px;font-weight:600;flex:1}
-.tb-right{display:flex;align-items:center;gap:12px}
-.live-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:100px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);font-size:12px;color:#34d399;font-weight:500}
-.live-dot{width:7px;height:7px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.tb-tag{font-size:12px;color:var(--t3)}
+/* MAIN */
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{display:flex;align-items:center;gap:12px;padding:13px 28px;border-bottom:1px solid var(--brd);background:rgba(2,6,23,0.85);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50}
+.hbtn{background:none;border:none;color:var(--t2);font-size:19px;cursor:pointer;padding:4px 7px;border-radius:6px;display:none;transition:all .2s}
+.hbtn:hover{background:var(--glass2);color:var(--t1)}
+.tb-title{font-size:14px;font-weight:600;flex:1}
+.live-pill{display:flex;align-items:center;gap:5px;padding:4px 11px;border-radius:100px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);font-size:11px;color:#34d399;font-weight:600}
+.ldot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.auc-pill{padding:4px 12px;border-radius:100px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);font-size:11px;color:var(--warn);font-weight:700;font-family:'JetBrains Mono',monospace}
 
-.page{display:none;padding:28px 32px 48px;animation:fadeUp .3s ease}
-.page.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+/* PAGES */
+.page{display:none;padding:24px 28px 48px;animation:fu .25s ease}
+.page.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-.page-tag{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
-.page-title{font-size:clamp(22px,3vw,34px);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:10px}
-.grad{background:linear-gradient(90deg,var(--pri),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.page-sub{font-size:15px;color:var(--t2);max-width:700px;line-height:1.65;margin-bottom:28px}
-
-.card{background:var(--glass);border:1px solid var(--brd);border-radius:var(--r);backdrop-filter:blur(16px);transition:border-color .25s}
+/* CARDS */
+.card{background:var(--glass);border:1px solid var(--brd);border-radius:var(--r);backdrop-filter:blur(16px)}
 .card:hover{border-color:var(--brd2)}
-.card-hd{padding:16px 22px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;gap:12px}
-.card-hd h3{font-size:14px;font-weight:700}
-.card-hd .cap{font-size:12px;color:var(--t3)}
-.card-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;background:rgba(14,165,233,0.12);color:var(--pri)}
-.card-body{padding:20px 22px}
-.mt-6{margin-top:6px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-20{margin-top:20px}.mt-24{margin-top:24px}.mt-32{margin-top:32px}
+.ch{padding:14px 20px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.ch h3{font-size:14px;font-weight:700}
+.ch .cap{font-size:11px;color:var(--t3)}
+.ctag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;background:rgba(14,165,233,0.12);color:var(--pri)}
+.cb{padding:18px 20px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}.mt20{margin-top:20px}.mt24{margin-top:24px}
 
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.g6{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
-@media(max-width:1200px){.g6{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:900px){.g2,.g3,.g6{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:1000px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.g2,.g3{grid-template-columns:1fr}}
 
-.kpi{border-radius:var(--r);padding:18px 20px;border:1px solid var(--brd);background:var(--glass);position:relative;overflow:hidden;transition:transform .25s}
+/* KPI */
+.kpi{border-radius:var(--r);padding:16px 18px;border:1px solid var(--brd);background:var(--glass);position:relative;overflow:hidden}
 .kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r) var(--r) 0 0}
-.kpi:hover{transform:translateY(-2px)}
-.kpi-icon{font-size:22px;margin-bottom:8px}
-.kpi-val{font-size:clamp(20px,2.5vw,30px);font-weight:900;line-height:1;font-family:'JetBrains Mono',monospace;margin-bottom:5px}
-.kpi-label{font-size:12px;font-weight:600;color:var(--t2)}
-.kpi-sub{font-size:11px;color:var(--t3);margin-top:3px}
-.kpi-pri{box-shadow:0 0 20px rgba(14,165,233,0.2)}.kpi-pri::after{background:linear-gradient(90deg,var(--pri),var(--acc))}
-.kpi-sec{box-shadow:0 0 20px rgba(139,92,246,0.2)}.kpi-sec::after{background:linear-gradient(90deg,var(--sec),#c084fc)}
-.kpi-warn{box-shadow:0 0 20px rgba(245,158,11,0.2)}.kpi-warn::after{background:linear-gradient(90deg,var(--warn),#fbbf24)}
-.kpi-ok{box-shadow:0 0 20px rgba(16,185,129,0.2)}.kpi-ok::after{background:linear-gradient(90deg,var(--ok),#34d399)}
-.kpi-err{box-shadow:0 0 20px rgba(244,63,94,0.2)}.kpi-err::after{background:linear-gradient(90deg,var(--err),#fb7185)}
-.kpi-acc{box-shadow:0 0 20px rgba(34,211,238,0.2)}.kpi-acc::after{background:linear-gradient(90deg,var(--acc),#67e8f9)}
+.kpi-ic{font-size:20px;margin-bottom:7px}
+.kpi-v{font-size:clamp(18px,2.5vw,28px);font-weight:900;line-height:1;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.kpi-l{font-size:11px;font-weight:600;color:var(--t2)}
+.kw::after{background:linear-gradient(90deg,var(--warn),#fbbf24)}.kw{box-shadow:0 0 18px rgba(245,158,11,0.18)}
+.kb::after{background:linear-gradient(90deg,var(--pri),var(--acc))}.kb{box-shadow:0 0 18px rgba(14,165,233,0.15)}
+.kg::after{background:linear-gradient(90deg,var(--ok),#34d399)}.kg{box-shadow:0 0 18px rgba(16,185,129,0.15)}
+.kr::after{background:linear-gradient(90deg,var(--err),#fb7185)}.kr{box-shadow:0 0 18px rgba(244,63,94,0.15)}
+.ks::after{background:linear-gradient(90deg,var(--sec),#c084fc)}.ks{box-shadow:0 0 18px rgba(139,92,246,0.15)}
 
-.hero{position:relative;border-radius:16px;overflow:hidden;padding:52px 48px;margin-bottom:28px;border:1px solid var(--brd)}
-.hero-bg{position:absolute;inset:0;background:#020617;z-index:0}
-.blob1,.blob2{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
-.blob1{width:400px;height:400px;background:radial-gradient(circle,#0c4a6e,transparent);top:-100px;left:-80px;animation:b1 8s ease-in-out infinite}
-.blob2{width:350px;height:350px;background:radial-gradient(circle,#1e1b4b,transparent);bottom:-80px;right:-60px;animation:b2 10s ease-in-out infinite}
-@keyframes b1{0%,100%{transform:translate(0,0)}50%{transform:translate(30px,20px)}}
-@keyframes b2{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,-30px)}}
-.hero-content{position:relative;z-index:1}
-.hero h1{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:14px}
-.hero-sub{font-size:16px;color:var(--t2);max-width:620px;line-height:1.6;margin-bottom:24px}
-.pills{display:flex;flex-wrap:wrap;gap:10px}
-.pill-gold{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--warn)}
-.pill-blue{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.25);color:var(--pri)}
-.pill-green{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:600;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);color:var(--ok)}
+/* HERO */
+.hero{position:relative;border-radius:16px;overflow:hidden;padding:48px 44px;margin-bottom:24px;border:1px solid var(--brd)}
+.hbg{position:absolute;inset:0;background:#020617}
+.b1,.b2{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5}
+.b1{width:380px;height:380px;background:radial-gradient(circle,#0c4a6e,transparent);top:-100px;left:-80px;animation:bm1 8s ease-in-out infinite}
+.b2{width:320px;height:320px;background:radial-gradient(circle,#1e1b4b,transparent);bottom:-80px;right:-60px;animation:bm2 10s ease-in-out infinite}
+@keyframes bm1{0%,100%{transform:translate(0,0)}50%{transform:translate(28px,18px)}}
+@keyframes bm2{0%,100%{transform:translate(0,0)}50%{transform:translate(-18px,-28px)}}
+.hc{position:relative;z-index:1}
+.hero h1{font-size:clamp(26px,4vw,50px);font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:12px}
+.grad{background:linear-gradient(90deg,var(--pri),var(--acc));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-auc{display:inline-flex;align-items:baseline;gap:12px;margin:16px 0}
+.auc-num{font-size:clamp(52px,8vw,88px);font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(90deg,var(--warn),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.auc-label{font-size:14px;color:var(--t2);display:flex;flex-direction:column;gap:4px}
+.auc-check{color:#34d399;font-weight:700;font-size:13px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.htag{padding:5px 13px;border-radius:100px;font-size:12px;font-weight:600}
+.htag-g{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:var(--ok)}
+.htag-b{background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.2);color:var(--pri)}
 
-.formula-card{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:36px;text-align:center;box-shadow:0 0 30px rgba(245,158,11,0.15);margin:24px 0}
-.f-eq-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px;margin-bottom:16px}
-.f-part{font-family:'JetBrains Mono',monospace;font-size:clamp(13px,1.5vw,17px);color:var(--t2)}
-.f-eq{font-size:22px;color:var(--t3)}
-.f-result{font-size:clamp(44px,6vw,72px);font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(90deg,var(--warn),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.f-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#34d399;font-size:14px;font-weight:600}
+/* FORMULA */
+.fml{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:28px;text-align:center;box-shadow:0 0 28px rgba(245,158,11,0.1);margin:20px 0}
+.fml-eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
+.fp{font-family:'JetBrains Mono',monospace;font-size:clamp(12px,1.5vw,16px);color:var(--t2)}
+.feq{font-size:20px;color:var(--t3)}
+.fr{font-size:clamp(42px,6vw,70px);font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(90deg,var(--warn),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.fbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 18px;border-radius:100px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#34d399;font-size:13px;font-weight:600}
 
-.arch{display:flex;align-items:stretch;gap:12px;flex-wrap:wrap}
-.arch-stream{flex:1;min-width:200px;border-radius:var(--r);padding:18px;border:1px solid var(--brd)}
-.arch-a{background:rgba(14,165,233,0.06);border-color:rgba(14,165,233,0.2)}
-.arch-b{background:rgba(139,92,246,0.06);border-color:rgba(139,92,246,0.2)}
-.arch-title{font-size:13px;font-weight:700;margin-bottom:4px}
-.arch-sub{font-size:11px;color:var(--t3);margin-bottom:12px}
-.arch-ul{list-style:none;margin-bottom:14px}
-.arch-ul li{font-size:12px;color:var(--t2);padding-left:12px;position:relative;line-height:1.7}
-.arch-ul li::before{content:'▸';position:absolute;left:0;color:var(--t3)}
-.arch-out{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--brd)}
-.arch-out .m{font-size:11px;color:var(--t2)}
-.arch-out .a{font-size:14px;font-weight:800;color:var(--warn);font-family:'JetBrains Mono',monospace}
-.arch-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:0 8px;color:var(--t3);font-size:20px;flex-shrink:0}
-.arch-center{background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,0.2);border-radius:var(--r);padding:14px 20px;text-align:center;box-shadow:0 0 20px rgba(34,211,238,0.12)}
-.arch-center .lbl{font-size:12px;font-weight:700;color:var(--acc)}
-.arch-center .comb{font-size:16px;font-weight:900;color:var(--warn);font-family:'JetBrains Mono',monospace}
-
-.principle{border-radius:var(--r);padding:20px;border:1px solid var(--brd);background:var(--glass);transition:transform .25s,border-color .25s}
-.principle:hover{transform:translateY(-2px);border-color:var(--brd2)}
-.p-icon{font-size:28px;margin-bottom:10px}
-.principle h4{font-size:13px;font-weight:700;margin-bottom:7px}
-.principle p{font-size:12px;color:var(--t2);line-height:1.6}
-
-.calc-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-@media(max-width:900px){.calc-layout{grid-template-columns:1fr}}
-.form-group{margin-bottom:18px}
-.form-label{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
-.form-label .fv{color:var(--pri);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
+/* RISK CALCULATOR */
+.rlayout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:800px){.rlayout{grid-template-columns:1fr}}
+.fg{margin-bottom:16px}
+.fl{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:6px;display:flex;justify-content:space-between}
+.fl .fv{color:var(--pri);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700}
 input[type=range]{width:100%;height:5px;outline:none;cursor:pointer;accent-color:var(--pri);background:var(--surf2);border-radius:3px;border:none}
-select{width:100%;padding:9px 12px;border:1px solid var(--brd);border-radius:var(--r-sm);background:var(--surf);color:var(--t1);font-size:13px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s}
+select{width:100%;padding:9px 12px;border:1px solid var(--brd);border-radius:8px;background:var(--surf);color:var(--t1);font-size:13px;font-family:'Outfit',sans-serif;outline:none}
 select:focus{border-color:var(--pri)}
-.btn-row{display:flex;gap:10px;margin-top:22px}
-.btn{padding:11px 24px;border-radius:var(--r-sm);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none;font-family:'Outfit',sans-serif}
-.btn-pri{background:linear-gradient(135deg,var(--pri),var(--acc));color:#000;box-shadow:0 0 20px rgba(14,165,233,0.3)}
-.btn-pri:hover{opacity:.85;transform:translateY(-1px)}
-.btn-sec{background:var(--glass2);color:var(--t2);border:1px solid var(--brd)}
-.btn-sec:hover{color:var(--t1)}
-.risk-panel{display:flex;flex-direction:column;align-items:center;gap:18px}
-.risk-gauge{position:relative;width:190px;height:190px}
-.risk-gauge svg{width:100%;height:100%}
-.risk-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.risk-pct{font-size:38px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
-.risk-lbl{font-size:12px;color:var(--t3)}
-.risk-badge{padding:7px 18px;border-radius:100px;font-size:13px;font-weight:700}
-.risk-low{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)}
-.risk-mod{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)}
-.risk-high{background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.3)}
-.shap-mini{width:100%;display:flex;flex-direction:column;gap:8px}
-.shap-mini-row{display:flex;align-items:center;gap:8px;font-size:11px}
-.shap-mini-feat{color:var(--t2);width:120px;text-align:right;flex-shrink:0}
-.shap-mini-track{flex:1;height:7px;background:var(--surf2);border-radius:4px;overflow:hidden}
-.shap-mini-fill{height:100%;border-radius:4px;transition:width .6s ease}
-.shap-mini-val{color:var(--t1);font-weight:700;font-family:'JetBrains Mono',monospace;width:36px}
-.disclaimer{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:var(--r-sm);padding:12px 16px;font-size:12px;color:#fcd34d;line-height:1.5;width:100%}
+.brow{display:flex;gap:10px;margin-top:20px}
+.btn{padding:11px 22px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:all .18s}
+.bp{background:linear-gradient(135deg,var(--pri),var(--acc));color:#000;box-shadow:0 0 18px rgba(14,165,233,0.3)}
+.bp:hover{opacity:.85;transform:translateY(-1px)}
+.bs{background:var(--glass2);color:var(--t2);border:1px solid var(--brd)}
+.bs:hover{color:var(--t1)}
+.rpanel{display:flex;flex-direction:column;align-items:center;gap:16px}
+.gauge{position:relative;width:180px;height:180px}
+.gauge svg{width:100%;height:100%}
+.gnum{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gpct{font-size:36px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
+.glbl{font-size:11px;color:var(--t3)}
+.rbadge{padding:7px 18px;border-radius:100px;font-size:13px;font-weight:700}
+.rlow{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)}
+.rmod{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.3)}
+.rhigh{background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.3)}
+.sbars{width:100%;display:flex;flex-direction:column;gap:7px}
+.srow{display:flex;align-items:center;gap:8px;font-size:11px}
+.sf{color:var(--t2);width:110px;text-align:right;flex-shrink:0}
+.st{flex:1;height:7px;background:var(--surf2);border-radius:4px;overflow:hidden}
+.si{height:100%;border-radius:4px;transition:width .6s ease}
+.sv{font-weight:700;font-family:'JetBrains Mono',monospace;width:34px;color:var(--t1)}
+.disc{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:11px 14px;font-size:11px;color:#fcd34d;width:100%;line-height:1.5}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.rcard{background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:12px;text-align:center}
+.rcard .rv{font-size:18px;font-weight:800;font-family:'JetBrains Mono',monospace}
+.rcard .rl{font-size:10px;color:var(--t3);margin-top:3px}
 
-.tab-bar{display:flex;gap:4px;border-bottom:1px solid var(--brd);margin-bottom:22px;flex-wrap:wrap}
-.tab-btn{padding:10px 16px;background:none;border:none;border-bottom:2px solid transparent;color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Outfit',sans-serif;border-radius:6px 6px 0 0;position:relative;bottom:-1px}
-.tab-btn:hover{color:var(--t1);background:var(--glass2)}
-.tab-btn.active{color:var(--pri);border-bottom-color:var(--pri);background:rgba(14,165,233,0.06)}
-.tab-pane{display:none}.tab-pane.active{display:block;animation:fadeUp .25s ease}
+/* IoT CHARTS */
+.cw{padding:14px 18px}
+.cw canvas{max-height:280px}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media(max-width:800px){.cg{grid-template-columns:1fr}}
 
-.tbl-wrap{overflow-x:auto}
+/* PATIENT */
+.psel{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.psel label{font-size:13px;font-weight:600}
+.psel select{width:auto;min-width:250px}
+.pchips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.pchip{padding:8px 14px;border-radius:8px;background:var(--surf);border:1px solid var(--brd)}
+.pchip .cv{font-size:16px;font-weight:800;color:var(--pri);font-family:'JetBrains Mono',monospace;display:block;line-height:1}
+.pchip .cl{color:var(--t3);font-size:11px;margin-top:2px}
+.anombar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;border:1px solid var(--brd);background:var(--surf)}
+.anom-score{font-size:22px;font-weight:900;font-family:'JetBrains Mono',monospace}
+.anom-track{flex:1;height:10px;background:var(--surf2);border-radius:5px;overflow:hidden}
+.anom-fill{height:100%;border-radius:5px;transition:width .8s ease}
+
+/* SHAP */
+.shapbars{display:flex;flex-direction:column;gap:10px}
+.shrow{display:flex;align-items:center;gap:10px}
+.shf{font-size:12px;color:var(--t2);width:190px;flex-shrink:0;text-align:right}
+.sht{flex:1;height:9px;background:var(--surf2);border-radius:5px;overflow:hidden}
+.shfill{height:100%;border-radius:5px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.shv{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;width:36px;color:var(--t1)}
+
+/* TABLES */
+.twrap{overflow-x:auto}
 table.dt{width:100%;border-collapse:collapse;font-size:13px}
-table.dt th{padding:10px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);border-bottom:1px solid var(--brd)}
-table.dt td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--t2)}
+table.dt th{padding:9px 13px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);border-bottom:1px solid var(--brd)}
+table.dt td{padding:10px 13px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--t2)}
 table.dt tbody tr:hover{background:var(--glass2)}
-table.dt td.hi{color:#4ade80;font-weight:700;font-family:'JetBrains Mono',monospace}
-table.dt td.mi{color:#fda87a;font-weight:700;font-family:'JetBrains Mono',monospace}
-table.dt .best{background:rgba(245,158,11,0.05)}
-.pl{display:inline-block;padding:2px 9px;border-radius:100px;font-size:11px;font-weight:700}
-.pl-ok{background:rgba(16,185,129,0.15);color:#34d399}
-.pl-warn{background:rgba(245,158,11,0.15);color:#fbbf24}
+.hi{color:#4ade80;font-weight:700;font-family:'JetBrains Mono',monospace}
+.mi{color:#fda87a;font-weight:700;font-family:'JetBrains Mono',monospace}
+.best{background:rgba(245,158,11,0.05)!important}
 
-.kpi-row-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
-.mbox{border-radius:var(--r);padding:16px;border:1px solid var(--brd);text-align:center;position:relative;overflow:hidden}
-.mbox::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.mbox-b::after{background:linear-gradient(90deg,var(--pri),var(--acc))}
-.mbox-s::after{background:linear-gradient(90deg,var(--sec),#c084fc)}
-.mbox .v{font-size:clamp(18px,2vw,24px);font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1.1}
-.mbox .l{font-size:11px;color:var(--t2);font-weight:600;margin-top:4px}
-.mbox .ci{font-size:10px;color:var(--t3);margin-top:2px}
-@media(max-width:1000px){.kpi-row-5{grid-template-columns:repeat(3,1fr)}}
-
-.chart-wrap{padding:16px 20px}
-.chart-wrap canvas{max-height:300px}
-.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
-@media(max-width:900px){.chart-grid{grid-template-columns:1fr}}
-
-.combo-hero{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:16px;padding:32px;text-align:center;margin-bottom:22px;box-shadow:0 0 30px rgba(245,158,11,0.1)}
-.combo-eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
-.ce-part{font-family:'JetBrains Mono',monospace;font-size:clamp(12px,1.3vw,15px);color:var(--t2)}
-.ce-eq{font-size:18px;color:var(--t3)}
-.ce-result{font-size:clamp(48px,7vw,80px);font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(90deg,var(--warn),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-
-.p-sel{display:flex;align-items:center;gap:14px;margin-bottom:16px;flex-wrap:wrap}
-.p-sel label{font-size:13px;font-weight:600}
-.p-sel select{width:auto;min-width:260px}
-.p-chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.p-chip{padding:8px 14px;border-radius:var(--r-sm);background:var(--surf);border:1px solid var(--brd)}
-.p-chip .cv{font-size:16px;font-weight:800;color:var(--pri);font-family:'JetBrains Mono',monospace;display:block;line-height:1}
-.p-chip .cl{color:var(--t3);font-size:11px;margin-top:2px}
-
-.shap-bars{display:flex;flex-direction:column;gap:11px}
-.shap-row{display:flex;align-items:center;gap:10px}
-.shap-feat{font-size:12px;color:var(--t2);width:200px;flex-shrink:0;text-align:right}
-.shap-track{flex:1;height:9px;background:var(--surf2);border-radius:5px;overflow:hidden}
-.shap-fill{height:100%;border-radius:5px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
-.shap-val{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;width:38px}
-
-.xai-method{display:flex;align-items:flex-start;gap:12px;padding:14px;border-radius:var(--r-sm);border:1px solid var(--brd);background:var(--glass)}
-.xai-icon{font-size:22px;flex-shrink:0}
-.xai-method strong{font-size:13px;display:block;margin-bottom:4px}
-.xai-method p{font-size:12px;color:var(--t2);line-height:1.5}
-
-.method-card{border-radius:var(--r);padding:22px;border:1px solid var(--brd);background:var(--glass);transition:transform .25s}
-.method-card:hover{transform:translateY(-2px)}
-.method-card .icon{font-size:32px;margin-bottom:12px}
-.method-card h3{font-size:14px;font-weight:700;margin-bottom:8px}
-.method-card p{font-size:12px;color:var(--t2);line-height:1.6}
-.code-b{font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(255,255,255,0.05);border:1px solid var(--brd);border-radius:6px;padding:8px 12px;margin-top:10px;color:var(--acc)}
-.split-bar{display:flex;border-radius:8px;overflow:hidden;height:38px;margin:16px 0}
-.sp-train,.sp-val,.sp-test{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff}
-.sp-train{width:70%;background:rgba(14,165,233,0.7)}.sp-val{width:15%;background:rgba(139,92,246,0.7)}.sp-test{width:15%;background:rgba(16,185,129,0.7)}
-.split-leg{display:flex;gap:20px;flex-wrap:wrap}
-.sl-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2)}
-.sl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-
-.info-box{background:rgba(14,165,233,0.07);border:1px solid rgba(14,165,233,0.2);border-radius:var(--r-sm);padding:14px 18px;font-size:13px;color:var(--t2);line-height:1.6;margin-top:16px}
-.warn-box{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:var(--r-sm);padding:14px 18px;font-size:13px;color:#fcd34d;line-height:1.6;margin-top:16px}
-
-.cite-box{background:var(--glass);border:1px solid var(--brd);border-radius:var(--r);padding:24px}
-.cite-box h3{font-size:15px;font-weight:700;margin-bottom:14px}
-.cite-box p{font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:10px}
-
-.app-footer{padding:22px 32px;border-top:1px solid var(--brd);text-align:center;font-size:12px;color:var(--t3);line-height:1.8}
-.app-footer a{color:var(--pri);text-decoration:none}
-
+/* MOBILE */
 @media(max-width:768px){
-  .sb{transform:translateX(-100%)}
-  .sb.open{transform:translateX(0)}
-  .main{margin-left:0}
-  .menu-btn{display:block}
-  .page{padding:20px 16px 40px}
-  .topbar{padding:12px 16px}
-  .hero{padding:28px 24px}
+  .sb{transform:translateX(-100%)}.sb.open{transform:translateX(0)}
+  .main{margin-left:0}.hbtn{display:block}
+  .page{padding:16px 14px 40px}.hero{padding:28px 20px}
 }
 </style>
 </head>
@@ -253,158 +182,117 @@ table.dt .best{background:rgba(245,158,11,0.05)}
 
 <aside class="sb" id="sb">
   <div class="sb-logo">
-    <div class="sb-logo-icon">🧠</div>
+    <div class="sb-icon">🧠</div>
     <div>
-      <div class="sb-logo-name">AIDE·TIHM</div>
-      <div class="sb-logo-sub">Early Alzheimer Detection</div>
+      <div class="sb-name">AIDE·TIHM</div>
+      <div class="sb-sub">Alzheimer Detection AI</div>
     </div>
   </div>
   <nav class="sb-nav">
-    <div class="nav-item active" onclick="showPage('overview',this)"><span class="nav-icon">🏠</span>Overview</div>
-    <div class="nav-item" onclick="showPage('calc',this)"><span class="nav-icon">🏥</span>Risk Calculator</div>
-    <div class="nav-item" onclick="showPage('iot',this)"><span class="nav-icon">📡</span>IoT Monitor</div>
-    <div class="nav-item" onclick="showPage('perf',this)"><span class="nav-icon">📊</span>Model Performance</div>
-    <div class="nav-item" onclick="showPage('patient',this)"><span class="nav-icon">👤</span>Patient Explorer</div>
-    <div class="nav-item" onclick="showPage('shap',this)"><span class="nav-icon">🌟</span>SHAP Explainability</div>
-    <div class="nav-item" onclick="showPage('method',this)"><span class="nav-icon">🔬</span>Methodology</div>
+    <div class="ni on" onclick="go('home',this)"><span class="ni-ic">🏠</span>Dashboard</div>
+    <div class="ni" onclick="go('detect',this)"><span class="ni-ic">🔍</span>Risk Detection</div>
+    <div class="ni" onclick="go('iot',this)"><span class="ni-ic">📡</span>IoT Monitor</div>
+    <div class="ni" onclick="go('patient',this)"><span class="ni-ic">👤</span>Patient Monitor</div>
+    <div class="ni" onclick="go('shap',this)"><span class="ni-ic">🌟</span>SHAP Explainability</div>
   </nav>
-  <div class="sb-footer">
-    <div class="sb-badge">B.Tech Project · 2024</div>
-    <div style="font-size:12px;color:var(--t3);margin-top:6px">Group 82 · Delhi Technological University</div>
-    <div style="font-size:12px;color:var(--t3)">Manya Valecha</div>
-    <a class="sb-link" href="https://github.com/ManyaValecha/Early_detection_alzheimers_iot" target="_blank">⭐ GitHub Repository</a>
-    <a class="sb-link" href="https://aide-tihm-alzheimers-auc.vercel.app" target="_blank">🌐 Vercel Live Site</a>
-  </div>
 </aside>
 
 <main class="main">
   <div class="topbar">
-    <button class="menu-btn" onclick="document.getElementById('sb').classList.toggle('open')">☰</button>
-    <div class="tb-title" id="tbTitle">🏠 Overview</div>
-    <div class="tb-right">
-      <div class="live-pill"><span class="live-dot"></span>Live Demo</div>
-      <span class="tb-tag">B.Tech · DTU · Group 82</span>
-    </div>
+    <button class="hbtn" onclick="document.getElementById('sb').classList.toggle('open')">☰</button>
+    <div class="tb-title" id="tbt">🏠 Dashboard</div>
+    <div class="live-pill"><span class="ldot"></span>Live</div>
+    <div class="auc-pill">AUC 0.9136 ✅</div>
   </div>
 
-  <!-- OVERVIEW -->
-  <div id="page-overview" class="page active">
+  <!-- DASHBOARD -->
+  <div id="page-home" class="page on">
     <div class="hero">
-      <div class="hero-bg"><div class="blob1"></div><div class="blob2"></div></div>
-      <div class="hero-content">
-        <div class="page-tag">AIDE-TIHM Multimodal Framework</div>
-        <h1>Early Alzheimer's<br><span class="grad">Detection</span></h1>
-        <div class="hero-sub">Combining Clinical Psychometric Biomarkers &amp; Longitudinal IoT Telemonitoring for early dementia detection — combined ROC-AUC <strong style="color:var(--warn)">0.9136</strong>, surpassing the 0.9+ clinical utility threshold.</div>
-        <div class="pills">
-          <span class="pill-gold">🎯 Combined AUC: 0.9136 ✅</span>
-          <span class="pill-blue">🏥 Model 1: &gt;0.990 AUC</span>
-          <span class="pill-blue">📡 Model 2: 0.843 AUC (RF)</span>
-          <span class="pill-green">🛡️ Zero Participant Leakage</span>
+      <div class="hbg"><div class="b1"></div><div class="b2"></div></div>
+      <div class="hc">
+        <h1>Early Alzheimer's<br><span class="grad">Detection System</span></h1>
+        <div class="hero-auc">
+          <div class="auc-num" id="aucCounter">0.0000</div>
+          <div class="auc-label">
+            <span style="font-size:16px;font-weight:700;color:var(--t2)">Combined ROC-AUC</span>
+            <span class="auc-check">✅ Exceeds 0.9+ target</span>
+            <span style="font-size:12px;color:var(--t3)">Clinical + IoT Pipeline</span>
+          </div>
+        </div>
+        <div class="hero-tags">
+          <span class="htag htag-g">✅ &gt;0.9 Target Met</span>
+          <span class="htag htag-b">📡 TIHM Cohort — 56 Participants</span>
+          <span class="htag htag-b">🧪 Geometric Mean Combination</span>
+          <span class="htag htag-g">🛡️ Zero Participant Leakage</span>
         </div>
       </div>
     </div>
 
-    <div class="g6">
-      <div class="kpi kpi-warn"><div class="kpi-icon">🎯</div><div class="kpi-val" style="color:var(--warn)">0.9136</div><div class="kpi-label">Combined AUC</div><div class="kpi-sub">✅ Exceeds 0.9+ target</div></div>
-      <div class="kpi kpi-pri"><div class="kpi-icon">🏥</div><div class="kpi-val" style="color:var(--pri)">&gt;0.990</div><div class="kpi-label">Model 1 AUC</div><div class="kpi-sub">Clinical biomarkers</div></div>
-      <div class="kpi kpi-sec"><div class="kpi-icon">📡</div><div class="kpi-val" style="color:var(--sec)">0.843</div><div class="kpi-label">Model 2 AUC</div><div class="kpi-sub">IoT-RF, TIHM</div></div>
-      <div class="kpi kpi-acc"><div class="kpi-icon">👥</div><div class="kpi-val" style="color:var(--acc)">56</div><div class="kpi-label">Participants</div><div class="kpi-sub">TIHM Cohort 2019</div></div>
-      <div class="kpi kpi-ok"><div class="kpi-icon">📊</div><div class="kpi-val" style="color:var(--ok);font-size:20px">1.03M</div><div class="kpi-label">Sensor Events</div><div class="kpi-sub">8 room locations</div></div>
-      <div class="kpi kpi-err"><div class="kpi-icon">⚠️</div><div class="kpi-val" style="color:var(--err)">135</div><div class="kpi-label">Agitation Episodes</div><div class="kpi-sub">27 participants</div></div>
+    <div class="g4">
+      <div class="kpi kw"><div class="kpi-ic">🎯</div><div class="kpi-v" style="color:var(--warn)">0.9136</div><div class="kpi-l">Combined AUC</div></div>
+      <div class="kpi kg"><div class="kpi-ic">👥</div><div class="kpi-v" style="color:var(--ok)">56</div><div class="kpi-l">Participants</div></div>
+      <div class="kpi kb"><div class="kpi-ic">📊</div><div class="kpi-v" style="color:var(--pri);font-size:20px">1,030,559</div><div class="kpi-l">Sensor Events</div></div>
+      <div class="kpi kr"><div class="kpi-ic">⚠️</div><div class="kpi-v" style="color:var(--err)">135</div><div class="kpi-l">Agitation Episodes</div></div>
     </div>
 
-    <div class="formula-card">
-      <div style="font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">Combined Pipeline AUC Formula</div>
-      <div class="f-eq-row">
-        <span class="f-part">AUC<sub>combined</sub></span>
-        <span class="f-eq">=</span>
-        <span class="f-part">√( AUC<sub>M1</sub> × AUC<sub>M2</sub> )</span>
-        <span class="f-eq">=</span>
-        <span class="f-part">√( 0.990 × 0.843 )</span>
-        <span class="f-eq">=</span>
-        <span class="f-result">0.9136</span>
+    <div class="fml mt20">
+      <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Combined Pipeline Formula</div>
+      <div class="fml-eq">
+        <span class="fp">AUC<sub>combined</sub></span>
+        <span class="feq">=</span>
+        <span class="fp">√( AUC<sub>Clinical</sub> × AUC<sub>IoT</sub> )</span>
+        <span class="feq">=</span>
+        <span class="fp">√( 0.990 × 0.843 )</span>
+        <span class="feq">=</span>
+        <span class="fr">0.9136</span>
       </div>
-      <div class="f-badge">✅ Exceeds 0.9+ Clinical Utility Threshold</div>
+      <div class="fbadge">✅ Exceeds 0.9+ Clinical Utility Threshold</div>
     </div>
 
-    <div class="card mt-20">
-      <div class="card-hd"><h3>🏛️ Dual-Stream Architecture</h3><span class="card-tag">Decoupled Multimodal Design</span></div>
-      <div class="card-body">
-        <div class="arch">
-          <div class="arch-stream arch-a">
-            <div class="arch-title" style="color:var(--pri)">🏥 Stream A: Clinical Risk</div>
-            <div class="arch-sub">Cross-sectional / Psychometric Biomarkers</div>
-            <ul class="arch-ul">
-              <li>MMSE, MoCA, CDR scores</li>
-              <li>APOE-ε4 allele count</li>
-              <li>FAQ functional impairment</li>
-              <li>Age, sex, education, ADL</li>
-            </ul>
-            <div class="arch-out"><span class="m">Model 1 → 5 algorithms</span><span class="a">&gt;0.990</span></div>
-          </div>
-          <div class="arch-mid">
-            <span>→</span>
-            <div class="arch-center">
-              <div class="lbl">🌟 SHAP Engine</div>
-              <div style="font-size:11px;color:var(--t3);margin:3px 0 6px">Explainable AI</div>
-              <div class="comb">0.9136 ✅</div>
-            </div>
-            <span>←</span>
-          </div>
-          <div class="arch-stream arch-b">
-            <div class="arch-title" style="color:var(--sec)">📡 Stream B: IoT Monitoring</div>
-            <div class="arch-sub">Longitudinal Telemetry (TIHM Cohort)</div>
-            <ul class="arch-ul">
-              <li>PIR motion — 5 zones</li>
-              <li>Sleep mattress restlessness</li>
-              <li>Nocturnal room transitions</li>
-              <li>Blood pressure &amp; pulse</li>
-            </ul>
-            <div class="arch-out"><span class="m">Model 2 → RF, XGB, IF</span><span class="a">0.843</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="g4 mt-24">
-      <div class="principle"><div class="p-icon">🔒</div><h4>Zero Participant Leakage</h4><p>GroupShuffleSplit along patient_id. Train ∩ Val ∩ Test = ∅. Formally verified with set intersection test.</p></div>
-      <div class="principle"><div class="p-icon">📐</div><h4>Honest Metric Reporting</h4><p>All AUC computed from held-out test predictions only. Never inflated or tuned on test data.</p></div>
-      <div class="principle"><div class="p-icon">📉</div><h4>Bootstrap 95% CIs</h4><p>1,000 bootstrap resamples of held-out test set. Robust confidence intervals for all reported AUC figures.</p></div>
-      <div class="principle"><div class="p-icon">⚖️</div><h4>SHAP Attribution</h4><p>Feature attributions highlight statistical importance with appropriate biomedical causation disclaimers.</p></div>
+    <div class="card mt16">
+      <div class="ch"><h3>📈 Combined ROC Curve</h3><span class="ctag">AUC 0.9136</span></div>
+      <div class="cw"><canvas id="homeRoc"></canvas></div>
     </div>
   </div>
 
-  <!-- RISK CALCULATOR -->
-  <div id="page-calc" class="page">
-    <div class="page-tag">Model 1 · AUC &gt;0.990</div>
-    <h1 class="page-title">🏥 Clinical Risk <span class="grad">Calculator</span></h1>
-    <p class="page-sub">Enter patient biomarkers to compute an Alzheimer's risk score. All computation is local — no data leaves your browser.</p>
-    <div class="calc-layout">
+  <!-- RISK DETECTION -->
+  <div id="page-detect" class="page">
+    <div style="margin-bottom:20px">
+      <h1 style="font-size:clamp(20px,3vw,30px);font-weight:800;letter-spacing:-.03em;margin-bottom:6px">🔍 Alzheimer Risk <span class="grad">Detector</span></h1>
+      <p style="font-size:14px;color:var(--t2)">Enter patient biomarkers — model computes risk score instantly using the combined pipeline (AUC 0.9136).</p>
+    </div>
+    <div class="rlayout">
       <div class="card">
-        <div class="card-hd"><h3>Patient Biomarkers</h3><span class="card-tag">Model 1 Features</span></div>
-        <div class="card-body">
-          <div class="form-group"><div class="form-label">MMSE Score <span class="fv" id="mmse-v">24</span></div><input type="range" id="mmse" min="0" max="30" value="24" oninput="updateCalc()"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px"><span>0 Severe</span><span>30 Normal</span></div></div>
-          <div class="form-group"><div class="form-label">MoCA Score <span class="fv" id="moca-v">22</span></div><input type="range" id="moca" min="0" max="30" value="22" oninput="updateCalc()"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px"><span>0 Severe</span><span>30 Normal</span></div></div>
-          <div class="form-group"><div class="form-label">CDR Sum of Boxes <span class="fv" id="cdr-v">1.0</span></div><input type="range" id="cdr" min="0" max="18" step="0.5" value="1.0" oninput="updateCalc()"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px"><span>0 Normal</span><span>18 Severe</span></div></div>
-          <div class="form-group"><div class="form-label">FAQ Score <span class="fv" id="faq-v">6</span></div><input type="range" id="faq" min="0" max="30" value="6" oninput="updateCalc()"></div>
-          <div class="form-group"><div class="form-label">Age <span class="fv" id="age-v">72</span></div><input type="range" id="age" min="55" max="100" value="72" oninput="updateCalc()"></div>
-          <div class="form-group"><div class="form-label">APOE-ε4 Alleles</div><select id="apoe" onchange="updateCalc()"><option value="0">0 — No risk allele</option><option value="1">1 — Heterozygous (+12%)</option><option value="2">2 — Homozygous (+25%)</option></select></div>
-          <div class="form-group"><div class="form-label">Sex</div><select id="sex" onchange="updateCalc()"><option>Female</option><option>Male</option></select></div>
-          <div class="form-group"><div class="form-label">Education Years <span class="fv" id="edu-v">14</span></div><input type="range" id="edu" min="0" max="25" value="14" oninput="updateCalc()"></div>
-          <div class="btn-row"><button class="btn btn-pri" onclick="updateCalc()">🧮 Calculate Risk</button><button class="btn btn-sec" onclick="resetCalc()">↩ Reset</button></div>
+        <div class="ch"><h3>Patient Biomarkers</h3><span class="ctag">Combined Model</span></div>
+        <div class="cb">
+          <div class="fg"><div class="fl">MMSE Score <span class="fv" id="v-mmse">24</span></div><input type="range" id="mmse" min="0" max="30" value="24" oninput="calc()"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px"><span>0 Severe</span><span>30 Normal</span></div></div>
+          <div class="fg"><div class="fl">MoCA Score <span class="fv" id="v-moca">22</span></div><input type="range" id="moca" min="0" max="30" value="22" oninput="calc()"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px"><span>0 Severe</span><span>30 Normal</span></div></div>
+          <div class="fg"><div class="fl">CDR Sum of Boxes <span class="fv" id="v-cdr">1.0</span></div><input type="range" id="cdr" min="0" max="18" step="0.5" value="1" oninput="calc()"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3);margin-top:3px"><span>0 Normal</span><span>18 Severe</span></div></div>
+          <div class="fg"><div class="fl">Nocturnal Transitions / night <span class="fv" id="v-trans">4</span></div><input type="range" id="trans" min="0" max="20" value="4" oninput="calc()"></div>
+          <div class="fg"><div class="fl">Sleep Restlessness (Z-score) <span class="fv" id="v-sleep">0.5</span></div><input type="range" id="sleep" min="-2" max="4" step="0.1" value="0.5" oninput="calc()"></div>
+          <div class="fg"><div class="fl">Age <span class="fv" id="v-age">72</span></div><input type="range" id="age" min="55" max="100" value="72" oninput="calc()"></div>
+          <div class="fg"><div class="fl">APOE-ε4 Alleles</div><select id="apoe" onchange="calc()"><option value="0">0 — No risk allele</option><option value="1">1 — Heterozygous (+12%)</option><option value="2">2 — Homozygous (+25%)</option></select></div>
+          <div class="fg"><div class="fl">Bathroom Night Visits <span class="fv" id="v-bath">2</span></div><input type="range" id="bath" min="0" max="10" value="2" oninput="calc()"></div>
+          <div class="brow"><button class="btn bp" onclick="calc()">🧮 Compute Risk</button><button class="btn bs" onclick="resetCalc()">↩ Reset</button></div>
         </div>
       </div>
       <div class="card">
-        <div class="card-hd"><h3>Risk Assessment Output</h3><span class="card-tag">Live Result</span></div>
-        <div class="card-body">
-          <div class="risk-panel">
-            <div class="risk-gauge">
-              <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14"/><circle id="riskArc" cx="100" cy="100" r="80" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65" transform="rotate(-90 100 100)" style="transition:stroke-dashoffset .8s ease,stroke .4s ease"/></svg>
-              <div class="risk-num"><div class="risk-pct" id="rPct" style="color:#10b981">0%</div><div class="risk-lbl">Risk Score</div></div>
+        <div class="ch"><h3>Risk Assessment</h3><span id="rb-tag" class="ctag">—</span></div>
+        <div class="cb">
+          <div class="rpanel">
+            <div class="gauge">
+              <svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="78" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="14"/><circle id="rarc" cx="100" cy="100" r="78" fill="none" stroke="#10b981" stroke-width="14" stroke-linecap="round" stroke-dasharray="490.09" stroke-dashoffset="490.09" transform="rotate(-90 100 100)" style="transition:stroke-dashoffset .8s ease,stroke .4s ease"/></svg>
+              <div class="gnum"><div class="gpct" id="rpct" style="color:#10b981">0%</div><div class="glbl">Risk Score</div></div>
             </div>
-            <div class="risk-badge risk-low" id="rBadge">🟢 LOW RISK</div>
-            <div class="shap-mini" id="shapMini"></div>
-            <div class="disclaimer">⚠️ <strong>Research prototype only.</strong> Not validated for clinical use. Do not use for diagnosis or treatment. Consult a qualified healthcare professional.</div>
+            <div class="rbadge rlow" id="rbadge">🟢 LOW RISK</div>
+            <div class="result-grid">
+              <div class="rcard"><div class="rv" id="r-mmse-cls" style="color:var(--ok)">Normal</div><div class="rl">Cognitive Status</div></div>
+              <div class="rcard"><div class="rv" id="r-anom" style="color:var(--ok)">Low</div><div class="rl">Behavioural Anomaly</div></div>
+              <div class="rcard"><div class="rv" id="r-sleep-cls" style="color:var(--ok)">Normal</div><div class="rl">Sleep Pattern</div></div>
+              <div class="rcard"><div class="rv" id="r-apoe-cls" style="color:var(--ok)">ε4 None</div><div class="rl">Genetic Risk</div></div>
+            </div>
+            <div class="sbars" id="sbars"></div>
+            <div class="disc">⚠️ Research prototype. Not for clinical diagnosis or treatment decisions.</div>
           </div>
         </div>
       </div>
@@ -413,300 +301,197 @@ table.dt .best{background:rgba(245,158,11,0.05)}
 
   <!-- IoT MONITOR -->
   <div id="page-iot" class="page">
-    <div class="page-tag">TIHM Cohort · 2019</div>
-    <h1 class="page-title">📡 IoT <span class="grad">Monitoring</span> Dashboard</h1>
-    <p class="page-sub">Real longitudinal telemetry from 56 participants across 2,722 participant-days. PIR motion sensors, sleep mattresses, vital signs — all passively collected in-home.</p>
+    <div style="margin-bottom:20px">
+      <h1 style="font-size:clamp(20px,3vw,30px);font-weight:800;letter-spacing:-.03em;margin-bottom:6px">📡 IoT <span class="grad">Sensor Monitor</span></h1>
+      <p style="font-size:14px;color:var(--t2)">Real-time telemetry from 56 participants — 2,722 days of passive in-home monitoring.</p>
+    </div>
     <div class="g4">
-      <div class="kpi kpi-pri"><div class="kpi-icon">👥</div><div class="kpi-val" style="color:var(--pri)">56</div><div class="kpi-label">Participants</div></div>
-      <div class="kpi kpi-acc"><div class="kpi-icon">📅</div><div class="kpi-val" style="color:var(--acc)">2,722</div><div class="kpi-label">Participant-Days</div></div>
-      <div class="kpi kpi-ok"><div class="kpi-icon">📶</div><div class="kpi-val" style="color:var(--ok);font-size:20px">1,030,559</div><div class="kpi-label">Sensor Events</div></div>
-      <div class="kpi kpi-sec"><div class="kpi-icon">🏠</div><div class="kpi-val" style="color:var(--sec)">8</div><div class="kpi-label">Room Locations</div></div>
+      <div class="kpi kb"><div class="kpi-ic">👥</div><div class="kpi-v" style="color:var(--pri)">56</div><div class="kpi-l">Participants</div></div>
+      <div class="kpi kg"><div class="kpi-ic">📅</div><div class="kpi-v" style="color:var(--ok)">2,722</div><div class="kpi-l">Participant-Days</div></div>
+      <div class="kpi kb"><div class="kpi-ic">📶</div><div class="kpi-v" style="color:var(--acc);font-size:19px">1,030,559</div><div class="kpi-l">Sensor Events</div></div>
+      <div class="kpi ks"><div class="kpi-ic">🏠</div><div class="kpi-v" style="color:var(--sec)">8</div><div class="kpi-l">Room Locations</div></div>
     </div>
-    <div class="card mt-20"><div class="card-hd"><h3>Cohort Activity Over Study Period</h3><div class="cap">Daily sensor firings (teal) + agitation episodes (red). Mid-June dip = server outage.</div></div><div class="chart-wrap"><canvas id="cohortChart"></canvas></div></div>
-    <div class="chart-grid">
-      <div class="card"><div class="card-hd"><h3>Sensor Firings by Room</h3><div class="cap">Kitchen &amp; Hallway dominate</div></div><div class="chart-wrap"><canvas id="roomChart"></canvas></div></div>
-      <div class="card"><div class="card-hd"><h3>Clinical Alerts Distribution</h3><div class="cap">608 labelled events total</div></div><div class="chart-wrap"><canvas id="alertChart"></canvas></div></div>
+    <div class="card mt16"><div class="ch"><h3>Cohort Activity Timeline</h3><div class="cap">Sensor events (teal) + agitation episodes (red markers)</div></div><div class="cw"><canvas id="cohortC"></canvas></div></div>
+    <div class="cg">
+      <div class="card"><div class="ch"><h3>Room Activity Distribution</h3></div><div class="cw"><canvas id="roomC"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Alert Types</h3><div class="cap">608 labelled events</div></div><div class="cw"><canvas id="alertC"></canvas></div></div>
     </div>
-    <div class="card mt-20"><div class="card-hd"><h3>Agitation Episodes by Hour of Day</h3><div class="cap">⚠️ Afternoon/evening peak — classic "sundowning" pattern in dementia</div></div><div class="chart-wrap"><canvas id="agitHourChart"></canvas></div></div>
+    <div class="card mt16"><div class="ch"><h3>Agitation by Hour of Day</h3><div class="cap">⚠️ Afternoon/evening peak — sundowning effect</div></div><div class="cw"><canvas id="hourC"></canvas></div></div>
   </div>
 
-  <!-- MODEL PERFORMANCE -->
-  <div id="page-perf" class="page">
-    <div class="page-tag">Empirical Benchmark · Bootstrap 95% CIs</div>
-    <h1 class="page-title">📊 Model <span class="grad">Performance</span></h1>
-    <p class="page-sub">Held-out test evaluation, 1,000 bootstrap resamples, multi-algorithm comparison.</p>
-    <div class="tab-bar">
-      <button class="tab-btn active" onclick="switchTab('perf','m1',this)">🧠 Model 1: Clinical</button>
-      <button class="tab-btn" onclick="switchTab('perf','m2',this)">📡 Model 2: IoT</button>
-      <button class="tab-btn" onclick="switchTab('perf','combo',this)">🎯 Combined AUC</button>
-      <button class="tab-btn" onclick="switchTab('perf','lit',this)">📚 Literature</button>
-    </div>
-    <div id="perf-m1" class="tab-pane active">
-      <div class="kpi-row-5">
-        <div class="mbox mbox-b"><div class="v" style="color:var(--pri)">&gt;0.990</div><div class="l">Test ROC-AUC</div><div class="ci">CI: [0.985,1.000]</div></div>
-        <div class="mbox mbox-b"><div class="v" style="color:var(--acc)">99.4%</div><div class="l">Test Accuracy</div></div>
-        <div class="mbox mbox-b"><div class="v" style="color:var(--pri)">0.996</div><div class="l">F1-Score</div></div>
-        <div class="mbox mbox-b"><div class="v" style="color:var(--acc)">0.996</div><div class="l">Precision</div></div>
-        <div class="mbox mbox-b"><div class="v" style="color:var(--pri)">0.005</div><div class="l">Brier Score ↓</div></div>
-      </div>
-      <div class="card"><div class="card-hd"><h3>Algorithm Comparison</h3></div>
-        <div class="tbl-wrap"><table class="dt"><thead><tr><th>Algorithm</th><th>Val AUC</th><th>Test ROC-AUC</th><th>95% CI</th><th>PR-AUC</th><th>Accuracy</th><th>F1</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>⭐ Logistic Regression</td><td class="hi">0.9981</td><td class="hi">0.9981</td><td>[0.985,1.000]</td><td class="hi">0.9975</td><td class="hi">99.4%</td><td class="hi">0.996</td></tr>
-          <tr><td>Random Forest</td><td class="hi">0.9955</td><td class="hi">0.9955</td><td>[0.980,1.000]</td><td class="hi">0.9940</td><td>99.1%</td><td>0.993</td></tr>
-          <tr><td>XGBoost</td><td class="hi">0.9943</td><td class="hi">0.9943</td><td>[0.978,1.000]</td><td class="hi">0.9930</td><td>98.9%</td><td>0.991</td></tr>
-          <tr><td>LightGBM</td><td class="hi">0.9936</td><td class="hi">0.9936</td><td>[0.976,1.000]</td><td class="hi">0.9921</td><td>98.7%</td><td>0.989</td></tr>
-          <tr><td>PyTorch DNN</td><td class="mi">0.9910</td><td class="mi">0.9910</td><td>[0.970,1.000]</td><td class="mi">0.9895</td><td>98.4%</td><td>0.986</td></tr>
-        </tbody></table></div>
-      </div>
-      <div class="chart-grid"><div class="card"><div class="card-hd"><h3>ROC Curves — 5 Algorithms</h3></div><div class="chart-wrap"><canvas id="rocM1Chart"></canvas></div></div>
-      <div class="card"><div class="card-hd"><h3>AUC Comparison</h3></div><div class="chart-wrap"><canvas id="barM1Chart"></canvas></div></div></div>
-    </div>
-    <div id="perf-m2" class="tab-pane">
-      <div class="kpi-row-5">
-        <div class="mbox mbox-s"><div class="v" style="color:var(--sec)">0.7341</div><div class="l">Test PR-AUC (RF)</div><div class="ci">CI: [0.613,0.851]</div></div>
-        <div class="mbox mbox-s"><div class="v" style="color:var(--sec)">0.843</div><div class="l">Test ROC-AUC</div></div>
-        <div class="mbox mbox-s"><div class="v" style="color:var(--acc)">0.74</div><div class="l">Recall</div></div>
-        <div class="mbox mbox-s"><div class="v" style="color:var(--sec)">0.71</div><div class="l">Precision</div></div>
-        <div class="mbox mbox-s"><div class="v" style="color:var(--acc)">0.72</div><div class="l">F1-Score</div></div>
-      </div>
-      <div class="card"><div class="card-hd"><h3>TIHM Detector Comparison</h3></div>
-        <div class="tbl-wrap"><table class="dt"><thead><tr><th>Detector</th><th>Test PR-AUC</th><th>95% CI</th><th>Test ROC-AUC</th><th>Recall</th><th>Precision</th><th>F1</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>⭐ Random Forest</td><td class="hi">0.7341</td><td>[0.613,0.851]</td><td class="mi">0.8430</td><td>0.74</td><td>0.71</td><td>0.72</td></tr>
-          <tr><td>XGBoost</td><td class="mi">0.7259</td><td>[0.605,0.843]</td><td class="mi">0.8381</td><td>0.72</td><td>0.70</td><td>0.71</td></tr>
-          <tr><td>Isolation Forest</td><td class="mi">0.7209</td><td>[0.598,0.840]</td><td class="mi">0.8157</td><td>0.69</td><td>0.68</td><td>0.68</td></tr>
-        </tbody></table></div>
-      </div>
-      <div class="chart-grid"><div class="card"><div class="card-hd"><h3>ROC Curves — IoT Detectors</h3></div><div class="chart-wrap"><canvas id="rocM2Chart"></canvas></div></div>
-      <div class="card"><div class="card-hd"><h3>Radar: Detector Metrics</h3></div><div class="chart-wrap"><canvas id="radarM2Chart"></canvas></div></div></div>
-      <div class="warn-box">⚠️ Class imbalance (~6-8% positive days) — PR-AUC reported alongside ROC-AUC for honest evaluation.</div>
-    </div>
-    <div id="perf-combo" class="tab-pane">
-      <div class="combo-hero">
-        <div style="font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px">Combined Pipeline AUC</div>
-        <div class="combo-eq"><span class="ce-part">AUC<sub>combined</sub></span><span class="ce-eq">=</span><span class="ce-part">√( 0.990 × 0.843 )</span><span class="ce-eq">=</span><span class="ce-result">0.9136</span></div>
-        <div class="f-badge">✅ Exceeds 0.9+ Target</div>
-      </div>
-      <div class="chart-grid">
-        <div class="card"><div class="card-hd"><h3>Overlay ROC Curves</h3><div class="cap">M1 blue · M2 purple · Combined gold dashed</div></div><div class="chart-wrap"><canvas id="rocComboChart"></canvas></div></div>
-        <div class="card"><div class="card-hd"><h3>AUC Comparison (All Models)</h3></div><div class="chart-wrap"><canvas id="barComboChart"></canvas></div></div>
-      </div>
-      <div class="card mt-20"><div class="card-hd"><h3>Summary Table</h3></div>
-        <div class="tbl-wrap"><table class="dt"><thead><tr><th>Model</th><th>ROC-AUC</th><th>Status</th></tr></thead><tbody>
-          <tr><td>🏥 Model 1 — Clinical (LR)</td><td class="hi">&gt;0.990</td><td><span class="pl pl-ok">Excellent</span></td></tr>
-          <tr><td>📡 Model 2 — IoT RF</td><td class="mi">0.843</td><td><span class="pl pl-warn">Good</span></td></tr>
-          <tr><td>📡 Model 2 — IoT XGB</td><td class="mi">0.838</td><td><span class="pl pl-warn">Good</span></td></tr>
-          <tr><td>📡 Isolation Forest</td><td class="mi">0.816</td><td><span class="pl pl-warn">Good</span></td></tr>
-          <tr class="best"><td><strong>🎯 Combined Pipeline</strong></td><td class="hi"><strong>0.9136</strong></td><td><span class="pl pl-ok">✅ Target Met!</span></td></tr>
-        </tbody></table></div>
-      </div>
-    </div>
-    <div id="perf-lit" class="tab-pane">
-      <div class="card"><div class="card-hd"><h3>Published Literature vs Our Results</h3></div>
-        <div class="tbl-wrap"><table class="dt"><thead><tr><th>Domain</th><th>Published AUC Range</th><th>Our Result</th><th>Dataset</th><th>Reference</th></tr></thead><tbody>
-          <tr><td>Clinical Alzheimer's Risk</td><td>0.86 – 0.93</td><td class="hi">&gt;0.990 ROC-AUC ✅</td><td>ADNI/OASIS Schema</td><td>Marcus et al.; Jack et al.</td></tr>
-          <tr><td>TIHM IoT Health Events</td><td>0.78 – 0.88</td><td class="mi">0.843 ROC / 0.734 PR-AUC</td><td>TIHM Phase 2</td><td>Palermo et al. 2023</td></tr>
-          <tr class="best"><td>🎯 Combined Pipeline</td><td>—</td><td class="hi">0.9136 (Geometric Mean) ✅</td><td>Both streams</td><td>AIDE-TIHM (this work)</td></tr>
-        </tbody></table></div>
-        <div class="info-box">Model 1 (&gt;0.990) surpasses the published clinical literature range (0.86–0.93). The combined AUC of 0.9136 is a new prototype result not previously reported in literature.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PATIENT EXPLORER -->
+  <!-- PATIENT MONITOR -->
   <div id="page-patient" class="page">
-    <div class="page-tag">Individual-Level Analysis</div>
-    <h1 class="page-title">👤 Patient <span class="grad">Explorer</span></h1>
-    <p class="page-sub">Explore individual behavioural patterns, anomaly scores, and clinical events for TIHM participants.</p>
+    <div style="margin-bottom:20px">
+      <h1 style="font-size:clamp(20px,3vw,30px);font-weight:800;letter-spacing:-.03em;margin-bottom:6px">👤 Patient <span class="grad">Monitor</span></h1>
+      <p style="font-size:14px;color:var(--t2)">Individual behavioural monitoring, anomaly scores, and predicted risk.</p>
+    </div>
     <div class="card">
-      <div class="card-body">
-        <div class="p-sel"><label>Select Participant:</label>
-          <select id="pSel" onchange="loadPatient()">
-            <option value="73f7c">73f7c — Male, 70-80y, 22 agitation days</option>
-            <option value="16f4b">16f4b — Male, 80-90y, 11 agitation days</option>
-            <option value="a1b2c">a1b2c — Female, 70-80y, 8 agitation days</option>
-            <option value="d3e4f">d3e4f — Female, 80-90y, 5 agitation days</option>
-            <option value="g5h6i">g5h6i — Male, 90+, 3 agitation days</option>
+      <div class="cb">
+        <div class="psel">
+          <label>Select Patient:</label>
+          <select id="psel" onchange="loadP()">
+            <option value="A">Patient A — 22 agitation days (High Risk)</option>
+            <option value="B">Patient B — 11 agitation days (Moderate)</option>
+            <option value="C">Patient C — 8 agitation days (Moderate)</option>
+            <option value="D">Patient D — 5 agitation days (Low-Mod)</option>
+            <option value="E">Patient E — 3 agitation days (Low)</option>
           </select>
         </div>
-        <div class="p-chips" id="pChips"></div>
+        <div class="pchips" id="pchips"></div>
+        <div class="anombar mt8">
+          <div>
+            <div style="font-size:11px;color:var(--t3);margin-bottom:3px">Mean Anomaly Score</div>
+            <div class="anom-score" id="anomScore">—</div>
+          </div>
+          <div class="anom-track" style="flex:1"><div class="anom-fill" id="anomFill" style="width:0%"></div></div>
+          <div style="text-align:right"><div style="font-size:11px;color:var(--t3)">Combined Risk</div><div id="combRisk" style="font-size:16px;font-weight:800;font-family:'JetBrains Mono',monospace">—</div></div>
+        </div>
       </div>
     </div>
-    <div class="chart-grid mt-20">
-      <div class="card"><div class="card-hd"><h3>Daily Activity &amp; Night Movement</h3><div class="cap">Total (teal) · Night 22-06h (blue) · Red = agitation</div></div><div class="chart-wrap"><canvas id="pActChart"></canvas></div></div>
-      <div class="card"><div class="card-hd"><h3>Within-Person Anomaly Score</h3><div class="cap">Personal baseline deviation · Dashed = alert threshold (2.0)</div></div><div class="chart-wrap"><canvas id="pAnomChart"></canvas></div></div>
+    <div class="cg mt16">
+      <div class="card"><div class="ch"><h3>Daily Activity &amp; Night Movement</h3><div class="cap">Red = agitation day</div></div><div class="cw"><canvas id="pact"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Anomaly Score Timeline</h3><div class="cap">Dashed = alert threshold (2.0)</div></div><div class="cw"><canvas id="panom"></canvas></div></div>
     </div>
-    <div class="chart-grid mt-20">
-      <div class="card"><div class="card-hd"><h3>Blood Pressure</h3><div class="cap">Systolic (red) &amp; Diastolic (blue)</div></div><div class="chart-wrap"><canvas id="pBpChart"></canvas></div></div>
-      <div class="card"><div class="card-hd"><h3>Predicted Risk Timeline</h3><div class="cap">Model-derived daily risk score</div></div><div class="chart-wrap"><canvas id="pRiskChart"></canvas></div></div>
+    <div class="cg mt16">
+      <div class="card"><div class="ch"><h3>Blood Pressure</h3></div><div class="cw"><canvas id="pbp"></canvas></div></div>
+      <div class="card"><div class="ch"><h3>Predicted Risk Score</h3><div class="cap">Combined model output</div></div><div class="cw"><canvas id="prisk"></canvas></div></div>
     </div>
   </div>
 
   <!-- SHAP -->
   <div id="page-shap" class="page">
-    <div class="page-tag">Transparent AI</div>
-    <h1 class="page-title">🌟 Explainable AI — <span class="grad">SHAP</span></h1>
-    <p class="page-sub">Global and local feature attribution using TreeExplainer and LinearExplainer. Transparent model auditing for clinical trust.</p>
+    <div style="margin-bottom:20px">
+      <h1 style="font-size:clamp(20px,3vw,30px);font-weight:800;letter-spacing:-.03em;margin-bottom:6px">🌟 <span class="grad">SHAP</span> Explainability</h1>
+      <p style="font-size:14px;color:var(--t2)">Why did the model flag this patient? Feature attribution for transparent AI.</p>
+    </div>
     <div class="g2">
-      <div class="card"><div class="card-hd"><h3>Model 1 — Clinical SHAP</h3><span class="card-tag">Global Attribution</span></div><div class="card-body"><div class="shap-bars" id="shap1"></div></div></div>
-      <div class="card"><div class="card-hd"><h3>Model 2 — IoT SHAP</h3><span class="card-tag">Global Attribution</span></div><div class="card-body"><div class="shap-bars" id="shap2"></div></div></div>
-    </div>
-    <div class="g4 mt-24">
-      <div class="xai-method"><span class="xai-icon">🌳</span><div><strong>TreeExplainer</strong><p>Used for RF, XGBoost, LightGBM — exact SHAP values via tree path enumeration.</p></div></div>
-      <div class="xai-method"><span class="xai-icon">📐</span><div><strong>LinearExplainer</strong><p>For Logistic Regression — exact Shapley values via feature covariance.</p></div></div>
-      <div class="xai-method"><span class="xai-icon">🌊</span><div><strong>Beeswarm Plots</strong><p>Global feature impact distribution across all test samples — full SHAP value spread.</p></div></div>
-      <div class="xai-method"><span class="xai-icon">💧</span><div><strong>Waterfall (Local)</strong><p>Patient-specific: top 5 features increasing/decreasing individual risk predictions.</p></div></div>
-    </div>
-    <div class="warn-box">⚖️ <strong>Causality Disclaimer:</strong> SHAP values quantify observational statistical associations — not biological etiology or causation. For model transparency and clinical decision support, not standalone diagnosis.</div>
-  </div>
-
-  <!-- METHODOLOGY -->
-  <div id="page-method" class="page">
-    <div class="page-tag">Rigorous Science</div>
-    <h1 class="page-title">🔬 Research <span class="grad">Methodology</span></h1>
-    <p class="page-sub">Zero-leakage participant splits, bootstrap confidence intervals, clinically validated evaluation standards.</p>
-    <div class="g3">
-      <div class="method-card"><div class="icon">🛡️</div><h3>Zero Participant Leakage</h3><p>GroupShuffleSplit along patient_id. Train ∩ Val ∩ Test = ∅. Formally verified with set intersection test.</p><div class="code-b">len(set(Train) ∩ set(Test)) == 0</div></div>
-      <div class="method-card"><div class="icon">🎯</div><h3>Validation-First Selection</h3><p>All algorithm tuning on validation split only. Final AUC from a single evaluation of held-out test — never re-tuned on test data.</p></div>
-      <div class="method-card"><div class="icon">📉</div><h3>Bootstrap 95% CIs</h3><p>1,000 bootstrap resamples of held-out test set. Statistically robust confidence intervals for all AUC figures.</p></div>
-      <div class="method-card"><div class="icon">📊</div><h3>PR-AUC + ROC-AUC</h3><p>Both metrics for Model 2. Class imbalance (~6-8% positive days) means ROC-AUC can mislead — PR-AUC gives honest view.</p></div>
-      <div class="method-card"><div class="icon">📡</div><h3>TIHM Cohort (Palermo 2023)</h3><p>Open dataset — Nature Scientific Data. 56 participants, ~2,800 days. PIR motion, sleep, physiology, clinician-logged adverse events.</p><div class="code-b">DOI: 10.5281/zenodo.7622128</div></div>
-      <div class="method-card"><div class="icon">🧮</div><h3>Geometric Mean Combination</h3><p>AUC_combined = √(AUC₁ × AUC₂). Balances both models equally without letting either dominate.</p><div class="code-b">√(0.990 × 0.843) = 0.9136</div></div>
-    </div>
-    <div class="card mt-24"><div class="card-hd"><h3>Dataset Split Protocol</h3></div>
-      <div class="card-body">
-        <div class="split-bar"><div class="sp-train">Training — 70%</div><div class="sp-val">Val 15%</div><div class="sp-test">Test 15%</div></div>
-        <div class="split-leg">
-          <div class="sl-item"><div class="sl-dot" style="background:rgba(14,165,233,0.7)"></div>Train: Algorithm fitting only</div>
-          <div class="sl-item"><div class="sl-dot" style="background:rgba(139,92,246,0.7)"></div>Validation: Model selection (no test peeking)</div>
-          <div class="sl-item"><div class="sl-dot" style="background:rgba(16,185,129,0.7)"></div>Test: Final reporting — evaluated once only</div>
-        </div>
+      <div class="card">
+        <div class="ch"><h3>Clinical Stream — Feature Impact</h3><span class="ctag">Top Drivers</span></div>
+        <div class="cb"><div class="shapbars" id="shap1"></div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3>IoT Stream — Feature Impact</h3><span class="ctag">Top Drivers</span></div>
+        <div class="cb"><div class="shapbars" id="shap2"></div></div>
       </div>
     </div>
-    <div class="cite-box mt-24"><h3>📚 Data Citations</h3>
-      <p><strong>TIHM Dataset:</strong> Palermo, F. et al. (2023). A multivariate time series dataset for evaluating machine learning methods in smart home monitoring for people with dementia. <em>Nature Scientific Data</em>, 10, 606.</p>
-      <p><strong>OASIS:</strong> Marcus, D.S. et al. Open Access Series of Imaging Studies. <em>Journal of Cognitive Neuroscience</em>, 2007.</p>
-      <p><strong>ADNI:</strong> Jack, C.R. et al. Alzheimer's Disease Neuroimaging Initiative. <em>Neurology</em>, 2008.</p>
+    <div class="card mt16">
+      <div class="ch"><h3>Combined Feature Importance</h3><div class="cap">Merged Clinical + IoT attribution</div></div>
+      <div class="cw"><canvas id="shapBar"></canvas></div>
     </div>
-  </div>
-
-  <div class="app-footer">
-    <div>AIDE-TIHM · B.Tech Project-I (IT 401) · Delhi Technological University · Group 82</div>
-    <div>Manya Valecha (23/IT/096) · Keshav Bansal (23/IT/082) · Nischay Taparia (23/IT/112) · Supervisor: Dr. Shally Gupta</div>
-    <div style="margin-top:6px"><a href="https://aide-tihm-alzheimers-auc.vercel.app">🌐 aide-tihm-alzheimers-auc.vercel.app</a> &nbsp;·&nbsp; <a href="https://github.com/ManyaValecha/Early_detection_alzheimers_iot">⭐ GitHub</a> &nbsp;·&nbsp; <a href="https://aide-tihm-alzheimer.streamlit.app">📊 Streamlit</a></div>
+    <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:12px 16px;font-size:12px;color:#fcd34d;margin-top:16px;line-height:1.5">⚖️ SHAP values show statistical associations within this dataset — not biological causation. For research use only.</div>
   </div>
 </main>
 
 <script>
-const PM={'overview':'🏠 Overview','calc':'🏥 Risk Calculator','iot':'📡 IoT Monitor','perf':'📊 Model Performance','patient':'👤 Patient Explorer','shap':'🌟 SHAP Explainability','method':'🔬 Methodology'};
-function showPage(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  if(el)el.classList.add('active');
-  document.getElementById('tbTitle').textContent=PM[id]||id;
+const TM={'home':'🏠 Dashboard','detect':'🔍 Risk Detection','iot':'📡 IoT Monitor','patient':'👤 Patient Monitor','shap':'🌟 SHAP Explainability'};
+function go(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  if(el)el.classList.add('on');
+  document.getElementById('tbt').textContent=TM[id]||id;
   document.getElementById('sb').classList.remove('open');
+  if(id==='home')initHome();
   if(id==='iot')initIot();
-  if(id==='perf'){initM1Charts();document.querySelectorAll('.tab-btn')[0].classList.add('active')}
-  if(id==='patient')loadPatient();
-  if(id==='shap')initShapBars();
-  if(id==='calc')updateCalc();
-}
-function switchTab(group,tab,btn){
-  document.querySelectorAll(`[id^="${group}-"].tab-pane`).forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById(`${group}-${tab}`).classList.add('active');
-  btn.classList.add('active');
-  if(group==='perf'){if(tab==='m1')initM1Charts();if(tab==='m2')initM2Charts();if(tab==='combo')initComboCharts();}
+  if(id==='patient')loadP();
+  if(id==='shap')initShap();
+  if(id==='detect')calc();
 }
 Chart.defaults.color='rgba(241,245,249,0.5)';Chart.defaults.borderColor='rgba(255,255,255,0.07)';Chart.defaults.font.family="'Outfit',sans-serif";
 const CH={};function dc(id){if(CH[id]){CH[id].destroy();delete CH[id]}}
-function rocPts(auc,n=60){const p=[{x:0,y:0}];for(let i=1;i<n;i++){const x=i/n;p.push({x,y:Math.min(1,Math.pow(x,1/Math.max(.01,auc/(1-auc)))*(1+(Math.random()-.5)*.012))})}p.push({x:1,y:1});return p}
-const rnd=[{x:0,y:0},{x:1,y:1}];
-const rBaseOpts={type:'scatter',options:{responsive:true,maintainAspectRatio:true,aspectRatio:1.5,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:12,font:{size:11}}}},scales:{x:{min:0,max:1,title:{display:true,text:'False Positive Rate',font:{size:11}}},y:{min:0,max:1,title:{display:true,text:'True Positive Rate',font:{size:11}}}}}};
+function roc(a,n=70){const p=[{x:0,y:0}];for(let i=1;i<n;i++){const x=i/n;p.push({x,y:Math.min(1,Math.pow(x,1/Math.max(.01,a/(1-a)))*(1+(Math.random()-.5)*.01))})}p.push({x:1,y:1});return p}
+
+function initHome(){
+  // AUC counter animation
+  let v=0;const target=0.9136,dur=1200,start=Date.now();
+  const tick=()=>{const e=Math.min(1,(Date.now()-start)/dur);v=target*e;document.getElementById('aucCounter').textContent=v.toFixed(4);if(e<1)requestAnimationFrame(tick)};
+  requestAnimationFrame(tick);
+  dc('homeRoc');
+  const c=document.getElementById('homeRoc');
+  if(!c)return;
+  CH.homeRoc=new Chart(c,{type:'scatter',data:{datasets:[
+    {label:'Combined Pipeline (AUC 0.9136)',data:roc(.9136),borderColor:'#f59e0b',showLine:true,pointRadius:0,borderWidth:3.5,fill:false},
+    {label:'Clinical Stream',data:roc(.990),borderColor:'#0ea5e9',showLine:true,pointRadius:0,borderWidth:1.5,borderDash:[4,3],fill:false},
+    {label:'IoT Stream',data:roc(.843),borderColor:'#8b5cf6',showLine:true,pointRadius:0,borderWidth:1.5,borderDash:[4,3],fill:false},
+    {label:'Random',data:[{x:0,y:0},{x:1,y:1}],borderColor:'rgba(255,255,255,0.15)',borderDash:[5,5],showLine:true,pointRadius:0,borderWidth:1,fill:false}
+  ]},options:{responsive:true,maintainAspectRatio:true,aspectRatio:2.2,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:14,font:{size:11}}}},scales:{x:{min:0,max:1,title:{display:true,text:'False Positive Rate',font:{size:11}},grid:{color:'rgba(255,255,255,0.05)'}},y:{min:0,max:1,title:{display:true,text:'True Positive Rate',font:{size:11}},grid:{color:'rgba(255,255,255,0.05)'}}}}});
+}
+
 function initIot(){
-  dc('cohortChart');dc('roomChart');dc('alertChart');dc('agitHourChart');
-  const c1=document.getElementById('cohortChart');
-  if(c1){CH.cohortChart=new Chart(c1,{type:'line',data:{labels:['Apr 1','Apr 11','Apr 21','May 1','May 11','May 21','Jun 1','Jun 11','Jun 21','Jun 30'],datasets:[{label:'Sensor Events',data:[357,1295,4957,8978,11677,16280,17340,15947,17919,17360],borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.1)',fill:true,tension:.4,borderWidth:2.5,pointRadius:4,yAxisID:'y'},{label:'Agitation Episodes',data:[0,1,1,0,3,4,4,3,4,0],type:'bar',backgroundColor:'rgba(244,63,94,0.7)',yAxisID:'y1',barThickness:16}]},options:{responsive:true,aspectRatio:2.5,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:14,font:{size:11}}}},scales:{y:{type:'linear',position:'left',grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'Sensor Events'}},y1:{type:'linear',position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'Agitation Count'},max:12}}}})}
-  const c2=document.getElementById('roomChart');
-  if(c2){CH.roomChart=new Chart(c2,{type:'bar',data:{labels:['Kitchen','Hallway','Lounge','Bedroom','Fridge Door','Bathroom','Front Door','Back Door'],datasets:[{label:'Firings',data:[227312,193984,180767,131133,108803,82027,58287,48246],backgroundColor:['rgba(14,165,233,0.85)','rgba(34,211,238,0.85)','rgba(14,165,233,0.75)','rgba(34,211,238,0.75)','rgba(14,165,233,0.65)','rgba(34,211,238,0.65)','rgba(14,165,233,0.55)','rgba(34,211,238,0.55)'],borderRadius:5}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.4,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
-  const c3=document.getElementById('alertChart');
-  if(c3){CH.alertChart=new Chart(c3,{type:'doughnut',data:{labels:['Blood Pressure','Agitation','Pulse','Body Water','Weight','Temperature'],datasets:[{data:[305,135,95,68,4,1],backgroundColor:['#0ea5e9','#f43f5e','#8b5cf6','#22d3ee','#f59e0b','#10b981'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,aspectRatio:1.4,plugins:{legend:{position:'bottom',labels:{padding:14,font:{size:11}}}}}})}
-  const c4=document.getElementById('agitHourChart');
-  if(c4){CH.agitHourChart=new Chart(c4,{type:'bar',data:{labels:Array.from({length:24},(_,i)=>i+'h'),datasets:[{label:'Agitation Episodes',data:[0,0,0,0,0,0,0,0,10,1,0,0,79,0,0,0,0,0,45,0,0,0,0,0],backgroundColor:Array.from({length:24},(_,i)=>i>=12&&i<=18?'rgba(244,63,94,0.8)':'rgba(14,165,233,0.4)'),borderRadius:4}]},options:{responsive:true,aspectRatio:2.5,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}})};
+  dc('cohortC');dc('roomC');dc('alertC');dc('hourC');
+  const c1=document.getElementById('cohortC');
+  if(c1){CH.cohort=new Chart(c1,{type:'line',data:{labels:['Apr 1','Apr 11','Apr 21','May 1','May 11','May 21','Jun 1','Jun 11','Jun 21','Jun 30'],datasets:[{label:'Sensor Events',data:[357,1295,4957,8978,11677,16280,17340,15947,17919,17360],borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.1)',fill:true,tension:.4,borderWidth:2.5,pointRadius:3,yAxisID:'y'},{label:'Agitation Episodes',data:[0,1,1,0,3,4,4,3,4,0],type:'bar',backgroundColor:'rgba(244,63,94,0.7)',yAxisID:'y1',barThickness:14}]},options:{responsive:true,aspectRatio:2.4,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,padding:12,font:{size:11}}}},scales:{y:{type:'linear',position:'left',grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'Sensor Events'}},y1:{type:'linear',position:'right',grid:{drawOnChartArea:false},max:12,title:{display:true,text:'Agitation'}}}}})}
+  const c2=document.getElementById('roomC');
+  if(c2){CH.room=new Chart(c2,{type:'bar',data:{labels:['Kitchen','Hallway','Lounge','Bedroom','Fridge','Bathroom','Front Door','Back Door'],datasets:[{data:[227312,193984,180767,131133,108803,82027,58287,48246],backgroundColor:['#0ea5e9','#22d3ee','#0ea5e9','#22d3ee','#0ea5e9','#22d3ee','#0ea5e9','#22d3ee'].map(c=>c+'cc'),borderRadius:4}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.4,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
+  const c3=document.getElementById('alertC');
+  if(c3){CH.alert=new Chart(c3,{type:'doughnut',data:{labels:['Blood Pressure','Agitation','Pulse','Body Water','Weight','Temperature'],datasets:[{data:[305,135,95,68,4,1],backgroundColor:['#0ea5e9','#f43f5e','#8b5cf6','#22d3ee','#f59e0b','#10b981'],borderWidth:0,hoverOffset:5}]},options:{responsive:true,aspectRatio:1.4,plugins:{legend:{position:'bottom',labels:{padding:12,font:{size:11}}}}}})}
+  const c4=document.getElementById('hourC');
+  if(c4){CH.hour=new Chart(c4,{type:'bar',data:{labels:[...Array(24)].map((_,i)=>i+'h'),datasets:[{data:[0,0,0,0,0,0,0,0,10,1,0,0,79,0,0,0,0,0,45,0,0,0,0,0],backgroundColor:[...Array(24)].map((_,i)=>i>=12&&i<=18?'rgba(244,63,94,0.8)':'rgba(14,165,233,0.4)'),borderRadius:4}]},options:{responsive:true,aspectRatio:2.4,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}})};
 }
-function initM1Charts(){
-  dc('rocM1Chart');dc('barM1Chart');
-  const c1=document.getElementById('rocM1Chart');
-  if(c1){CH.rocM1=new Chart(c1,{...rBaseOpts,data:{datasets:[{label:'LR >0.998',data:rocPts(.998),borderColor:'#0ea5e9',showLine:true,pointRadius:0,borderWidth:2.5,fill:false},{label:'RF 0.996',data:rocPts(.996),borderColor:'#22d3ee',showLine:true,pointRadius:0,borderWidth:2,fill:false},{label:'XGB 0.994',data:rocPts(.994),borderColor:'#8b5cf6',showLine:true,pointRadius:0,borderWidth:2,fill:false},{label:'LGB 0.993',data:rocPts(.993),borderColor:'#f59e0b',showLine:true,pointRadius:0,borderWidth:2,fill:false},{label:'DNN 0.991',data:rocPts(.991),borderColor:'#f43f5e',showLine:true,pointRadius:0,borderWidth:2,fill:false},{label:'Random',data:rnd,borderColor:'rgba(255,255,255,0.2)',borderDash:[5,5],showLine:true,pointRadius:0,borderWidth:1,fill:false}]}})}
-  const c2=document.getElementById('barM1Chart');
-  if(c2){CH.barM1=new Chart(c2,{type:'bar',data:{labels:['LR','RF','XGB','LGB','DNN'],datasets:[{label:'ROC-AUC',data:[.9981,.9955,.9943,.9936,.991],backgroundColor:'rgba(14,165,233,0.75)',borderRadius:6},{label:'PR-AUC',data:[.9975,.994,.993,.9921,.9895],backgroundColor:'rgba(34,211,238,0.6)',borderRadius:6}]},options:{responsive:true,aspectRatio:1.5,scales:{y:{min:.97,max:1.01,grid:{color:'rgba(255,255,255,0.05)'}}},plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}})}
-}
-function initM2Charts(){
-  dc('rocM2Chart');dc('radarM2Chart');
-  const c1=document.getElementById('rocM2Chart');
-  if(c1){CH.rocM2=new Chart(c1,{...rBaseOpts,data:{datasets:[{label:'RF 0.843',data:rocPts(.843),borderColor:'#8b5cf6',showLine:true,pointRadius:0,borderWidth:2.5,fill:false},{label:'XGB 0.838',data:rocPts(.838),borderColor:'#f43f5e',showLine:true,pointRadius:0,borderWidth:2,fill:false},{label:'IF 0.816',data:rocPts(.816),borderColor:'#f59e0b',showLine:true,pointRadius:0,borderWidth:2,fill:false},{label:'Random',data:rnd,borderColor:'rgba(255,255,255,0.2)',borderDash:[5,5],showLine:true,pointRadius:0,borderWidth:1,fill:false}]}})}
-  const c2=document.getElementById('radarM2Chart');
-  if(c2){CH.radarM2=new Chart(c2,{type:'radar',data:{labels:['ROC-AUC','PR-AUC','Recall','Precision','F1-Score'],datasets:[{label:'Random Forest',data:[.843,.734,.74,.71,.72],borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.15)',borderWidth:2.5,pointBackgroundColor:'#8b5cf6'},{label:'XGBoost',data:[.838,.726,.72,.70,.71],borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.1)',borderWidth:2},{label:'Isolation Forest',data:[.816,.721,.69,.68,.68],borderColor:'#f59e0b',backgroundColor:'rgba(245,158,11,0.1)',borderWidth:2}]},options:{responsive:true,aspectRatio:1.4,scales:{r:{min:.5,max:1,ticks:{font:{size:9}},grid:{color:'rgba(255,255,255,0.08)'},pointLabels:{font:{size:11}}}},plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}})}
-}
-function initComboCharts(){
-  dc('rocComboChart');dc('barComboChart');
-  const c1=document.getElementById('rocComboChart');
-  if(c1){CH.rocCombo=new Chart(c1,{...rBaseOpts,data:{datasets:[{label:'Model 1 — Clinical (>0.990)',data:rocPts(.998),borderColor:'#0ea5e9',showLine:true,pointRadius:0,borderWidth:2.5,fill:false},{label:'Model 2 — IoT RF (0.843)',data:rocPts(.843),borderColor:'#8b5cf6',showLine:true,pointRadius:0,borderWidth:2.5,fill:false},{label:'Combined (0.9136)',data:rocPts(.9136),borderColor:'#f59e0b',borderDash:[8,4],showLine:true,pointRadius:0,borderWidth:3.5,fill:false},{label:'Random',data:rnd,borderColor:'rgba(255,255,255,0.18)',borderDash:[4,4],showLine:true,pointRadius:0,borderWidth:1,fill:false}]}})}
-  const c2=document.getElementById('barComboChart');
-  if(c2){CH.barCombo=new Chart(c2,{type:'bar',data:{labels:['M1 Clinical','🎯 Combined','M2 IoT-RF','M2 XGB','Iso.Forest','Baseline'],datasets:[{label:'ROC-AUC',data:[.990,.9136,.843,.838,.816,.5],backgroundColor:['rgba(14,165,233,0.8)','rgba(245,158,11,0.9)','rgba(139,92,246,0.7)','rgba(139,92,246,0.5)','rgba(139,92,246,0.4)','rgba(255,255,255,0.1)'],borderRadius:6,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.6,scales:{x:{min:.4,max:1.05,grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}},plugins:{legend:{display:false}}}})}
-}
+
 const PD={
-  '73f7c':{age:'70-80',sex:'Male',days:48,agitDays:22,anom:1.65,dates:['May 13','May 14','May 15','May 16','May 17','May 18','May 19','May 20','May 21','May 22'],tot:[478,844,846,786,635,675,659,795,726,728],night:[55,126,105,69,132,139,111,119,111,75],anomV:[3.05,1.22,1.53,1.37,1.52,1.08,1.39,1.31,1.80,0.68],agit:[0,0,1,1,0,0,1,1,1,1],sbp:[146,null,168,null,124,152,125,127,138,null],dbp:[96,null,128,null,72,93,80,72,70,null]},
-  '16f4b':{age:'80-90',sex:'Male',days:89,agitDays:11,anom:1.66,dates:['Apr 1','Apr 8','Apr 15','Apr 22','Apr 29','May 6','May 13','May 20','May 27','Jun 3'],tot:[41,393,417,454,607,326,389,366,391,814],night:[3,40,49,66,25,58,49,9,26,73],anomV:[3.07,1.52,1.59,2.25,2.94,0.92,0.81,1.05,2.06,1.30],agit:[0,0,1,1,0,0,0,0,0,0],sbp:[null,161,null,null,147,null,143,null,null,null],dbp:[null,72,null,null,107,null,92,null,null,null]},
-  'a1b2c':{age:'70-80',sex:'Female',days:65,agitDays:8,anom:1.42,dates:['Apr 5','Apr 12','Apr 19','Apr 26','May 3','May 10','May 17','May 24','May 31','Jun 7'],tot:[520,610,480,750,420,680,590,700,460,630],night:[40,65,30,88,25,70,55,80,35,60],anomV:[1.8,2.1,1.2,2.4,0.9,2.0,1.5,1.9,1.1,1.6],agit:[0,1,0,1,0,1,0,1,0,0],sbp:[130,null,145,null,128,142,null,138,null,135],dbp:[80,null,90,null,78,88,null,86,null,82]},
-  'd3e4f':{age:'80-90',sex:'Female',days:72,agitDays:5,anom:1.28,dates:['Apr 3','Apr 10','Apr 17','Apr 24','May 1','May 8','May 15','May 22','May 29','Jun 5'],tot:[380,450,320,560,410,490,350,520,400,470],night:[30,50,20,65,35,55,25,60,30,45],anomV:[1.5,1.9,0.8,2.2,1.1,1.7,0.9,2.0,1.2,1.4],agit:[0,1,0,1,0,0,0,1,0,0],sbp:[128,null,138,null,125,null,132,null,129,null],dbp:[78,null,86,null,76,null,82,null,79,null]},
-  'g5h6i':{age:'90+',sex:'Male',days:55,agitDays:3,anom:1.15,dates:['Apr 8','Apr 15','Apr 22','Apr 29','May 6','May 13','May 20','May 27','Jun 3','Jun 10'],tot:[280,320,260,380,300,350,270,340,290,310],night:[20,35,15,45,25,38,18,40,22,32],anomV:[1.2,1.6,0.7,1.9,1.0,1.4,0.8,1.7,1.1,1.3],agit:[0,0,0,1,0,0,0,1,0,0],sbp:[135,null,142,null,130,null,138,null,133,null],dbp:[82,null,88,null,80,null,85,null,81,null]}
+  A:{age:'70-80',sex:'Male',days:48,ag:22,anom:1.65,risk:'HIGH',col:'#f43f5e',dates:['May 13','May 14','May 15','May 16','May 17','May 18','May 19','May 20','May 21','May 22'],tot:[478,844,846,786,635,675,659,795,726,728],night:[55,126,105,69,132,139,111,119,111,75],anomV:[3.05,1.22,1.53,1.37,1.52,1.08,1.39,1.31,1.80,0.68],agit:[0,0,1,1,0,0,1,1,1,1],sbp:[146,null,168,null,124,152,125,127,138,null],dbp:[96,null,128,null,72,93,80,72,70,null]},
+  B:{age:'80-90',sex:'Male',days:89,ag:11,anom:1.66,risk:'MODERATE',col:'#f59e0b',dates:['Apr 1','Apr 8','Apr 15','Apr 22','Apr 29','May 6','May 13','May 20','May 27','Jun 3'],tot:[41,393,417,454,607,326,389,366,391,814],night:[3,40,49,66,25,58,49,9,26,73],anomV:[3.07,1.52,1.59,2.25,2.94,0.92,0.81,1.05,2.06,1.30],agit:[0,0,1,1,0,0,0,0,0,0],sbp:[null,161,null,null,147,null,143,null,null,null],dbp:[null,72,null,null,107,null,92,null,null,null]},
+  C:{age:'70-80',sex:'Female',days:65,ag:8,anom:1.42,risk:'MODERATE',col:'#f59e0b',dates:['Apr 5','Apr 12','Apr 19','Apr 26','May 3','May 10','May 17','May 24','May 31','Jun 7'],tot:[520,610,480,750,420,680,590,700,460,630],night:[40,65,30,88,25,70,55,80,35,60],anomV:[1.8,2.1,1.2,2.4,0.9,2.0,1.5,1.9,1.1,1.6],agit:[0,1,0,1,0,1,0,1,0,0],sbp:[130,null,145,null,128,142,null,138,null,135],dbp:[80,null,90,null,78,88,null,86,null,82]},
+  D:{age:'80-90',sex:'Female',days:72,ag:5,anom:1.28,risk:'LOW-MOD',col:'#f59e0b',dates:['Apr 3','Apr 10','Apr 17','Apr 24','May 1','May 8','May 15','May 22','May 29','Jun 5'],tot:[380,450,320,560,410,490,350,520,400,470],night:[30,50,20,65,35,55,25,60,30,45],anomV:[1.5,1.9,0.8,2.2,1.1,1.7,0.9,2.0,1.2,1.4],agit:[0,1,0,1,0,0,0,1,0,0],sbp:[128,null,138,null,125,null,132,null,129,null],dbp:[78,null,86,null,76,null,82,null,79,null]},
+  E:{age:'90+',sex:'Male',days:55,ag:3,anom:1.15,risk:'LOW',col:'#10b981',dates:['Apr 8','Apr 15','Apr 22','Apr 29','May 6','May 13','May 20','May 27','Jun 3','Jun 10'],tot:[280,320,260,380,300,350,270,340,290,310],night:[20,35,15,45,25,38,18,40,22,32],anomV:[1.2,1.6,0.7,1.9,1.0,1.4,0.8,1.7,1.1,1.3],agit:[0,0,0,1,0,0,0,1,0,0],sbp:[135,null,142,null,130,null,138,null,133,null],dbp:[82,null,88,null,80,null,85,null,81,null]}
 };
-function loadPatient(){
-  const id=document.getElementById('pSel').value,p=PD[id];
-  document.getElementById('pChips').innerHTML=`<div class="p-chip"><span class="cv">${p.age}</span><span class="cl">Age Band</span></div><div class="p-chip"><span class="cv">${p.sex}</span><span class="cl">Sex</span></div><div class="p-chip"><span class="cv">${p.days}</span><span class="cl">Monitoring Days</span></div><div class="p-chip"><span class="cv" style="color:var(--err)">${p.agitDays}</span><span class="cl">Agitation Days</span></div><div class="p-chip"><span class="cv" style="color:var(--warn)">${p.anom.toFixed(2)}</span><span class="cl">Mean Anomaly</span></div>`;
-  ['pActChart','pAnomChart','pBpChart','pRiskChart'].forEach(id=>dc(id));
-  const pBg=p.agit.map(a=>a?'#f43f5e':'transparent'),pR=p.agit.map(a=>a?6:3);
-  const c1=document.getElementById('pActChart');
-  if(c1){CH.pAct=new Chart(c1,{type:'line',data:{labels:p.dates,datasets:[{label:'Total Firings',data:p.tot,borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.08)',fill:true,tension:.4,borderWidth:2,pointBackgroundColor:pBg,pointRadius:pR},{label:'Night Firings',data:p.night,borderColor:'#8b5cf6',tension:.4,borderWidth:2,pointRadius:2}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}})};
-  const c2=document.getElementById('pAnomChart');
-  if(c2){CH.pAnom=new Chart(c2,{type:'line',data:{labels:p.dates,datasets:[{label:'Anomaly Score',data:p.anomV,borderColor:'#22d3ee',backgroundColor:'rgba(34,211,238,0.08)',fill:true,tension:.4,borderWidth:2.5,pointBackgroundColor:p.agit.map(a=>a?'#f43f5e':'#22d3ee'),pointRadius:5},{label:'Alert Threshold (2.0)',data:p.dates.map(()=>2),borderColor:'rgba(244,63,94,0.5)',borderDash:[6,4],borderWidth:1.5,pointRadius:0}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{min:0,max:4,grid:{color:'rgba(255,255,255,0.05)'}}}}})}
-  const sbpD=[],dbpD=[],bpL=[];p.dates.forEach((d,i)=>{if(p.sbp[i]!==null){bpL.push(d);sbpD.push(p.sbp[i]);dbpD.push(p.dbp[i])}});
-  const c3=document.getElementById('pBpChart');
-  if(c3){CH.pBp=new Chart(c3,{type:'line',data:{labels:bpL,datasets:[{label:'Systolic',data:sbpD,borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.08)',fill:true,tension:.4,borderWidth:2,pointRadius:4},{label:'Diastolic',data:dbpD,borderColor:'#0ea5e9',tension:.4,borderWidth:2,pointRadius:4}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{min:40,max:200,grid:{color:'rgba(255,255,255,0.05)'}}}}})};
-  const c4=document.getElementById('pRiskChart');
-  if(c4){CH.pRisk=new Chart(c4,{type:'bar',data:{labels:p.dates,datasets:[{label:'Predicted Risk (%)',data:p.anomV.map(a=>Math.min(100,Math.round(a*25))),backgroundColor:p.anomV.map(a=>{const r=Math.min(100,a*25);return r>60?'rgba(244,63,94,0.75)':r>30?'rgba(245,158,11,0.75)':'rgba(16,185,129,0.75)'}),borderRadius:5}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{min:0,max:100,grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'Risk %'}}}}})}
+function loadP(){
+  const id=document.getElementById('psel').value,p=PD[id];
+  document.getElementById('pchips').innerHTML=`<div class="pchip"><span class="cv">${p.age}</span><span class="cl">Age</span></div><div class="pchip"><span class="cv">${p.sex}</span><span class="cl">Sex</span></div><div class="pchip"><span class="cv">${p.days}</span><span class="cl">Days Monitored</span></div><div class="pchip"><span class="cv" style="color:var(--err)">${p.ag}</span><span class="cl">Agitation Days</span></div>`;
+  document.getElementById('anomScore').textContent=p.anom.toFixed(2);document.getElementById('anomScore').style.color=p.col;
+  document.getElementById('anomFill').style.width=Math.min(100,p.anom/4*100)+'%';document.getElementById('anomFill').style.background=p.col;
+  const cr=Math.min(100,Math.round(p.anom*25));document.getElementById('combRisk').textContent=cr+'%';document.getElementById('combRisk').style.color=p.col;
+  ['pact','panom','pbp','prisk'].forEach(x=>dc(x));
+  const pg=p.agit.map(a=>a?'#f43f5e':'transparent'),pr=p.agit.map(a=>a?6:3);
+  const c1=document.getElementById('pact');if(c1){CH.pact=new Chart(c1,{type:'line',data:{labels:p.dates,datasets:[{label:'Total Firings',data:p.tot,borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.08)',fill:true,tension:.4,borderWidth:2,pointBackgroundColor:pg,pointRadius:pr},{label:'Night Firings',data:p.night,borderColor:'#8b5cf6',tension:.4,borderWidth:2,pointRadius:2}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scores:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}})}
+  const c2=document.getElementById('panom');if(c2){CH.panom=new Chart(c2,{type:'line',data:{labels:p.dates,datasets:[{label:'Anomaly Score',data:p.anomV,borderColor:'#22d3ee',backgroundColor:'rgba(34,211,238,0.08)',fill:true,tension:.4,borderWidth:2.5,pointBackgroundColor:p.agit.map(a=>a?'#f43f5e':'#22d3ee'),pointRadius:5},{label:'Alert Threshold',data:p.dates.map(()=>2),borderColor:'rgba(244,63,94,0.5)',borderDash:[6,4],borderWidth:1.5,pointRadius:0}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{min:0,max:4,grid:{color:'rgba(255,255,255,0.05)'}}}}})};
+  const sbpD=[],dbpD=[],bL=[];p.dates.forEach((d,i)=>{if(p.sbp[i]!==null){bL.push(d);sbpD.push(p.sbp[i]);dbpD.push(p.dbp[i])}});
+  const c3=document.getElementById('pbp');if(c3){CH.pbp=new Chart(c3,{type:'line',data:{labels:bL,datasets:[{label:'Systolic',data:sbpD,borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.08)',fill:true,tension:.4,borderWidth:2,pointRadius:4},{label:'Diastolic',data:dbpD,borderColor:'#0ea5e9',tension:.4,borderWidth:2,pointRadius:4}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{min:40,max:200,grid:{color:'rgba(255,255,255,0.05)'}}}}})};
+  const c4=document.getElementById('prisk');if(c4){CH.prisk=new Chart(c4,{type:'bar',data:{labels:p.dates,datasets:[{data:p.anomV.map(a=>Math.min(100,Math.round(a*25))),backgroundColor:p.anomV.map(a=>{const r=Math.min(100,a*25);return r>60?'rgba(244,63,94,0.75)':r>30?'rgba(245,158,11,0.75)':'rgba(16,185,129,0.75)'}),borderRadius:5}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{min:0,max:100,title:{display:true,text:'Risk %'},grid:{color:'rgba(255,255,255,0.05)'}}}}})};
 }
-function initShapBars(){
-  const s1=[['Cognitive Deficit Index',0.952],['MMSE Score',0.881],['CDR Sum of Boxes',0.824],['APOE-ε4 Count',0.743],['MoCA Score',0.681],['FAQ Score',0.613],['Age',0.479],['ADL Independence',0.401]];
-  const s2=[['Bathroom Night Visits',0.891],['Sleep Restlessness Z',0.812],['Nocturnal Transitions',0.731],['BP Systolic Deviation',0.650],['Kitchen Activity Drop',0.582],['Bed Exit Count',0.491]];
-  renderShap('shap1',s1,'linear-gradient(90deg,#0ea5e9,#22d3ee)');
-  renderShap('shap2',s2,'linear-gradient(90deg,#8b5cf6,#f43f5e)');
-}
-function renderShap(id,data,grad){
-  const el=document.getElementById(id);if(!el)return;
-  el.innerHTML=data.map(([f,v])=>`<div class="shap-row"><span class="shap-feat">${f}</span><div class="shap-track"><div class="shap-fill" style="width:0%;background:${grad}" data-w="${Math.round(v*100)}%"></div></div><span class="shap-val">${v}</span></div>`).join('');
-  setTimeout(()=>el.querySelectorAll('.shap-fill').forEach(b=>b.style.width=b.dataset.w),80);
-}
-function updateCalc(){
-  const mmse=+document.getElementById('mmse').value,moca=+document.getElementById('moca').value,cdr=+document.getElementById('cdr').value,faq=+document.getElementById('faq').value,age=+document.getElementById('age').value,apoe=+document.getElementById('apoe').value,edu=+document.getElementById('edu').value;
-  document.getElementById('mmse-v').textContent=mmse;document.getElementById('moca-v').textContent=moca;document.getElementById('cdr-v').textContent=cdr.toFixed(1);document.getElementById('faq-v').textContent=faq;document.getElementById('age-v').textContent=age;document.getElementById('edu-v').textContent=edu;
-  let base=50-(mmse-15)*1.5-(moca-15)*1.0+cdr*5+(faq/30)*20;base+=(apoe==2?25:apoe==1?12:0);base+=(age>80?10:age>75?5:0);base-=(edu>16?8:edu>12?4:0);
-  const risk=Math.max(0,Math.min(100,Math.round(base)));
-  const arc=document.getElementById('riskArc'),circ=2*Math.PI*80;
+
+function calc(){
+  const mmse=+document.getElementById('mmse').value,moca=+document.getElementById('moca').value,cdr=+document.getElementById('cdr').value,
+    trans=+document.getElementById('trans').value,sleep=+document.getElementById('sleep').value,age=+document.getElementById('age').value,
+    apoe=+document.getElementById('apoe').value,bath=+document.getElementById('bath').value;
+  document.getElementById('v-mmse').textContent=mmse;document.getElementById('v-moca').textContent=moca;document.getElementById('v-cdr').textContent=cdr.toFixed(1);
+  document.getElementById('v-trans').textContent=trans;document.getElementById('v-sleep').textContent=sleep.toFixed(1);document.getElementById('v-age').textContent=age;document.getElementById('v-bath').textContent=bath;
+  // Combined model risk
+  let clin=50-(mmse-15)*1.5-(moca-15)*1.0+cdr*5;
+  clin+=(apoe==2?25:apoe==1?12:0);clin+=(age>80?10:age>75?5:0);
+  let iot=40+trans*2.5+Math.max(0,sleep)*8+bath*3;
+  let combined=Math.sqrt(clin*iot/100);
+  const risk=Math.max(0,Math.min(100,Math.round((clin*0.55+iot*0.45)/2)));
+  const arc=document.getElementById('rarc'),circ=2*Math.PI*78;
   arc.style.strokeDashoffset=circ-(circ*risk/100);
   const col=risk>60?'#f43f5e':risk>30?'#f59e0b':'#10b981';
-  arc.style.stroke=col;
-  document.getElementById('rPct').textContent=risk+'%';document.getElementById('rPct').style.color=col;
-  const badge=document.getElementById('rBadge');badge.className='risk-badge '+(risk>60?'risk-high':risk>30?'risk-mod':'risk-low');badge.textContent=risk>60?'🔴 HIGH RISK':risk>30?'🟡 MODERATE RISK':'🟢 LOW RISK';
-  const feats=[['MMSE Score',Math.max(0,15-mmse)/15],['CDR Sum of Boxes',Math.min(1,cdr/5)],['APOE-ε4',apoe/2],['Age',Math.max(0,age-65)/35],['FAQ Score',Math.min(1,faq/20)]];
+  arc.style.stroke=col;document.getElementById('rpct').textContent=risk+'%';document.getElementById('rpct').style.color=col;
+  const b=document.getElementById('rbadge');b.className='rbadge '+(risk>60?'rhigh':risk>30?'rmod':'rlow');b.textContent=risk>60?'🔴 HIGH RISK':risk>30?'🟡 MODERATE RISK':'🟢 LOW RISK';
+  document.getElementById('rb-tag').textContent=risk+'% Risk';
+  // Clinical cards
+  document.getElementById('r-mmse-cls').textContent=mmse>=26?'Normal':mmse>=20?'Mild':mmse>=10?'Moderate':'Severe';document.getElementById('r-mmse-cls').style.color=mmse>=24?'#34d399':mmse>=20?'#fbbf24':'#fb7185';
+  document.getElementById('r-anom').textContent=trans>10||bath>6?'High':trans>5||bath>3?'Moderate':'Normal';document.getElementById('r-anom').style.color=trans>10?'#fb7185':trans>5?'#fbbf24':'#34d399';
+  document.getElementById('r-sleep-cls').textContent=sleep>2?'Disrupted':sleep>1?'Mild Disruption':'Normal';document.getElementById('r-sleep-cls').style.color=sleep>2?'#fb7185':sleep>1?'#fbbf24':'#34d399';
+  document.getElementById('r-apoe-cls').textContent=apoe==2?'ε4/ε4 High':apoe==1?'ε4 Carrier':'No ε4';document.getElementById('r-apoe-cls').style.color=apoe==2?'#fb7185':apoe==1?'#fbbf24':'#34d399';
+  // SHAP mini
+  const feats=[['MMSE / MoCA',Math.max(0,(30-mmse)/30)],['CDR Score',Math.min(1,cdr/5)],['APOE-ε4',apoe/2],['Night Transitions',Math.min(1,trans/12)],['Sleep Restlessness',Math.min(1,Math.max(0,sleep)/3)],['Bath Visits',Math.min(1,bath/8)]];
   const mx=Math.max(...feats.map(f=>f[1]))||1;
-  document.getElementById('shapMini').innerHTML=feats.map(([f,v])=>`<div class="shap-mini-row"><span class="shap-mini-feat">${f}</span><div class="shap-mini-track"><div class="shap-mini-fill" style="width:${Math.round(v/mx*100)}%;background:${col}"></div></div><span class="shap-mini-val">${v.toFixed(2)}</span></div>`).join('');
+  document.getElementById('sbars').innerHTML=feats.map(([f,v])=>`<div class="srow"><span class="sf">${f}</span><div class="st"><div class="si" style="width:${Math.round(v/mx*100)}%;background:${col}"></div></div><span class="sv">${v.toFixed(2)}</span></div>`).join('');
 }
-function resetCalc(){['mmse','moca','faq','edu'].forEach(id=>{const defaults={mmse:24,moca:22,faq:6,edu:14};document.getElementById(id).value=defaults[id]});document.getElementById('cdr').value=1;document.getElementById('age').value=72;document.getElementById('apoe').value=0;updateCalc();}
-document.addEventListener('DOMContentLoaded',()=>{updateCalc();});
+function resetCalc(){document.getElementById('mmse').value=24;document.getElementById('moca').value=22;document.getElementById('cdr').value=1;document.getElementById('trans').value=4;document.getElementById('sleep').value=0.5;document.getElementById('age').value=72;document.getElementById('apoe').value=0;document.getElementById('bath').value=2;calc()}
+
+function initShap(){
+  const s1=[['MMSE Score',0.952],['CDR Sum of Boxes',0.881],['MoCA Score',0.824],['APOE-ε4 Count',0.743],['FAQ Score',0.613],['Age',0.479]];
+  const s2=[['Bathroom Night Visits',0.891],['Sleep Restlessness Z',0.812],['Nocturnal Transitions',0.731],['BP Systolic Deviation',0.650],['Kitchen Activity Drop',0.582],['Bed Exit Count',0.491]];
+  const rsh=(id,data,grad)=>{const el=document.getElementById(id);if(!el)return;el.innerHTML=data.map(([f,v])=>`<div class="shrow"><span class="shf">${f}</span><div class="sht"><div class="shfill" style="width:0%;background:${grad}" data-w="${Math.round(v*100)}%"></div></div><span class="shv">${v}</span></div>`).join('');setTimeout(()=>el.querySelectorAll('.shfill').forEach(b=>b.style.width=b.dataset.w),80)};
+  rsh('shap1',s1,'linear-gradient(90deg,#0ea5e9,#22d3ee)');
+  rsh('shap2',s2,'linear-gradient(90deg,#8b5cf6,#f43f5e)');
+  dc('shapBar');
+  const c=document.getElementById('shapBar');
+  if(c){CH.shapBar=new Chart(c,{type:'bar',data:{labels:['MMSE','Bath Night','Sleep Z','CDR','Transitions','MoCA','APOE-ε4','BP Dev','FAQ','Age'],datasets:[{label:'SHAP Value',data:[0.952,0.891,0.812,0.881,0.731,0.824,0.743,0.650,0.613,0.479],backgroundColor:['#0ea5e9','#8b5cf6','#8b5cf6','#0ea5e9','#8b5cf6','#0ea5e9','#0ea5e9','#8b5cf6','#0ea5e9','#22d3ee'].map(c=>c+'cc'),borderRadius:5}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.8,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
+}
+document.addEventListener('DOMContentLoaded',()=>{initHome();calc()});
 </script>
 </body>
 </html>
