@@ -22,7 +22,7 @@
 | **Prior Art Baseline** | Enshaeifar et al. (2018) — **AUC 0.73** using SVM + 7 hand-crafted PIR features |
 | **Our Clinical Stream AUC** | **0.9981** (Logistic Regression, 5 models trained) |
 | **Our IoT Stream AUC** | **0.843** (Random Forest, 3 models trained) |
-| **Combined AUC** | **0.9136** via geometric mean fusion |
+| **Combined AUC** | **0.9136** via fusion of ML models |
 | **Improvement** | **+18.4 percentage points** over published baseline |
 
 ---
