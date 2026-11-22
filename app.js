@@ -1,332 +1,214 @@
-/* ============================================================
-   AIDE-TIHM — Interactive Dashboard JavaScript
-   ============================================================ */
+/* AIDE-TIHM Dashboard — app.js */
 
-// ---- Animated Background Particles ----
-function initParticles() {
-  const container = document.getElementById('bgParticles');
-  const colors = ['#6366f1','#06b6d4','#f472b6','#fb923c','#a78bfa','#fbbf24'];
-  const count = 30;
-  for (let i = 0; i < count; i++) {
-    const p = document.createElement('div');
-    p.classList.add('particle');
-    const size = Math.random() * 6 + 2;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const left = Math.random() * 100;
-    const duration = Math.random() * 15 + 10;
-    const delay = Math.random() * -20;
-    p.style.cssText = `
-      width:${size}px; height:${size}px;
-      background:${color};
-      left:${left}%;
-      animation-duration:${duration}s;
-      animation-delay:${delay}s;
-      filter: blur(1px);
-    `;
-    container.appendChild(p);
-  }
+// ── Page navigation
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelector(`[data-page="${id}"]`).classList.add('active');
+  const titles = {
+    overview:'🏠 Overview', performance:'📊 Model Performance',
+    model1:'🏥 Clinical Risk (Model 1)', model2:'📡 IoT Monitoring (Model 2)',
+    combined:'🎯 Combined AUC', xai:'🌟 Explainable AI', methodology:'🔬 Methodology'
+  };
+  document.getElementById('topbarTitle').textContent = titles[id] || id;
+  // Init charts for the page
+  if(id==='performance') initPerfCharts();
+  if(id==='model1') initModel1Charts();
+  if(id==='model2') initModel2Charts();
+  if(id==='combined') initCombinedCharts();
 }
 
-// ---- Scroll Reveal ----
-function initScrollReveal() {
-  // Add scroll-reveal class to key sections
-  const targets = document.querySelectorAll(
-    '.section-label, .section-title, .section-desc, .model-card, .method-card, .auc-formula-card, .gauge-container, .combine-visual, .table-wrapper, .bar-chart-section, .roc-section'
-  );
-  targets.forEach(el => el.classList.add('scroll-reveal'));
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
-
-  targets.forEach(el => observer.observe(el));
+// ── Tab switching
+function switchTab(group, tabId) {
+  const prefix = group + '-';
+  document.querySelectorAll(`[id^="${prefix}"]`).forEach(el => {
+    if(el.classList.contains('tab-content')) el.classList.remove('active');
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(prefix + tabId).classList.add('active');
+  event.target.classList.add('active');
 }
 
-// ---- Gauge Animation ----
-function animateGauge() {
-  const arcM1 = document.getElementById('arcM1');
-  const arcM2 = document.getElementById('arcM2');
-  const needle = document.getElementById('gaugeNeedle');
-  if (!arcM1) return;
-
-  // Arc length for a 180-degree arc with r=120 is π*120 ≈ 377
-  const totalLen = 377;
-  
-  // Model 1: 0.99 → near full
-  const m1Pct = (0.99 - 0.5) / 0.5; // normalized to 0–1 within 0.5–1.0
-  const m1Offset = totalLen * (1 - m1Pct);
-  
-  // Model 2: 0.843
-  const m2Pct = (0.843 - 0.5) / 0.5;
-  const m2Offset = totalLen * (1 - m2Pct);
-
-  // Combined: 0.9136
-  const combPct = (0.9136 - 0.5) / 0.5;
-  // Needle angle: 0 at left (angle=180), 1 at right (angle=0); center at 90 for 0.5
-  // Needle starts at top (270deg in SVG terms) pointing down, rotating from left to right
-  // The gauge goes from -180 (left) to 0 (right), center is -90 (top)
-  // For 0 gauge reading, needle points left; for 1.0, points right
-  const needleAngle = -180 + combPct * 180; // degrees from vertical
-  const rad = needleAngle * Math.PI / 180;
-  const r = 110;
-  const cx = 150, cy = 170;
-  const x2 = cx + r * Math.sin(rad);
-  const y2 = cy - r * Math.cos(rad);
-  
-  setTimeout(() => {
-    arcM1.style.strokeDashoffset = m1Offset;
-    arcM2.style.strokeDashoffset = m2Offset;
-    needle.setAttribute('x2', x2);
-    needle.setAttribute('y2', y2);
-  }, 600);
+// ── Sidebar toggle (mobile)
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
 }
 
-// ---- ROC Curve Canvas ----
-function drawROCCurve() {
-  const canvas = document.getElementById('rocCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-  const pad = { top: 30, right: 30, bottom: 50, left: 60 };
-  const plotW = W - pad.left - pad.right;
-  const plotH = H - pad.top - pad.bottom;
+// ── Shared chart defaults
+Chart.defaults.color = 'rgba(232,240,255,0.5)';
+Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+Chart.defaults.font.family = 'Inter, sans-serif';
 
-  // Helper: data-space to canvas-space
-  function toC(x, y) {
-    return [pad.left + x * plotW, pad.top + (1 - y) * plotH];
+const charts = {};
+
+function destroyChart(id) {
+  if(charts[id]) { charts[id].destroy(); delete charts[id]; }
+}
+
+// Generate realistic ROC curve points
+function rocCurve(auc, n=80) {
+  const pts = [{x:0,y:0}];
+  for(let i=1;i<n;i++){
+    const fpr = i/n;
+    const alpha = auc/(1-auc);
+    const tpr = Math.min(1, Math.pow(fpr, 1/alpha) * (1 + (Math.random()-.5)*0.015));
+    pts.push({x:fpr, y:tpr});
   }
+  pts.push({x:1,y:1});
+  return pts;
+}
 
-  // Clear
-  ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(13,21,38,0)';
-  ctx.fillRect(0, 0, W, H);
-
-  // Grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= 5; i++) {
-    const x = pad.left + (i/5)*plotW, y = pad.top + (i/5)*plotH;
-    ctx.beginPath(); ctx.moveTo(x, pad.top); ctx.lineTo(x, pad.top + plotH); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + plotW, y); ctx.stroke();
-  }
-
-  // Axis labels
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.font = '12px Inter, sans-serif';
-  ctx.textAlign = 'center';
-  for (let i = 0; i <= 5; i++) {
-    const v = (i/5).toFixed(1);
-    const [lx] = toC(i/5, 0); ctx.fillText(v, lx, pad.top + plotH + 20);
-    const [,,] = [0,0,0];
-    ctx.textAlign = 'right';
-    const [, ly] = toC(0, i/5); ctx.fillText(v, pad.left - 8, ly + 4);
-    ctx.textAlign = 'center';
-  }
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.font = '13px Inter, sans-serif';
-  ctx.fillText('False Positive Rate', pad.left + plotW/2, H - 10);
-  ctx.save(); ctx.translate(16, pad.top + plotH/2); ctx.rotate(-Math.PI/2);
-  ctx.fillText('True Positive Rate', 0, 0); ctx.restore();
-
-  // Random baseline
-  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-  ctx.lineWidth = 1; ctx.setLineDash([6,4]);
-  ctx.beginPath();
-  ctx.moveTo(...toC(0,0)); ctx.lineTo(...toC(1,1));
-  ctx.stroke(); ctx.setLineDash([]);
-
-  // 0.9+ target threshold marker
-  ctx.strokeStyle = 'rgba(240,192,96,0.3)';
-  ctx.lineWidth = 1; ctx.setLineDash([4,4]);
-  ctx.fillStyle = 'rgba(240,192,96,0.5)';
-  ctx.font = '11px Inter';
-  ctx.textAlign = 'left';
-  ctx.setLineDash([]); 
-
-  // Generate realistic ROC curves using Beta distribution approximation
-  function generateROC(auc, nPoints = 200) {
-    const pts = [[0,0]];
-    for (let i = 1; i < nPoints; i++) {
-      const fpr = i / nPoints;
-      // Approximate: TPR = fpr^((1-auc)/auc) with some variation
-      const alpha = auc / (1 - auc);
-      const tpr = Math.min(1, Math.pow(fpr, 1/alpha) * (1 + (Math.random()-0.5)*0.02));
-      pts.push([fpr, tpr]);
+const rocDefaults = {
+  type:'scatter', options:{
+    responsive:true, maintainAspectRatio:true, aspectRatio:1.4,
+    plugins:{ legend:{ position:'bottom', labels:{ usePointStyle:true, padding:14, font:{size:11} } } },
+    scales:{
+      x:{ title:{display:true,text:'False Positive Rate',font:{size:11}}, min:0, max:1, grid:{color:'rgba(255,255,255,0.05)'} },
+      y:{ title:{display:true,text:'True Positive Rate',font:{size:11}}, min:0, max:1, grid:{color:'rgba(255,255,255,0.05)'} }
     }
-    pts.push([1,1]);
-    return pts;
   }
+};
 
-  const rocM1 = generateROC(0.99);
-  const rocM2 = generateROC(0.843);
-  const rocComb = generateROC(0.9136);
+// ── Performance page charts
+function initPerfCharts() {
+  destroyChart('rocM1'); destroyChart('barM1');
+  destroyChart('rocM2'); destroyChart('barM2');
 
-  // Draw curve helper
-  function drawCurve(pts, colors, lineWidth=3) {
-    const grad = ctx.createLinearGradient(pad.left, 0, pad.left+plotW, 0);
-    colors.forEach((c, i) => grad.addColorStop(i/(colors.length-1), c));
-    ctx.strokeStyle = grad;
-    ctx.lineWidth = lineWidth;
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    pts.forEach(([x,y], i) => {
-      const [cx,cy] = toC(x,y);
-      if (i===0) ctx.moveTo(cx,cy); else ctx.lineTo(cx,cy);
-    });
-    ctx.stroke();
-  }
+  // M1 ROC
+  const c1 = document.getElementById('rocM1Chart');
+  if(c1) charts['rocM1'] = new Chart(c1, {
+    ...rocDefaults,
+    data:{ datasets:[
+      { label:'LR >0.998', data:rocCurve(0.998), borderColor:'#6366f1', showLine:true, pointRadius:0, borderWidth:2.5, fill:false },
+      { label:'RF 0.996', data:rocCurve(0.996), borderColor:'#06b6d4', showLine:true, pointRadius:0, borderWidth:2, fill:false },
+      { label:'XGB 0.994', data:rocCurve(0.994), borderColor:'#a78bfa', showLine:true, pointRadius:0, borderWidth:2, fill:false },
+      { label:'LGB 0.994', data:rocCurve(0.993), borderColor:'#f472b6', showLine:true, pointRadius:0, borderWidth:2, fill:false },
+      { label:'DNN 0.991', data:rocCurve(0.991), borderColor:'#fb923c', showLine:true, pointRadius:0, borderWidth:2, fill:false },
+      { label:'Random', data:[{x:0,y:0},{x:1,y:1}], borderColor:'rgba(255,255,255,0.2)', borderDash:[5,5], showLine:true, pointRadius:0, borderWidth:1, fill:false },
+    ]}
+  });
 
-  // Fill area under curve
-  function fillArea(pts, color) {
-    ctx.beginPath();
-    pts.forEach(([x,y], i) => {
-      const [cx,cy] = toC(x,y);
-      if (i===0) ctx.moveTo(cx,cy); else ctx.lineTo(cx,cy);
-    });
-    ctx.lineTo(...toC(1,0));
-    ctx.lineTo(...toC(0,0));
-    ctx.closePath();
-    ctx.fillStyle = color;
-    ctx.fill();
-  }
+  // M1 Bar
+  const c2 = document.getElementById('barM1Chart');
+  if(c2) charts['barM1'] = new Chart(c2, {
+    type:'bar',
+    data:{ labels:['LR','RF','XGB','LGB','DNN'],
+      datasets:[
+        { label:'ROC-AUC', data:[0.998,0.996,0.994,0.994,0.991], backgroundColor:'rgba(99,102,241,0.7)', borderRadius:6 },
+        { label:'F1-Score', data:[0.996,0.993,0.991,0.989,0.986], backgroundColor:'rgba(6,182,212,0.7)', borderRadius:6 },
+      ]
+    },
+    options:{ responsive:true, aspectRatio:1.4, scales:{ y:{ min:0.95, max:1.01, grid:{color:'rgba(255,255,255,0.05)'} } },
+      plugins:{ legend:{ position:'bottom', labels:{font:{size:11}} } } }
+  });
 
-  // Draw in order: fills first, then lines
-  fillArea(rocM2, 'rgba(244,114,182,0.06)');
-  fillArea(rocM1, 'rgba(99,102,241,0.06)');
-  fillArea(rocComb, 'rgba(240,192,96,0.06)');
+  // M2 ROC
+  const c3 = document.getElementById('rocM2Chart');
+  if(c3) charts['rocM2'] = new Chart(c3, {
+    ...rocDefaults,
+    data:{ datasets:[
+      { label:'RF 0.843', data:rocCurve(0.843), borderColor:'#f472b6', showLine:true, pointRadius:0, borderWidth:2.5, fill:false },
+      { label:'XGB 0.838', data:rocCurve(0.838), borderColor:'#fb923c', showLine:true, pointRadius:0, borderWidth:2, fill:false },
+      { label:'IF 0.816', data:rocCurve(0.816), borderColor:'#a78bfa', showLine:true, pointRadius:0, borderWidth:2, fill:false },
+      { label:'Random', data:[{x:0,y:0},{x:1,y:1}], borderColor:'rgba(255,255,255,0.2)', borderDash:[5,5], showLine:true, pointRadius:0, borderWidth:1, fill:false },
+    ]}
+  });
 
-  drawCurve(rocM2, ['#f472b6','#fb923c'], 2.5);
-  drawCurve(rocM1, ['#818cf8','#06b6d4'], 3);
-  ctx.setLineDash([8,4]);
-  drawCurve(rocComb, ['#fbbf24','#f0c060'], 3);
-  ctx.setLineDash([]);
-
-  // AUC labels on curve
-  function aucLabel(pts, label, auc, color) {
-    const midIdx = Math.floor(pts.length * 0.4);
-    const [x,y] = toC(pts[midIdx][0], pts[midIdx][1]);
-    ctx.fillStyle = color;
-    ctx.font = 'bold 12px Inter';
-    ctx.textAlign = 'left';
-    ctx.fillText(`${label} (AUC=${auc})`, x + 6, y - 6);
-  }
-  aucLabel(rocM1, 'M1', '0.990', '#818cf8');
-  aucLabel(rocM2, 'M2', '0.843', '#f472b6');
-  aucLabel(rocComb, 'Combined', '0.9136', '#fbbf24');
-}
-
-// ---- Bar Chart Animation ----
-function animateBars() {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const fills = entry.target.querySelectorAll('.bar-fill');
-        fills.forEach(fill => {
-          const target = fill.getAttribute('data-width');
-          fill.style.width = target;
-        });
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.2 });
-
-  const barChart = document.getElementById('barChart');
-  if (barChart) observer.observe(barChart);
-}
-
-// ---- Metric Bar Animation ----
-function animateMetricBars() {
-  document.querySelectorAll('.metric-bar').forEach(bar => {
-    const pct = getComputedStyle(bar).getPropertyValue('--pct');
-    bar.style.setProperty('--pct', pct);
+  // M2 Bar
+  const c4 = document.getElementById('barM2Chart');
+  if(c4) charts['barM2'] = new Chart(c4, {
+    type:'bar',
+    data:{ labels:['RF','XGBoost','IsoForest'],
+      datasets:[
+        { label:'ROC-AUC', data:[0.843,0.838,0.816], backgroundColor:'rgba(244,114,182,0.7)', borderRadius:6 },
+        { label:'PR-AUC', data:[0.734,0.726,0.721], backgroundColor:'rgba(251,146,60,0.7)', borderRadius:6 },
+      ]
+    },
+    options:{ responsive:true, aspectRatio:1.4, scales:{ y:{ min:0.5, max:1, grid:{color:'rgba(255,255,255,0.05)'} } },
+      plugins:{ legend:{ position:'bottom', labels:{font:{size:11}} } } }
   });
 }
 
-// ---- Gauge observer ----
-function initGaugeObserver() {
-  const gauge = document.getElementById('gaugeChart');
-  if (!gauge) return;
-  const obs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      animateGauge();
-      obs.unobserve(gauge);
-    }
-  }, { threshold: 0.4 });
-  obs.observe(gauge);
-}
-
-// ---- ROC observer ----
-function initROCObserver() {
-  const canvas = document.getElementById('rocCanvas');
-  if (!canvas) return;
-  const obs = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting) {
-      drawROCCurve();
-      obs.unobserve(canvas);
-    }
-  }, { threshold: 0.3 });
-  obs.observe(canvas);
-}
-
-// ---- Smooth nav ----
-function initNav() {
-  document.querySelectorAll('a[href^="#"]').forEach(link => {
-    link.addEventListener('click', e => {
-      const target = document.querySelector(link.getAttribute('href'));
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-    });
+// ── Model 1 page
+function initModel1Charts() {
+  destroyChart('m1SingleRoc');
+  const c = document.getElementById('m1SingleRoc');
+  if(!c) return;
+  charts['m1SingleRoc'] = new Chart(c, {
+    ...rocDefaults,
+    data:{ datasets:[
+      { label:'Model 1 (AUC >0.990)', data:rocCurve(0.998), borderColor:'#6366f1', showLine:true, pointRadius:0, borderWidth:3,
+        backgroundColor:'rgba(99,102,241,0.08)', fill:true },
+      { label:'Random Baseline', data:[{x:0,y:0},{x:1,y:1}], borderColor:'rgba(255,255,255,0.2)', borderDash:[5,5], showLine:true, pointRadius:0, borderWidth:1, fill:false },
+    ]}
   });
 }
 
-// ---- Number counter animation ----
-function animateCounter(el, target, duration = 1500, decimals = 4) {
-  const start = Date.now();
-  const startVal = 0;
-  function update() {
-    const elapsed = Date.now() - start;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const val = startVal + (target - startVal) * eased;
-    el.textContent = val.toFixed(decimals);
-    if (progress < 1) requestAnimationFrame(update);
-  }
-  requestAnimationFrame(update);
+// ── Model 2 page
+function initModel2Charts() {
+  destroyChart('m2RadarChart');
+  const c = document.getElementById('m2RadarChart');
+  if(!c) return;
+  charts['m2RadarChart'] = new Chart(c, {
+    type:'radar',
+    data:{
+      labels:['ROC-AUC','PR-AUC','Recall','Precision','F1-Score'],
+      datasets:[
+        { label:'Random Forest', data:[0.843,0.734,0.74,0.71,0.72], borderColor:'#f472b6', backgroundColor:'rgba(244,114,182,0.15)', borderWidth:2.5, pointBackgroundColor:'#f472b6' },
+        { label:'XGBoost', data:[0.838,0.726,0.72,0.70,0.71], borderColor:'#fb923c', backgroundColor:'rgba(251,146,60,0.1)', borderWidth:2, pointBackgroundColor:'#fb923c' },
+        { label:'Isolation Forest', data:[0.816,0.721,0.69,0.68,0.68], borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,0.1)', borderWidth:2, pointBackgroundColor:'#a78bfa' },
+      ]
+    },
+    options:{ responsive:true, aspectRatio:1.3,
+      scales:{ r:{ min:0.5, max:1, ticks:{stepSize:0.1, font:{size:9}}, grid:{color:'rgba(255,255,255,0.08)'}, pointLabels:{font:{size:11}} } },
+      plugins:{ legend:{ position:'bottom', labels:{font:{size:11}} } } }
+  });
 }
 
-// ---- Stat chips counter ----
-function initCounters() {
-  const chips = document.querySelectorAll('.stat-num');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const text = el.textContent;
-        if (text === '0.9136') animateCounter(el, 0.9136, 1500, 4);
-        else if (text === '0.843') animateCounter(el, 0.843, 1500, 3);
-        else if (text === '28') {
-          let v = 0;
-          const t = setInterval(() => { v = Math.min(v + 1, 28); el.textContent = v; if (v >= 28) clearInterval(t); }, 50);
-        }
-        obs.unobserve(el);
+// ── Combined page
+function initCombinedCharts() {
+  destroyChart('combinedRoc'); destroyChart('combinedBar');
+  const c1 = document.getElementById('combinedRocChart');
+  if(c1) charts['combinedRoc'] = new Chart(c1, {
+    ...rocDefaults,
+    options:{...rocDefaults.options, aspectRatio:1.5},
+    data:{ datasets:[
+      { label:'Model 1 — Clinical (AUC=0.990)', data:rocCurve(0.998), borderColor:'#6366f1', showLine:true, pointRadius:0, borderWidth:2.5, fill:false },
+      { label:'Model 2 — IoT RF (AUC=0.843)', data:rocCurve(0.843), borderColor:'#f472b6', showLine:true, pointRadius:0, borderWidth:2.5, fill:false },
+      { label:'Combined Pipeline (AUC=0.9136)', data:rocCurve(0.9136), borderColor:'#f0c060', borderDash:[8,4], showLine:true, pointRadius:0, borderWidth:3, fill:false },
+      { label:'Random Baseline (0.5)', data:[{x:0,y:0},{x:1,y:1}], borderColor:'rgba(255,255,255,0.2)', borderDash:[4,4], showLine:true, pointRadius:0, borderWidth:1, fill:false },
+    ]}
+  });
+
+  const c2 = document.getElementById('combinedBarChart');
+  if(c2) charts['combinedBar'] = new Chart(c2, {
+    type:'bar',
+    data:{
+      labels:['M1 Clinical','Combined','M2 IoT-RF','M2 IoT-XGB','M2 Iso.Forest','Baseline'],
+      datasets:[{ label:'ROC-AUC', data:[0.990,0.9136,0.843,0.838,0.816,0.5],
+        backgroundColor:['rgba(99,102,241,0.8)','rgba(240,192,96,0.9)','rgba(244,114,182,0.7)','rgba(244,114,182,0.5)','rgba(244,114,182,0.4)','rgba(255,255,255,0.15)'],
+        borderRadius:6, borderSkipped:false,
+      }]
+    },
+    options:{
+      responsive:true, aspectRatio:1.6, indexAxis:'y',
+      scales:{ x:{ min:0.4, max:1.05, grid:{color:'rgba(255,255,255,0.05)'} }, y:{ grid:{display:false} } },
+      plugins:{ legend:{display:false},
+        annotation:{ annotations:{ line1:{ type:'line', xMin:0.9, xMax:0.9, borderColor:'rgba(240,192,96,0.5)', borderWidth:2, borderDash:[5,5], label:{content:'0.9 Target', display:true, position:'start', font:{size:10}} } } }
       }
-    });
-  }, { threshold: 0.5 });
-  chips.forEach(c => obs.observe(c));
+    }
+  });
 }
 
-// ---- Init ----
+// ── Keyboard shortcut
+document.addEventListener('keydown', e => {
+  const pages = ['overview','performance','model1','model2','combined','xai','methodology'];
+  const idx = parseInt(e.key) - 1;
+  if(idx >= 0 && idx < pages.length) showPage(pages[idx]);
+});
+
+// ── Init
 document.addEventListener('DOMContentLoaded', () => {
-  initParticles();
-  initScrollReveal();
-  initGaugeObserver();
-  initROCObserver();
-  animateBars();
-  animateMetricBars();
-  initNav();
-  initCounters();
+  showPage('overview');
 });
