@@ -524,44 +524,10 @@ Early_detection_alzheimers_iot/
 
 ---
 
-## 11. Citation
-
-```bibtex
-@misc{valecha2024aidetihm,
-  title     = {AIDE-TIHM: Early Alzheimer Detection via Clinical and IoT Fusion (AUC 0.9136)},
-  author    = {Valecha, Manya},
-  year      = {2024},
-  note      = {B.Tech Major Project, Delhi Technological University},
-  url       = {https://github.com/ManyaValecha/Early_detection_alzheimers_iot}
-}
-```
-
-```bibtex
-@article{palermo2023tihm,
-  author  = {Palermo, Giovanni and others},
-  title   = {The TIHM dataset for remote monitoring of people with dementia},
-  journal = {Scientific Data},
-  volume  = {10},
-  pages   = {290},
-  year    = {2023},
-  doi     = {10.1038/s41597-023-02115-6}
-}
-```
-
-```bibtex
-@article{enshaeifar2018,
-  author  = {Enshaeifar, Shirin and others},
-  title   = {Health management and pattern analysis of daily living activities of people with dementia using in-home sensors and machine learning},
-  journal = {PLOS ONE},
-  year    = {2018},
-  doi     = {10.1371/journal.pone.0195605}
-}
-```
-
----
 
 <p align="center">
-  Made with ❤️ at <strong>Delhi Technological University</strong> · B.Tech Major Project 2024<br><br>
+  Special Thanks to DR.SHALLY GUPTA (IT,DTU)
+  Made with ❤️  by Keshav , Manya and Nischay at <strong>Delhi Technological University</strong> · B.Tech Minor Project <br><br>
   <a href="https://aide-tihm-alzheimers-auc.vercel.app">🌐 Live Demo</a> ·
   <a href="https://doi.org/10.1038/s41597-023-02115-6">📄 TIHM Dataset</a> ·
   <a href="https://github.com/ManyaValecha/Early_detection_alzheimers_iot/issues">🐛 Issues</a>
