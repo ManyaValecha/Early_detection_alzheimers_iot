@@ -1,0 +1,57 @@
+patient_id,age,gender,diagnosis,living_status
+TIHM_001,71,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_002,88,Female,Vascular Dementia,Living Alone
+TIHM_003,76,Female,Vascular Dementia,With Partner/Caregiver
+TIHM_004,85,Male,Unspecified,Living Alone
+TIHM_005,85,Male,Alzheimer's Disease,Living Alone
+TIHM_006,71,Female,Alzheimer's Disease,Living Alone
+TIHM_007,69,Female,Alzheimer's Disease,Living Alone
+TIHM_008,75,Female,Mixed Dementia,Living Alone
+TIHM_009,82,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_010,77,Female,Vascular Dementia,With Partner/Caregiver
+TIHM_011,78,Male,Alzheimer's Disease,With Partner/Caregiver
+TIHM_012,83,Female,Mixed Dementia,With Partner/Caregiver
+TIHM_013,76,Female,Mixed Dementia,Living Alone
+TIHM_014,77,Male,Vascular Dementia,Living Alone
+TIHM_015,68,Female,Vascular Dementia,Living Alone
+TIHM_016,84,Female,Alzheimer's Disease,Living Alone
+TIHM_017,82,Male,Alzheimer's Disease,Living Alone
+TIHM_018,72,Male,Alzheimer's Disease,Living Alone
+TIHM_019,85,Female,Alzheimer's Disease,Living Alone
+TIHM_020,65,Male,Vascular Dementia,With Partner/Caregiver
+TIHM_021,69,Female,Vascular Dementia,Living Alone
+TIHM_022,88,Female,Vascular Dementia,With Partner/Caregiver
+TIHM_023,84,Male,Alzheimer's Disease,Living Alone
+TIHM_024,74,Female,Vascular Dementia,With Partner/Caregiver
+TIHM_025,73,Female,Alzheimer's Disease,Living Alone
+TIHM_026,84,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_027,70,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_028,84,Male,Alzheimer's Disease,With Partner/Caregiver
+TIHM_029,81,Male,Alzheimer's Disease,With Partner/Caregiver
+TIHM_030,73,Female,Mixed Dementia,Living Alone
+TIHM_031,81,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_032,86,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_033,84,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_034,75,Female,Vascular Dementia,Living Alone
+TIHM_035,80,Female,Vascular Dementia,With Partner/Caregiver
+TIHM_036,67,Male,Alzheimer's Disease,With Partner/Caregiver
+TIHM_037,65,Male,Vascular Dementia,With Partner/Caregiver
+TIHM_038,68,Female,Alzheimer's Disease,Living Alone
+TIHM_039,65,Male,Alzheimer's Disease,Living Alone
+TIHM_040,65,Male,Alzheimer's Disease,Living Alone
+TIHM_041,69,Male,Unspecified,Living Alone
+TIHM_042,83,Male,Vascular Dementia,With Partner/Caregiver
+TIHM_043,69,Female,Vascular Dementia,With Partner/Caregiver
+TIHM_044,65,Female,Alzheimer's Disease,Living Alone
+TIHM_045,80,Male,Alzheimer's Disease,With Partner/Caregiver
+TIHM_046,86,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_047,66,Male,Alzheimer's Disease,Living Alone
+TIHM_048,77,Female,Mixed Dementia,Living Alone
+TIHM_049,70,Male,Alzheimer's Disease,With Partner/Caregiver
+TIHM_050,85,Male,Mixed Dementia,With Partner/Caregiver
+TIHM_051,82,Female,Vascular Dementia,Living Alone
+TIHM_052,84,Male,Vascular Dementia,With Partner/Caregiver
+TIHM_053,85,Male,Unspecified,Living Alone
+TIHM_054,82,Female,Alzheimer's Disease,With Partner/Caregiver
+TIHM_055,84,Male,Alzheimer's Disease,Living Alone
+TIHM_056,70,Male,Alzheimer's Disease,Living Alone

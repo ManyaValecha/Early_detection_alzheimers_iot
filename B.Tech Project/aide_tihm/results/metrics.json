@@ -1,0 +1,587 @@
+{
+    "project": "AIDE-TIHM Multimodal Explainable AI Framework",
+    "timestamp": "2026-11-21T19:35:06.655077",
+    "clinical_split_summary": {
+        "n_total_patients": 450,
+        "n_total_samples": 841,
+        "train": {
+            "n_patients": 292,
+            "n_samples": 534,
+            "pos_rate": 0.6722846441947565
+        },
+        "val": {
+            "n_patients": 68,
+            "n_samples": 136,
+            "pos_rate": 0.75
+        },
+        "test": {
+            "n_patients": 90,
+            "n_samples": 171,
+            "pos_rate": 0.7251461988304093
+        }
+    },
+    "model_1_alzheimers_classification": {
+        "selected_best_model": "Logistic Regression",
+        "validation_scores_comparison": {
+            "Logistic Regression": 1.0,
+            "Random Forest": 0.9997,
+            "XGBoost": 0.9988,
+            "LightGBM": 0.9994,
+            "PyTorch Neural Network": 1.0
+        },
+        "held_out_test_metrics": {
+            "roc_auc": 1.0,
+            "pr_auc": 1.0,
+            "accuracy": 0.9942,
+            "precision": 1.0,
+            "recall": 0.9919,
+            "f1_score": 0.996,
+            "brier_score": 0.0053,
+            "confusion_matrix": [
+                [
+                    47,
+                    0
+                ],
+                [
+                    1,
+                    123
+                ]
+            ],
+            "n_samples": 171,
+            "n_positives": 124,
+            "prevalence": 0.7251,
+            "roc_auc_ci_95": [
+                1.0,
+                1.0
+            ]
+        },
+        "all_models_test_comparison": {
+            "Logistic Regression": {
+                "roc_auc": 1.0,
+                "pr_auc": 1.0,
+                "accuracy": 0.9942,
+                "precision": 1.0,
+                "recall": 0.9919,
+                "f1_score": 0.996,
+                "brier_score": 0.0053,
+                "confusion_matrix": [
+                    [
+                        47,
+                        0
+                    ],
+                    [
+                        1,
+                        123
+                    ]
+                ],
+                "n_samples": 171,
+                "n_positives": 124,
+                "prevalence": 0.7251,
+                "roc_auc_ci_95": [
+                    1.0,
+                    1.0
+                ]
+            },
+            "Random Forest": {
+                "roc_auc": 1.0,
+                "pr_auc": 1.0,
+                "accuracy": 1.0,
+                "precision": 1.0,
+                "recall": 1.0,
+                "f1_score": 1.0,
+                "brier_score": 0.0044,
+                "confusion_matrix": [
+                    [
+                        47,
+                        0
+                    ],
+                    [
+                        0,
+                        124
+                    ]
+                ],
+                "n_samples": 171,
+                "n_positives": 124,
+                "prevalence": 0.7251,
+                "roc_auc_ci_95": [
+                    1.0,
+                    1.0
+                ]
+            },
+            "XGBoost": {
+                "roc_auc": 1.0,
+                "pr_auc": 1.0,
+                "accuracy": 0.9942,
+                "precision": 1.0,
+                "recall": 0.9919,
+                "f1_score": 0.996,
+                "brier_score": 0.0028,
+                "confusion_matrix": [
+                    [
+                        47,
+                        0
+                    ],
+                    [
+                        1,
+                        123
+                    ]
+                ],
+                "n_samples": 171,
+                "n_positives": 124,
+                "prevalence": 0.7251,
+                "roc_auc_ci_95": [
+                    1.0,
+                    1.0
+                ]
+            },
+            "LightGBM": {
+                "roc_auc": 1.0,
+                "pr_auc": 1.0,
+                "accuracy": 0.9942,
+                "precision": 1.0,
+                "recall": 0.9919,
+                "f1_score": 0.996,
+                "brier_score": 0.0015,
+                "confusion_matrix": [
+                    [
+                        47,
+                        0
+                    ],
+                    [
+                        1,
+                        123
+                    ]
+                ],
+                "n_samples": 171,
+                "n_positives": 124,
+                "prevalence": 0.7251,
+                "roc_auc_ci_95": [
+                    1.0,
+                    1.0
+                ]
+            },
+            "PyTorch Neural Network": {
+                "roc_auc": 1.0,
+                "pr_auc": 1.0,
+                "accuracy": 0.9883,
+                "precision": 1.0,
+                "recall": 0.9839,
+                "f1_score": 0.9919,
+                "brier_score": 0.0084,
+                "confusion_matrix": [
+                    [
+                        47,
+                        0
+                    ],
+                    [
+                        2,
+                        122
+                    ]
+                ],
+                "n_samples": 171,
+                "n_positives": 124,
+                "prevalence": 0.7251,
+                "roc_auc_ci_95": [
+                    1.0,
+                    1.0
+                ]
+            }
+        },
+        "published_literature_benchmark": {
+            "source": "Published OASIS / ADNI Clinical Literature References",
+            "reference_auc_range": "0.86 - 0.93",
+            "note": "Literature values cited for contextual comparison; new models evaluated independently."
+        }
+    },
+    "model_2_tihm_health_event_monitoring": {
+        "selected_best_model": "Random Forest Event Detector",
+        "held_out_test_metrics": {
+            "roc_auc": 0.843,
+            "pr_auc": 0.7341,
+            "accuracy": 0.975,
+            "precision": 1.0,
+            "recall": 0.6667,
+            "f1_score": 0.8,
+            "brier_score": 0.0355,
+            "confusion_matrix": [
+                [
+                    555,
+                    0
+                ],
+                [
+                    15,
+                    30
+                ]
+            ],
+            "n_samples": 600,
+            "n_positives": 45,
+            "prevalence": 0.075,
+            "pr_auc_ci_95": [
+                0.6134,
+                0.8506
+            ]
+        },
+        "all_models_test_comparison": {
+            "XGBoost Event Detector": {
+                "roc_auc": 0.8381,
+                "pr_auc": 0.7259,
+                "accuracy": 0.9733,
+                "precision": 1.0,
+                "recall": 0.6444,
+                "f1_score": 0.7838,
+                "brier_score": 0.0337,
+                "confusion_matrix": [
+                    [
+                        555,
+                        0
+                    ],
+                    [
+                        16,
+                        29
+                    ]
+                ],
+                "n_samples": 600,
+                "n_positives": 45,
+                "prevalence": 0.075,
+                "pr_auc_ci_95": [
+                    0.6089,
+                    0.8407
+                ]
+            },
+            "Random Forest Event Detector": {
+                "roc_auc": 0.843,
+                "pr_auc": 0.7341,
+                "accuracy": 0.975,
+                "precision": 1.0,
+                "recall": 0.6667,
+                "f1_score": 0.8,
+                "brier_score": 0.0355,
+                "confusion_matrix": [
+                    [
+                        555,
+                        0
+                    ],
+                    [
+                        15,
+                        30
+                    ]
+                ],
+                "n_samples": 600,
+                "n_positives": 45,
+                "prevalence": 0.075,
+                "pr_auc_ci_95": [
+                    0.6134,
+                    0.8506
+                ]
+            },
+            "Isolation Forest Anomaly Baseline": {
+                "roc_auc": 0.8157,
+                "pr_auc": 0.7209,
+                "accuracy": 0.9567,
+                "precision": 0.7209,
+                "recall": 0.6889,
+                "f1_score": 0.7045,
+                "brier_score": 0.075,
+                "confusion_matrix": [
+                    [
+                        543,
+                        12
+                    ],
+                    [
+                        14,
+                        31
+                    ]
+                ],
+                "n_samples": 600,
+                "n_positives": 45,
+                "prevalence": 0.075,
+                "pr_auc_ci_95": [
+                    0.6007,
+                    0.8336
+                ]
+            }
+        },
+        "target_definition": "TIHM Ground-Truth Clinically Confirmed Adverse Health Events (UTI, Agitation, Physiological)",
+        "published_reference": "Palermo et al., Scientific Data (2023) 10:606"
+    },
+    "explainability": {
+        "method": "SHAP (SHapley Additive exPlanations)",
+        "top_global_clinical_features": [
+            "faq",
+            "behavioral_problems",
+            "triglycerides",
+            "moca",
+            "adl"
+        ],
+        "sample_patient_local_explanation": {
+            "base_value": 3.7556,
+            "top_k_features": [
+                {
+                    "feature": "faq",
+                    "shap_value": 0.831,
+                    "feature_value": 15.2,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "behavioral_problems",
+                    "shap_value": 0.6864,
+                    "feature_value": 1,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "triglycerides",
+                    "shap_value": -0.5483,
+                    "feature_value": 61.9,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "moca",
+                    "shap_value": 0.4749,
+                    "feature_value": 19.5,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "adl",
+                    "shap_value": 0.4525,
+                    "feature_value": 65.7,
+                    "direction": "Increases Risk"
+                }
+            ],
+            "risk_increasing_factors": [
+                {
+                    "feature": "faq",
+                    "shap_value": 0.831,
+                    "feature_value": 15.2,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "behavioral_problems",
+                    "shap_value": 0.6864,
+                    "feature_value": 1,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "moca",
+                    "shap_value": 0.4749,
+                    "feature_value": 19.5,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "adl",
+                    "shap_value": 0.4525,
+                    "feature_value": 65.7,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "adl_dependency_index",
+                    "shap_value": 0.4525,
+                    "feature_value": 0.82,
+                    "direction": "Increases Risk"
+                }
+            ],
+            "risk_decreasing_factors": [
+                {
+                    "feature": "triglycerides",
+                    "shap_value": -0.5483,
+                    "feature_value": 61.9,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "cdr",
+                    "shap_value": -0.4369,
+                    "feature_value": 0.5,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "mmse",
+                    "shap_value": -0.3535,
+                    "feature_value": 25.3,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "diabetes",
+                    "shap_value": -0.1827,
+                    "feature_value": 1,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "gender_male",
+                    "shap_value": -0.1507,
+                    "feature_value": -0.95,
+                    "direction": "Decreases Risk"
+                }
+            ],
+            "all_contributions": [
+                {
+                    "feature": "faq",
+                    "shap_value": 0.831,
+                    "feature_value": 15.2,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "behavioral_problems",
+                    "shap_value": 0.6864,
+                    "feature_value": 1,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "triglycerides",
+                    "shap_value": -0.5483,
+                    "feature_value": 61.9,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "moca",
+                    "shap_value": 0.4749,
+                    "feature_value": 19.5,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "adl",
+                    "shap_value": 0.4525,
+                    "feature_value": 65.7,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "adl_dependency_index",
+                    "shap_value": 0.4525,
+                    "feature_value": 0.82,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "cdr",
+                    "shap_value": -0.4369,
+                    "feature_value": 0.5,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "mmse",
+                    "shap_value": -0.3535,
+                    "feature_value": 25.3,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "cognitive_deficit_composite",
+                    "shap_value": 0.3451,
+                    "feature_value": 0.33,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "memory_complaints",
+                    "shap_value": 0.271,
+                    "feature_value": 1,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "diabetes",
+                    "shap_value": -0.1827,
+                    "feature_value": 1,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "gender_male",
+                    "shap_value": -0.1507,
+                    "feature_value": -0.95,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "age",
+                    "shap_value": 0.1459,
+                    "feature_value": 76.7,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "cholesterol",
+                    "shap_value": -0.1427,
+                    "feature_value": 189.9,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "cardiovascular_risk_score",
+                    "shap_value": 0.1364,
+                    "feature_value": 0.76,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "hypertension",
+                    "shap_value": 0.1107,
+                    "feature_value": 0,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "education_years",
+                    "shap_value": 0.0997,
+                    "feature_value": 14,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "apoe4_alleles",
+                    "shap_value": -0.0701,
+                    "feature_value": 0,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "family_history",
+                    "shap_value": -0.0679,
+                    "feature_value": 0,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "hdl",
+                    "shap_value": -0.0675,
+                    "feature_value": 43.4,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "bmi",
+                    "shap_value": -0.0599,
+                    "feature_value": 25.7,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "pulse_pressure",
+                    "shap_value": 0.0434,
+                    "feature_value": 1.44,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "depression_score",
+                    "shap_value": -0.0307,
+                    "feature_value": 2.6,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "systolic_bp",
+                    "shap_value": 0.0278,
+                    "feature_value": 143.4,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "age_apoe_interaction",
+                    "shap_value": -0.0265,
+                    "feature_value": -0.65,
+                    "direction": "Decreases Risk"
+                },
+                {
+                    "feature": "ldl",
+                    "shap_value": 0.0062,
+                    "feature_value": 101.0,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "diastolic_bp",
+                    "shap_value": 0.0005,
+                    "feature_value": 65.5,
+                    "direction": "Increases Risk"
+                },
+                {
+                    "feature": "cholesterol_hdl_ratio",
+                    "shap_value": 0.0004,
+                    "feature_value": 0.14,
+                    "direction": "Increases Risk"
+                }
+            ],
+            "causality_disclaimer": "Important: SHAP values quantify the statistical contribution of each feature to the model's risk prediction relative to the baseline cohort. They reflect observational correlations within the training data and do not constitute mechanistic proof of biological causation."
+        }
+    }
+}
