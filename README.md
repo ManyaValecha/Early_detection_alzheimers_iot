@@ -1,6 +1,6 @@
 <h1 align="center">🧠 AIDE-TIHM</h1>
 <h3 align="center">Early Alzheimer's Detection via Multimodal AI — From 0.73 to 0.91 AUC</h3>
-<h4 align="center">B.Tech Major Project · Delhi Technological University</h4>
+<h4 align="center">B.Tech Minor Project · Delhi Technological University</h4>
 
 <p align="center">
   <img src="https://img.shields.io/badge/🌐 Live Demo-Vercel-black?style=for-the-badge" alt="Live Demo"/>
