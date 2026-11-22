@@ -818,7 +818,7 @@ table.dt tbody tr:hover{background:var(--glass2)}
       <button onclick="toggleChat()" style="margin-left:auto;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px">✕</button>
     </div>
     <div class="fc-msgs" id="fcMsgs">
-      <div class="fc-msg bot">Hello! I'm your AIDE assistant. I can help you understand risk scores, navigate the dashboard, or explain what biomarkers mean. Ask me anything!</div>
+      <div class="fc-msg bot">Hello! I am your AIDE assistant. I can help you understand risk scores, navigate the dashboard, or explain what biomarkers mean. Ask me anything!</div>
     </div>
     <div id="fcTyping" style="display:none;padding:0 14px 6px"><div class="fc-typing"><span></span><span></span><span></span></div></div>
     <form class="fc-form" onsubmit="sendChat(event)">
@@ -1241,10 +1241,7 @@ function initNeural(){
   const events=['[PIR-HAL] Motion detected — 03:14:22','[BP-MON] Systolic 148mmHg — elevated','[DOOR-FRT] Front door opened — 02:51:07','[BED-MAT] Bed exit #3 — 03:22:14','[PIR-BATH] Bathroom visit #4 — 03:35:51','[NLP] Pause ratio 0.38 — above threshold'];
   let ei=0;
   const lf=document.getElementById('liveFeed');
-  if(lf){setInterval(()=>{lf.innerHTML=`> ${events[ei%events.length]}
-`+lf.innerHTML.split('
-').slice(0,4).join('
-');ei++;},2200);}
+  if(lf){setInterval(()=>{lf.innerHTML='> '+events[ei%events.length]+'<br>'+lf.innerHTML.split('<br>').slice(0,4).join('<br>');ei++;},2200);}
 }
 
 // ══ SPEECH ASSESSMENT ══
@@ -1400,7 +1397,18 @@ function initAnalytics(){
 // ══ FLOATING CHAT ══
 let chatOpen=false;
 function toggleChat(){chatOpen=!chatOpen;document.getElementById('fcPanel').classList.toggle('open',chatOpen);}
-const chatResponses={'risk':'Your current risk score is computed from MMSE, CDR, APOE-ε4 status, and IoT behavioural features using the combined pipeline (AUC 0.9136). Scores above 60% warrant specialist referral.','mmse':'MMSE (Mini-Mental State Examination) scores range 0–30. Normal is ≥26, mild impairment is 20–25, moderate is 10–19, and severe is <10.','iot':'The IoT stream uses 42 features from the TIHM sensor network — PIR motion, door switches, bed mat, blood pressure, and smart plug data — to detect behavioural anomalies.','shap':'SHAP (SHapley Additive exPlanations) explains why the model made a prediction by computing each feature's contribution. Positive SHAP values push the score higher (more risk).','auc':'AUC (Area Under the ROC Curve) measures how well the model distinguishes between high and low risk patients. 0.5 = random, 1.0 = perfect. Our combined AUC of 0.9136 exceeds the clinical utility threshold of 0.9.','tihm':'TIHM (Technology Integrated Health Management) is a Nature Scientific Data dataset from 56 dementia patients monitored at home with IoT sensors for 91 days.','cri':'The Cognitive Risk Index (CRI) is a longitudinal score computed from repeated speech assessments. Lower is better. Scores above 20 indicate monitoring, above 40 indicate review needed.','exercise':'The cognitive exercises are evidence-based training tasks targeting working memory (Pattern Recall), episodic memory (Word Recall), psychomotor speed (Reaction Time), and executive function (Stroop).','hello':'Hello! I'm your AIDE research assistant. Ask me about risk scores, biomarkers, the TIHM dataset, SHAP explainability, or how to use the dashboard.','hi':'Hi there! Ask me about risk scores, models, IoT features, or anything about the dashboard.'};
+const chatResponses={
+  risk:"Your current risk score is computed from MMSE, CDR, APOE-e4 status, and IoT behavioural features using the combined pipeline (AUC 0.9136). Scores above 60% warrant specialist referral.",
+  mmse:"MMSE scores range 0-30. Normal is 26+, mild impairment is 20-25, moderate is 10-19, and severe is below 10.",
+  iot:"The IoT stream uses 42 features from the TIHM sensor network: PIR motion, door switches, bed mat, blood pressure, and smart plug data to detect behavioural anomalies.",
+  shap:"SHAP explains why the model made a prediction by computing each feature contribution. Positive values push the score higher (more risk).",
+  auc:"AUC measures how well the model distinguishes high vs low risk patients. 0.5 = random, 1.0 = perfect. Our combined AUC of 0.9136 exceeds the clinical utility threshold of 0.9.",
+  tihm:"TIHM is a Nature Scientific Data dataset from 56 dementia patients monitored at home with IoT sensors for 91 days.",
+  cri:"The Cognitive Risk Index (CRI) is a longitudinal score from repeated speech assessments. Lower is better. Scores above 20 indicate monitoring, above 40 indicate review needed.",
+  exercise:"The cognitive exercises target working memory (Pattern Recall), episodic memory (Word Recall), psychomotor speed (Reaction Time), and executive function (Stroop).",
+  hello:"Hello! I am your AIDE research assistant. Ask me about risk scores, biomarkers, the TIHM dataset, SHAP explainability, or how to use the dashboard.",
+  hi:"Hi there! Ask me about risk scores, models, IoT features, or anything about the dashboard."
+};
 async function sendChat(e){
   e.preventDefault();const inp=document.getElementById('fcInp');const msg=inp.value.trim();if(!msg)return;
   inp.value='';
@@ -1478,10 +1486,7 @@ function initNeural(){
   const events=['[PIR-HAL] Motion detected — 03:14:22','[BP-MON] Systolic 148mmHg — elevated','[DOOR-FRT] Front door opened — 02:51:07','[BED-MAT] Bed exit #3 — 03:22:14','[PIR-BATH] Bathroom visit #4 — 03:35:51','[NLP] Pause ratio 0.38 — above threshold'];
   let ei=0;
   const lf=document.getElementById('liveFeed');
-  if(lf){setInterval(()=>{lf.innerHTML=`> ${events[ei%events.length]}
-`+lf.innerHTML.split('
-').slice(0,4).join('
-');ei++;},2200);}
+  if(lf){setInterval(()=>{lf.innerHTML='> '+events[ei%events.length]+'<br>'+lf.innerHTML.split('<br>').slice(0,4).join('<br>');ei++;},2200);}
 }
 
 // ══ SPEECH ASSESSMENT ══
@@ -1637,7 +1642,18 @@ function initAnalytics(){
 // ══ FLOATING CHAT ══
 let chatOpen=false;
 function toggleChat(){chatOpen=!chatOpen;document.getElementById('fcPanel').classList.toggle('open',chatOpen);}
-const chatResponses={'risk':'Your current risk score is computed from MMSE, CDR, APOE-ε4 status, and IoT behavioural features using the combined pipeline (AUC 0.9136). Scores above 60% warrant specialist referral.','mmse':'MMSE (Mini-Mental State Examination) scores range 0–30. Normal is ≥26, mild impairment is 20–25, moderate is 10–19, and severe is <10.','iot':'The IoT stream uses 42 features from the TIHM sensor network — PIR motion, door switches, bed mat, blood pressure, and smart plug data — to detect behavioural anomalies.','shap':'SHAP (SHapley Additive exPlanations) explains why the model made a prediction by computing each feature's contribution. Positive SHAP values push the score higher (more risk).','auc':'AUC (Area Under the ROC Curve) measures how well the model distinguishes between high and low risk patients. 0.5 = random, 1.0 = perfect. Our combined AUC of 0.9136 exceeds the clinical utility threshold of 0.9.','tihm':'TIHM (Technology Integrated Health Management) is a Nature Scientific Data dataset from 56 dementia patients monitored at home with IoT sensors for 91 days.','cri':'The Cognitive Risk Index (CRI) is a longitudinal score computed from repeated speech assessments. Lower is better. Scores above 20 indicate monitoring, above 40 indicate review needed.','exercise':'The cognitive exercises are evidence-based training tasks targeting working memory (Pattern Recall), episodic memory (Word Recall), psychomotor speed (Reaction Time), and executive function (Stroop).','hello':'Hello! I'm your AIDE research assistant. Ask me about risk scores, biomarkers, the TIHM dataset, SHAP explainability, or how to use the dashboard.','hi':'Hi there! Ask me about risk scores, models, IoT features, or anything about the dashboard.'};
+const chatResponses={
+  risk:"Your current risk score is computed from MMSE, CDR, APOE-e4 status, and IoT behavioural features using the combined pipeline (AUC 0.9136). Scores above 60% warrant specialist referral.",
+  mmse:"MMSE scores range 0-30. Normal is 26+, mild impairment is 20-25, moderate is 10-19, and severe is below 10.",
+  iot:"The IoT stream uses 42 features from the TIHM sensor network: PIR motion, door switches, bed mat, blood pressure, and smart plug data to detect behavioural anomalies.",
+  shap:"SHAP explains why the model made a prediction by computing each feature contribution. Positive values push the score higher (more risk).",
+  auc:"AUC measures how well the model distinguishes high vs low risk patients. 0.5 = random, 1.0 = perfect. Our combined AUC of 0.9136 exceeds the clinical utility threshold of 0.9.",
+  tihm:"TIHM is a Nature Scientific Data dataset from 56 dementia patients monitored at home with IoT sensors for 91 days.",
+  cri:"The Cognitive Risk Index (CRI) is a longitudinal score from repeated speech assessments. Lower is better. Scores above 20 indicate monitoring, above 40 indicate review needed.",
+  exercise:"The cognitive exercises target working memory (Pattern Recall), episodic memory (Word Recall), psychomotor speed (Reaction Time), and executive function (Stroop).",
+  hello:"Hello! I am your AIDE research assistant. Ask me about risk scores, biomarkers, the TIHM dataset, SHAP explainability, or how to use the dashboard.",
+  hi:"Hi there! Ask me about risk scores, models, IoT features, or anything about the dashboard."
+};
 async function sendChat(e){
   e.preventDefault();const inp=document.getElementById('fcInp');const msg=inp.value.trim();if(!msg)return;
   inp.value='';
