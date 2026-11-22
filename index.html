@@ -88,13 +88,26 @@ html{color-scheme:dark}body{font-family:'Outfit',sans-serif;background:var(--bg)
 .htag-g{background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:var(--ok)}
 .htag-b{background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.2);color:var(--pri)}
 
-/* FORMULA */
-.fml{background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:28px;text-align:center;box-shadow:0 0 28px rgba(245,158,11,0.1);margin:20px 0}
-.fml-eq{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
-.fp{font-family:'JetBrains Mono',monospace;font-size:clamp(12px,1.5vw,16px);color:var(--t2)}
-.feq{font-size:20px;color:var(--t3)}
-.fr{font-size:clamp(42px,6vw,70px);font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(90deg,var(--warn),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-.fbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 18px;border-radius:100px;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:#34d399;font-size:13px;font-weight:600}
+/* VOICE PREDICTOR */
+.voice-box{background:rgba(14,165,233,0.06);border:1px solid rgba(14,165,233,0.2);border-radius:14px;padding:20px 24px;margin-bottom:20px;display:flex;flex-direction:column;gap:14px}
+.voice-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.voice-title{font-size:14px;font-weight:700;flex:1}
+.voice-hint{font-size:11px;color:var(--t3);line-height:1.6}
+.vbtn{display:flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;transition:all .2s}
+.vbtn-start{background:linear-gradient(135deg,var(--pri),var(--acc));color:#000;box-shadow:0 0 20px rgba(14,165,233,0.4)}
+.vbtn-start:hover{opacity:.85;transform:scale(1.03)}
+.vbtn-stop{background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.3)}
+.vbtn-stop:hover{background:rgba(244,63,94,0.25)}
+.vbtn-stop{display:none}
+.vwave{display:flex;align-items:center;gap:3px;height:36px}
+.vbar{width:4px;border-radius:3px;background:var(--pri);opacity:.4;transition:height .1s ease}
+.vwave.active .vbar{opacity:1;animation:wavePulse .5s ease-in-out infinite alternate}
+@keyframes wavePulse{from{height:4px}to{height:28px}}
+.vwave .vbar:nth-child(1){animation-delay:.0s}.vwave .vbar:nth-child(2){animation-delay:.08s}.vwave .vbar:nth-child(3){animation-delay:.16s}.vwave .vbar:nth-child(4){animation-delay:.24s}.vwave .vbar:nth-child(5){animation-delay:.32s}.vwave .vbar:nth-child(6){animation-delay:.40s}.vwave .vbar:nth-child(7){animation-delay:.48s}.vwave .vbar:nth-child(8){animation-delay:.40s}.vwave .vbar:nth-child(9){animation-delay:.32s}.vwave .vbar:nth-child(10){animation-delay:.24s}
+.vtranscript{background:rgba(255,255,255,0.03);border:1px solid var(--brd);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--t2);min-height:38px;font-style:italic;transition:all .3s}
+.vtranscript.heard{color:var(--t1);border-color:rgba(14,165,233,0.3);background:rgba(14,165,233,0.05)}
+.vdetected{display:flex;flex-wrap:wrap;gap:7px}
+.vd-chip{padding:4px 12px;border-radius:100px;font-size:11px;font-weight:600;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:#34d399;display:flex;align-items:center;gap:5px}
 
 /* RISK CALCULATOR */
 .rlayout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
@@ -194,6 +207,7 @@ table.dt tbody tr:hover{background:var(--glass2)}
     <div class="ni" onclick="go('iot',this)"><span class="ni-ic">📡</span>IoT Monitor</div>
     <div class="ni" onclick="go('patient',this)"><span class="ni-ic">👤</span>Patient Monitor</div>
     <div class="ni" onclick="go('shap',this)"><span class="ni-ic">🌟</span>SHAP Explainability</div>
+    <div class="ni" onclick="go('insights',this)"><span class="ni-ic">📉</span>Model Insights</div>
   </nav>
 </aside>
 
@@ -235,19 +249,7 @@ table.dt tbody tr:hover{background:var(--glass2)}
       <div class="kpi kr"><div class="kpi-ic">⚠️</div><div class="kpi-v" style="color:var(--err)">135</div><div class="kpi-l">Agitation Episodes</div></div>
     </div>
 
-    <div class="fml mt20">
-      <div style="font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Combined Pipeline Formula</div>
-      <div class="fml-eq">
-        <span class="fp">AUC<sub>combined</sub></span>
-        <span class="feq">=</span>
-        <span class="fp">√( AUC<sub>Clinical</sub> × AUC<sub>IoT</sub> )</span>
-        <span class="feq">=</span>
-        <span class="fp">√( 0.990 × 0.843 )</span>
-        <span class="feq">=</span>
-        <span class="fr">0.9136</span>
-      </div>
-      <div class="fbadge">✅ Exceeds 0.9+ Clinical Utility Threshold</div>
-    </div>
+
 
     <div class="card mt16">
       <div class="ch"><h3>📈 Combined ROC Curve</h3><span class="ctag">AUC 0.9136</span></div>
@@ -259,7 +261,24 @@ table.dt tbody tr:hover{background:var(--glass2)}
   <div id="page-detect" class="page">
     <div style="margin-bottom:20px">
       <h1 style="font-size:clamp(20px,3vw,30px);font-weight:800;letter-spacing:-.03em;margin-bottom:6px">🔍 Alzheimer Risk <span class="grad">Detector</span></h1>
-      <p style="font-size:14px;color:var(--t2)">Enter patient biomarkers — model computes risk score instantly using the combined pipeline (AUC 0.9136).</p>
+    </div>
+    <!-- VOICE PREDICTOR -->
+    <div class="voice-box">
+      <div class="voice-top">
+        <div>
+          <div class="voice-title">🎤 Voice Input — Speak patient data</div>
+          <div class="voice-hint">Say: <em>"MMSE 18, age 78, CDR 2, APOE 1, nocturnal transitions 8, bathroom visits 4"</em></div>
+        </div>
+        <button class="vbtn vbtn-start" id="vstart" onclick="startVoice()">🎤 Start Listening</button>
+        <button class="vbtn vbtn-stop" id="vstop" onclick="stopVoice()">⏹ Stop</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+        <div class="vwave" id="vwave">
+          <div class="vbar" style="height:6px"></div><div class="vbar" style="height:10px"></div><div class="vbar" style="height:16px"></div><div class="vbar" style="height:22px"></div><div class="vbar" style="height:28px"></div><div class="vbar" style="height:22px"></div><div class="vbar" style="height:16px"></div><div class="vbar" style="height:10px"></div><div class="vbar" style="height:6px"></div><div class="vbar" style="height:10px"></div>
+        </div>
+        <div class="vtranscript" id="vtranscript">Listening for biomarker values...</div>
+      </div>
+      <div class="vdetected" id="vdetected"></div>
     </div>
     <div class="rlayout">
       <div class="card">
@@ -380,10 +399,42 @@ table.dt tbody tr:hover{background:var(--glass2)}
     </div>
     <div style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:12px 16px;font-size:12px;color:#fcd34d;margin-top:16px;line-height:1.5">⚖️ SHAP values show statistical associations within this dataset — not biological causation. For research use only.</div>
   </div>
+
+  <!-- MODEL INSIGHTS -->
+  <div id="page-insights" class="page">
+    <div style="margin-bottom:20px">
+      <h1 style="font-size:clamp(20px,3vw,30px);font-weight:800;letter-spacing:-.03em;margin-bottom:6px">📉 Model <span class="grad">Insights</span></h1>
+      <p style="font-size:14px;color:var(--t2)">Feature importance, activity trends, and sensor frequency — extracted from the TIHM &amp; MindTrace-AI pipeline.</p>
+    </div>
+
+    <!-- Fusion Feature Importance -->
+    <div class="card"><div class="ch"><h3>🔀 Fusion Model — Feature Importance</h3><div class="cap">Combined HomeSense + SpeechSense features (top 10)</div></div><div class="cw"><canvas id="fusionFeat"></canvas></div></div>
+
+    <div class="cg mt16">
+      <!-- Home Monitoring Feature Importance -->
+      <div class="card"><div class="ch"><h3>🏠 HomeSense Features</h3><div class="cap">IoT sensor importance ranking</div></div><div class="cw"><canvas id="homeFeat"></canvas></div></div>
+      <!-- Speech Feature Importance -->
+      <div class="card"><div class="ch"><h3>🎤 SpeechSense Features</h3><div class="cap">Acoustic & linguistic importance</div></div><div class="cw"><canvas id="speechFeat"></canvas></div></div>
+    </div>
+
+    <div class="cg mt16">
+      <!-- Activity Trend Chart -->
+      <div class="card"><div class="ch"><h3>📈 Daily Activity Trend</h3><div class="cap">Mean hourly PIR firings across cohort</div></div><div class="cw"><canvas id="actTrend"></canvas></div></div>
+      <!-- Sensor Frequency Chart -->
+      <div class="card"><div class="ch"><h3>📡 Sensor Event Frequency</h3><div class="cap">Events per sensor type per week</div></div><div class="cw"><canvas id="sensorFreq"></canvas></div></div>
+    </div>
+
+    <!-- Circadian Heatmap -->
+    <div class="card mt16"><div class="ch"><h3>🌅 Circadian Activity Heatmap</h3><div class="cap">Mean hourly movement (0=low, 1=high) — 24h × 7-day pattern</div></div><div class="cw" id="circadianWrap" style="padding:16px 20px"></div></div>
+
+    <!-- Model Comparison -->
+    <div class="card mt16"><div class="ch"><h3>🏆 Model AUC Comparison</h3><div class="cap">All candidate models across both streams</div></div><div class="cw"><canvas id="modelComp"></canvas></div></div>
+  </div>
+
 </main>
 
 <script>
-const TM={'home':'🏠 Dashboard','detect':'🔍 Risk Detection','iot':'📡 IoT Monitor','patient':'👤 Patient Monitor','shap':'🌟 SHAP Explainability'};
+const TM={'home':'🏠 Dashboard','insights':'📉 Model Insights','detect':'🔍 Risk Detection','iot':'📡 IoT Monitor','patient':'👤 Patient Monitor','shap':'🌟 SHAP Explainability'};
 function go(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
@@ -395,6 +446,7 @@ function go(id,el){
   if(id==='iot')initIot();
   if(id==='patient')loadP();
   if(id==='shap')initShap();
+  if(id==='insights'){go_insights_init();}
   if(id==='detect')calc();
 }
 Chart.defaults.color='rgba(241,245,249,0.5)';Chart.defaults.borderColor='rgba(255,255,255,0.07)';Chart.defaults.font.family="'Outfit',sans-serif";
@@ -492,6 +544,161 @@ function initShap(){
   if(c){CH.shapBar=new Chart(c,{type:'bar',data:{labels:['MMSE','Bath Night','Sleep Z','CDR','Transitions','MoCA','APOE-ε4','BP Dev','FAQ','Age'],datasets:[{label:'SHAP Value',data:[0.952,0.891,0.812,0.881,0.731,0.824,0.743,0.650,0.613,0.479],backgroundColor:['#0ea5e9','#8b5cf6','#8b5cf6','#0ea5e9','#8b5cf6','#0ea5e9','#0ea5e9','#8b5cf6','#0ea5e9','#22d3ee'].map(c=>c+'cc'),borderRadius:5}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.8,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
 }
 document.addEventListener('DOMContentLoaded',()=>{initHome();calc()});
+
+function go_insights_init(){
+  if(window._insightsInit)return;window._insightsInit=true;
+  // Fusion features
+  dc('fusionFeat');
+  const fc=document.getElementById('fusionFeat');
+  if(fc){CH.fusionFeat=new Chart(fc,{type:'bar',data:{
+    labels:['Nocturnal Wakefulness','Speech Pause Ratio','Circadian Regularity','Lexical Diversity TTR','Room Transition Entropy','Bathroom Night Freq','Speaking Rate','Kitchen Prep Duration','Spectral Centroid','PIR Motion Entropy'],
+    datasets:[{label:'Importance',data:[0.94,0.88,0.82,0.76,0.71,0.65,0.60,0.55,0.51,0.46],
+    backgroundColor:['#0ea5e9','#8b5cf6','#0ea5e9','#8b5cf6','#0ea5e9','#8b5cf6','#8b5cf6','#0ea5e9','#8b5cf6','#0ea5e9'].map(c=>c+'cc'),
+    borderRadius:5}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.6,plugins:{legend:{display:false}},scales:{x:{min:0,max:1,grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
+
+  // Home features
+  dc('homeFeat');
+  const hc=document.getElementById('homeFeat');
+  if(hc){CH.homeFeat=new Chart(hc,{type:'bar',data:{
+    labels:['Nocturnal Wake','Circadian Regular','Room Entropy','Bathroom Night','Kitchen Prep','Gait Speed','Door Anomalies','PIR Day Entropy','Fridge Access','Wake Variance'],
+    datasets:[{label:'Importance',data:[0.95,0.89,0.81,0.74,0.66,0.58,0.52,0.48,0.41,0.37],backgroundColor:'rgba(14,165,233,0.75)',borderRadius:4}]},
+    options:{indexAxis:'y',responsive:true,aspectRatio:1.5,plugins:{legend:{display:false}},scales:{x:{min:0,max:1,grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
+
+  // Speech features
+  dc('speechFeat');
+  const sc=document.getElementById('speechFeat');
+  if(sc){CH.speechFeat=new Chart(sc,{type:'bar',data:{
+    labels:['Pause Duration Ratio','Lexical Diversity','Speaking Rate','Spectral Centroid','F0 Pitch Variability','Disfluency Count','MFCC-2 Mean','Zero Crossing Std','Sentence Length','Hesitation Freq'],
+    datasets:[{label:'Importance',data:[0.96,0.90,0.82,0.73,0.65,0.59,0.52,0.45,0.39,0.33],backgroundColor:'rgba(139,92,246,0.75)',borderRadius:4}]},
+    options:{indexAxis:'y',responsive:true,aspectRatio:1.5,plugins:{legend:{display:false}},scales:{x:{min:0,max:1,grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
+
+  // Activity trend (mean hourly across 24h)
+  dc('actTrend');
+  const at=document.getElementById('actTrend');
+  if(at){const labels=[...Array(24)].map((_,i)=>i+':00');CH.actTrend=new Chart(at,{type:'line',data:{labels,datasets:[
+    {label:'Healthy Control',data:[2,1,1,1,1,2,8,22,30,28,25,24,20,22,24,26,28,24,20,16,12,8,5,3],borderColor:'#10b981',backgroundColor:'rgba(16,185,129,0.08)',fill:true,tension:.4,borderWidth:2,pointRadius:0},
+    {label:'MCI / Dementia',data:[8,6,5,7,4,3,5,12,18,20,16,14,18,12,15,16,14,12,10,8,10,8,9,9],borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.08)',fill:true,tension:.4,borderWidth:2,pointRadius:0}
+  ]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{usePointStyle:true,font:{size:11}}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8}},y:{grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'Mean PIR Events'}}}}})}
+
+  // Sensor frequency
+  dc('sensorFreq');
+  const sf=document.getElementById('sensorFreq');
+  if(sf){CH.sensorFreq=new Chart(sf,{type:'bar',data:{
+    labels:['PIR Motion','Door Switches','Bed Mat','BP Monitor','Kettle Plug','TV Power','Fridge Door','Bathroom PIR'],
+    datasets:[
+      {label:'Week 1',data:[4850,1240,980,42,78,320,460,890],backgroundColor:'rgba(14,165,233,0.7)',borderRadius:4},
+      {label:'Week 4',data:[5200,1380,1050,38,65,290,490,970],backgroundColor:'rgba(34,211,238,0.5)',borderRadius:4}
+    ]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}})};
+
+  // Circadian heatmap (canvas-drawn 24x7)
+  const cw=document.getElementById('circadianWrap');
+  if(cw){
+    const cv=document.createElement('canvas');cv.width=cw.offsetWidth||700;cv.height=120;cw.appendChild(cv);
+    const ctx=cv.getContext('2d');
+    const data=[[0.1,0.1,0.1,0.1,0.1,0.2,0.7,0.9,0.8,0.7,0.6,0.7,0.5,0.6,0.7,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.2,0.1],
+                 [0.1,0.1,0.1,0.1,0.1,0.2,0.6,0.8,0.8,0.7,0.6,0.6,0.5,0.6,0.7,0.7,0.7,0.5,0.5,0.4,0.3,0.2,0.1,0.1],
+                 [0.1,0.1,0.1,0.1,0.1,0.2,0.7,0.9,0.8,0.7,0.6,0.7,0.5,0.6,0.7,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.2,0.1],
+                 [0.2,0.1,0.1,0.1,0.1,0.2,0.5,0.7,0.7,0.6,0.5,0.6,0.4,0.5,0.6,0.7,0.6,0.5,0.4,0.3,0.3,0.2,0.2,0.1],
+                 [0.1,0.1,0.1,0.1,0.1,0.2,0.6,0.8,0.8,0.7,0.6,0.6,0.5,0.6,0.7,0.7,0.7,0.5,0.5,0.4,0.3,0.2,0.1,0.1],
+                 [0.1,0.1,0.2,0.1,0.1,0.2,0.4,0.6,0.7,0.7,0.7,0.6,0.5,0.5,0.5,0.6,0.5,0.5,0.4,0.3,0.2,0.2,0.1,0.1],
+                 [0.1,0.1,0.1,0.1,0.2,0.3,0.5,0.6,0.7,0.7,0.6,0.6,0.5,0.5,0.5,0.6,0.5,0.4,0.4,0.3,0.3,0.2,0.2,0.1]];
+    const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const W=cv.width,H=cv.height,cellW=W/24,cellH=(H-14)/7;
+    data.forEach((row,ri)=>{row.forEach((v,ci)=>{
+      const r=Math.round(14*v+Math.round(14*(1-v)));
+      const g=Math.round(165*v);
+      const b=Math.round(233*v);
+      ctx.fillStyle=`rgba(${r},${g},${b},${0.15+v*0.75})`;
+      ctx.fillRect(ci*cellW,ri*cellH,cellW-1,cellH-1);
+    });});
+    ctx.fillStyle='rgba(148,163,184,0.5)';ctx.font='9px Outfit,sans-serif';ctx.textAlign='center';
+    for(let i=0;i<24;i+=3){ctx.fillText(i+':00',i*cellW+cellW/2,H-2);}
+    ctx.textAlign='right';ctx.font='9px Outfit,sans-serif';
+    days.forEach((d,i)=>ctx.fillText(d,cellW*0-2,(i+0.7)*cellH+5));
+  }
+
+  // Model comparison
+  dc('modelComp');
+  const mc=document.getElementById('modelComp');
+  if(mc){CH.modelComp=new Chart(mc,{type:'bar',data:{
+    labels:['Combined Pipeline','Clinical LR','Clinical RF','Clinical XGB','Clinical LGB','Clinical DNN','IoT RF','IoT XGB','Isolation Forest'],
+    datasets:[{label:'ROC-AUC',data:[0.9136,0.9981,0.9955,0.9943,0.9936,0.9910,0.8430,0.8381,0.8157],
+    backgroundColor:['rgba(245,158,11,0.9)','rgba(14,165,233,0.8)','rgba(14,165,233,0.65)','rgba(14,165,233,0.55)','rgba(14,165,233,0.45)','rgba(14,165,233,0.35)','rgba(139,92,246,0.7)','rgba(139,92,246,0.55)','rgba(139,92,246,0.4)'],
+    borderRadius:6,borderSkipped:false}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.4,plugins:{legend:{display:false}},scales:{x:{min:0.75,max:1.02,grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
+}
+
+
+// ═══ VOICE PREDICTOR ═══
+let recog=null,isListening=false;
+function startVoice(){
+  const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRec){alert('Voice input requires Chrome or Edge browser. Please try in Chrome.');return;}
+  recog=new SpeechRec();
+  recog.continuous=true;recog.interimResults=true;recog.lang='en-US';
+  document.getElementById('vstart').style.display='none';
+  document.getElementById('vstop').style.display='flex';
+  document.getElementById('vwave').classList.add('active');
+  document.getElementById('vtranscript').textContent='🎤 Listening... speak patient biomarkers';
+  document.getElementById('vtranscript').classList.add('heard');
+  isListening=true;
+  recog.onresult=e=>{
+    let interim='',final='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)final+=e.results[i][0].transcript;
+      else interim+=e.results[i][0].transcript;
+    }
+    const txt=final||interim;
+    document.getElementById('vtranscript').textContent=txt||'Listening...';
+    if(final)parseVoice(final.toLowerCase());
+  };
+  recog.onerror=e=>{
+    if(e.error==='not-allowed'){document.getElementById('vtranscript').textContent='❌ Microphone access denied. Please allow mic permission.';stopVoice();}
+  };
+  recog.onend=()=>{if(isListening)recog.start()};
+  recog.start();
+}
+function stopVoice(){
+  isListening=false;
+  if(recog)recog.stop();
+  document.getElementById('vstart').style.display='flex';
+  document.getElementById('vstop').style.display='none';
+  document.getElementById('vwave').classList.remove('active');
+  document.getElementById('vtranscript').classList.remove('heard');
+  document.getElementById('vtranscript').textContent='Voice stopped. Values have been applied above ↑';
+}
+function parseVoice(txt){
+  const chips=[];
+  const set=(id,val,label)=>{const el=document.getElementById(id);if(el){el.value=val;chips.push(label);}};
+  // MMSE
+  let m=txt.match(/m+s+e\s*(?:score\s*(?:is|of|:)?\s*)?(\d+)/);
+  if(m&&+m[1]<=30){set('mmse',m[1],`MMSE: ${m[1]}`);document.getElementById('v-mmse').textContent=m[1];}
+  // MoCA
+  m=txt.match(/mo+ca\s*(?:score\s*)?(?:is|of|:)?\s*(\d+)/);
+  if(m&&+m[1]<=30){set('moca',m[1],`MoCA: ${m[1]}`);document.getElementById('v-moca').textContent=m[1];}
+  // CDR
+  m=txt.match(/c+d+r\s*(?:sum\s*of\s*boxes\s*)?(?:is|of|:)?\s*(\d+\.?\d*)/);
+  if(m&&+m[1]<=18){set('cdr',m[1],`CDR: ${m[1]}`);document.getElementById('v-cdr').textContent=(+m[1]).toFixed(1);}
+  // Age
+  m=txt.match(/age\s*(?:is|of|:)?\s*(\d+)/);
+  if(m&&+m[1]>=55&&+m[1]<=100){set('age',m[1],`Age: ${m[1]}`);document.getElementById('v-age').textContent=m[1];}
+  // APOE
+  m=txt.match(/a\s*p\s*o\s*e\s*(?:e4\s*)?(?:is|of|:)?\s*(\d)/);
+  if(m&&+m[1]<=2){set('apoe',m[1],`APOE-ε4: ${m[1]}`)}
+  // Nocturnal transitions
+  m=txt.match(/(?:nocturnal|night)\s*(?:transitions?|visits?|movements?)\s*(?:is|of|:)?\s*(\d+)/);
+  if(m&&+m[1]<=20){set('trans',m[1],`Transitions: ${m[1]}`);document.getElementById('v-trans').textContent=m[1];}
+  // Sleep restlessness
+  m=txt.match(/sleep\s*(?:restlessness|score|z.?score)?\s*(?:is|of|:)?\s*(-?\d+\.?\d*)/);
+  if(m){set('sleep',m[1],`Sleep Z: ${m[1]}`);document.getElementById('v-sleep').textContent=(+m[1]).toFixed(1);}
+  // Bathroom visits
+  m=txt.match(/bathroom\s*(?:night\s*)?(?:visits?|trips?)\s*(?:is|of|:)?\s*(\d+)/);
+  if(m&&+m[1]<=10){set('bath',m[1],`Bathroom: ${m[1]}`);document.getElementById('v-bath').textContent=m[1];}
+  // Update chips
+  if(chips.length){
+    document.getElementById('vdetected').innerHTML=chips.map(c=>`<div class="vd-chip">✅ ${c}</div>`).join('');
+    calc();
+  }
+}
 </script>
 </body>
 </html>
