@@ -6,242 +6,6 @@
 <title>AIDE-TIHM | Early Alzheimer Detection</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script>
-// ══ NEURAL CANVAS ══
-(function(){
-  const cv=document.getElementById('neuralCanvas');
-  if(!cv)return;
-  const ctx=cv.getContext('2d');
-  let raf,pts=[];
-  const resize=()=>{cv.width=window.innerWidth;cv.height=window.innerHeight;pts=[];for(let i=0;i<50;i++)pts.push({x:Math.random()*cv.width,y:Math.random()*cv.height,s:.5+Math.random(),sz:1+Math.random()*2,o:.1+Math.random()*.4})};
-  const draw=()=>{
-    ctx.clearRect(0,0,cv.width,cv.height);
-    const t=Date.now()*.001;
-    for(let i=0;i<3;i++){ctx.beginPath();ctx.strokeStyle='rgba(14,165,233,0.04)';ctx.lineWidth=1;ctx.moveTo(0,cv.height*(.3+i*.2));for(let x=0;x<cv.width;x+=8){ctx.lineTo(x,cv.height*(.3+i*.2)+Math.sin(x*.002+t+i)*45);}ctx.stroke();}
-    pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx.fillStyle=`rgba(34,211,238,${p.o})`;ctx.fill();p.x+=p.s;if(p.x>cv.width)p.x=-10;});
-    raf=requestAnimationFrame(draw);};
-  resize();draw();window.addEventListener('resize',resize);
-})();
-
-// ══ NEURAL STREAM PAGE ══
-let _neuralInit=false;
-function initNeural(){
-  if(_neuralInit)return;_neuralInit=true;
-  // CRI gauge animation
-  const arc=document.getElementById('criArc'),score=32,circ=2*Math.PI*78;
-  arc.style.strokeDashoffset=circ-(circ*score/100);
-  // Activity feed
-  const acts=[
-    {ic:'🎙️',bg:'rgba(14,165,233,0.15)',title:'Speech Assessment',time:'Jun 12 · 10:32am',badge:'Elevated (32)',bc:'rgba(244,63,94,0.15)',tc:'#fb7185'},
-    {ic:'🧩',bg:'rgba(139,92,246,0.15)',title:'Pattern Recall Game',time:'Jun 10 · 3:14pm',badge:'Score: 1,400',bc:'rgba(14,165,233,0.15)',tc:'var(--pri)'},
-    {ic:'🎙️',bg:'rgba(14,165,233,0.15)',title:'Speech Assessment',time:'May 28 · 11:05am',badge:'Moderate (24)',bc:'rgba(245,158,11,0.15)',tc:'#fbbf24'},
-    {ic:'⚡',bg:'rgba(16,185,129,0.15)',title:'Reaction Time Test',time:'May 25 · 9:48am',badge:'241ms',bc:'rgba(16,185,129,0.15)',tc:'#34d399'},
-    {ic:'🏠',bg:'rgba(34,211,238,0.15)',title:'IoT Anomaly Flagged',time:'May 22 · 2:17am',badge:'Bathroom 4x',bc:'rgba(245,158,11,0.15)',tc:'#fbbf24'}
-  ];
-  document.getElementById('actFeed').innerHTML=acts.map(a=>`<div class="af-item"><div class="af-ic" style="background:${a.bg}">${a.ic}</div><div class="af-info"><div class="af-title">${a.title}</div><div class="af-time">${a.time}</div></div><div class="af-badge" style="background:${a.bc};color:${a.tc}">${a.badge}</div></div>`).join('');
-  // Radar chart
-  dc('radarC');
-  const rc=document.getElementById('radarC');
-  if(rc){CH.radar=new Chart(rc,{type:'radar',data:{labels:['Speech Rate','Pause Ratio','Vocab Richness','Semantic Density','Phonation Time'],datasets:[
-    {label:'Patient',data:[85,45,92,78,65],borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.2)',borderWidth:2,pointBackgroundColor:'#0ea5e9'},
-    {label:'Healthy Baseline',data:[100,20,100,100,100],borderColor:'rgba(255,255,255,0.15)',backgroundColor:'rgba(255,255,255,0.03)',borderWidth:1,borderDash:[4,4],pointRadius:0}
-  ]},options:{responsive:true,aspectRatio:1.4,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{r:{grid:{color:'rgba(255,255,255,0.08)'},ticks:{display:false},pointLabels:{font:{size:11},color:'rgba(148,163,184,0.8)'}}}}})}
-  // CRI Trend
-  dc('criTrend');
-  const ct=document.getElementById('criTrend');
-  if(ct){CH.criTrend=new Chart(ct,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'CRI Score',data:[12,14,13,18,24,32],borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.1)',fill:true,tension:.4,borderWidth:3,pointRadius:5,pointBackgroundColor:['#10b981','#10b981','#10b981','#f59e0b','#f59e0b','#f43f5e']}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{min:0,max:50,grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'CRI (lower=better)'}}}}})}
-  // Live EEG
-  let eegX=0;
-  const ec=document.getElementById('liveEEG');
-  if(ec){const ectx=ec.getContext('2d');ec.width=ec.offsetWidth;ec.height=80;
-    setInterval(()=>{ectx.fillStyle='rgba(2,6,23,0.3)';ectx.fillRect(0,0,ec.width,ec.height);
-      ectx.strokeStyle='rgba(14,165,233,0.8)';ectx.lineWidth=1.5;ectx.beginPath();
-      const y=40+Math.sin(eegX*.15)*(18+Math.sin(eegX*.07)*10)+Math.random()*6-3;
-      if(eegX===0)ectx.moveTo(0,y);else ectx.lineTo(eegX%ec.width,y);ectx.stroke();
-      if(eegX%ec.width===0)ectx.clearRect(0,0,ec.width,ec.height);eegX++;},40);}
-  // Live feed ticker
-  const events=['[PIR-HAL] Motion detected — 03:14:22','[BP-MON] Systolic 148mmHg — elevated','[DOOR-FRT] Front door opened — 02:51:07','[BED-MAT] Bed exit #3 — 03:22:14','[PIR-BATH] Bathroom visit #4 — 03:35:51','[NLP] Pause ratio 0.38 — above threshold'];
-  let ei=0;
-  const lf=document.getElementById('liveFeed');
-  if(lf){setInterval(()=>{lf.innerHTML=`> ${events[ei%events.length]}
-`+lf.innerHTML.split('
-').slice(0,4).join('
-');ei++;},2200);}
-}
-
-// ══ SPEECH ASSESSMENT ══
-let saRecording=false,saRecog=null,saStart=0,saWords=[];
-function toggleSpeechRec(){
-  const btn=document.getElementById('saRecBtn');
-  if(!saRecording){
-    saRecording=true;saStart=Date.now();saWords=[];
-    btn.textContent='⏹ Stop Recording';btn.classList.add('recording');
-    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-    if(SR){saRecog=new SR();saRecog.continuous=true;saRecog.interimResults=false;saRecog.lang='en-US';
-      saRecog.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal){saWords=saWords.concat(e.results[i][0].transcript.split(' ').filter(w=>w.trim()));}}};saRecog.start();}
-  } else {
-    saRecording=false;btn.textContent='🎤 Start Recording';btn.classList.remove('recording');
-    if(saRecog)saRecog.stop();
-    const dur=(Date.now()-saStart)/1000;
-    const wps=saWords.length>0?(saWords.length/Math.max(dur,1)).toFixed(2):((2.5+Math.random()).toFixed(2));
-    const unique=new Set(saWords.map(w=>w.toLowerCase())).size;
-    const ttr=saWords.length>0?Math.min(1,unique/saWords.length).toFixed(2):((.55+Math.random()*.35).toFixed(2));
-    const pauseRatio=(.28+Math.random()*.2).toFixed(2);
-    const disfluency=Math.floor(Math.random()*8+2);
-    const coherence=(.62+Math.random()*.3).toFixed(2);
-    const aucContrib=((.82+Math.random()*.1)).toFixed(3);
-    document.getElementById('sm-rate').textContent=wps+' WPS';document.getElementById('sm-rate').style.color=wps<2?'#fb7185':'#fbbf24';
-    document.getElementById('sm-pause').textContent=pauseRatio;document.getElementById('sm-pause').style.color=pauseRatio>.3?'#fb7185':'#fbbf24';
-    document.getElementById('sm-ttr').textContent=ttr;document.getElementById('sm-ttr').style.color=ttr>.7?'#34d399':'#fbbf24';
-    document.getElementById('sm-dis').textContent=disfluency+' events';document.getElementById('sm-dis').style.color=disfluency>5?'#fb7185':'#fbbf24';
-    document.getElementById('sm-coh').textContent=coherence;document.getElementById('sm-coh').style.color=coherence>.7?'#34d399':'#fbbf24';
-    document.getElementById('sm-auc').textContent=aucContrib;
-    document.getElementById('saResult').classList.add('show');
-    const flags=[];
-    if(wps<2.5)flags.push('⚠ Speaking rate '+wps+' WPS — below 2.5 threshold');
-    if(pauseRatio>.3)flags.push('⚠ Pause ratio '+pauseRatio+' — elevated hesitation');
-    if(ttr<.65)flags.push('⚠ Lexical diversity TTR '+ttr+' — reduced vocabulary range');
-    if(disfluency>5)flags.push('⚠ '+disfluency+' disfluency events detected');
-    document.getElementById('speechFlags').innerHTML=flags.length?flags.join('<br>'):('✅ No critical speech flags detected');
-    // Update speech radar
-    dc('speechRadar');
-    const src=document.getElementById('speechRadar');
-    if(src){CH.speechRadar=new Chart(src,{type:'radar',data:{labels:['Speech Rate','Lexical Div.','Semantic Coh.','Pause Ctrl','Phonation'],datasets:[
-      {label:'Current',data:[Math.round(wps/4*100),Math.round(ttr*100),Math.round(coherence*100),Math.round((1-pauseRatio)*100),75],borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.15)',borderWidth:2,pointBackgroundColor:'#f43f5e'},
-      {label:'Healthy',data:[100,100,100,100,100],borderColor:'rgba(255,255,255,0.1)',backgroundColor:'rgba(255,255,255,0.03)',borderWidth:1,borderDash:[4,4],pointRadius:0}
-    ]},options:{responsive:true,aspectRatio:1.3,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{r:{grid:{color:'rgba(255,255,255,0.08)'},ticks:{display:false},pointLabels:{font:{size:11},color:'rgba(148,163,184,0.8)'}}}}});}
-  }
-}
-
-// ══ COGNITIVE EXERCISES ══
-let exScores={pattern:null,word:null,reaction:null,stroop:null};
-let exTimer=null;
-function startEx(type){
-  document.getElementById('exPanel').style.display='block';
-  document.getElementById('exPanel').scrollIntoView({behavior:'smooth'});
-  if(type==='pattern')runPattern();
-  else if(type==='word')runWord();
-  else if(type==='reaction')runReaction();
-  else if(type==='stroop')runStroop();
-}
-function closeEx(){document.getElementById('exPanel').style.display='none';clearTimeout(exTimer);}
-
-function runPattern(){
-  document.getElementById('exTitle').textContent='🔵 Pattern Recall';
-  let level=1,pattern=[],userInput=[],gameState='idle';
-  const cells=['🔵','🟣','🟢','🟡','🔴','⚪','🟠','🔷','🌀'];
-  const render=()=>{
-    document.getElementById('exContent').innerHTML=`
-      <p style="font-size:13px;color:var(--t2);margin-bottom:12px">Level ${level} — Watch the sequence, then repeat it.</p>
-      <div class="pg-grid" id="pgGrid">${[...Array(9)].map((_,i)=>`<div class="pg-cell" id="pgc${i}" onclick="pgClick(${i})">${cells[i]}</div>`).join('')}</div>
-      <div style="text-align:center;margin-top:12px"><button class="btn bp" id="pgStart" onclick="pgStart()" style="font-size:12px;padding:9px 20px">▶ Start Level ${level}</button><span style="font-size:12px;color:var(--t3);margin-left:10px" id="pgStatus"></span></div>`;
-    window.pgClick=(i)=>{
-      if(gameState!=='playing')return;
-      userInput.push(i);
-      const c=document.getElementById('pgc'+i);
-      if(i!==pattern[userInput.length-1]){c.classList.add('wrong');gameState='fail';document.getElementById('pgStatus').textContent='❌ Wrong! Score: '+(level-1)*100;return;}
-      c.classList.add('correct');setTimeout(()=>c.classList.remove('correct'),300);
-      if(userInput.length===pattern.length){gameState='idle';level++;exScores.pattern=(level-1)*100;document.getElementById('score-pattern').textContent='Best: '+exScores.pattern;document.getElementById('pgStart').textContent='▶ Level '+level;document.getElementById('pgStatus').textContent='✅ Correct! Next level.';updateTotalEx();}
-    };
-    window.pgStart=()=>{
-      pattern=[...Array(level)].map(()=>Math.floor(Math.random()*9));userInput=[];gameState='showing';
-      document.getElementById('pgStart').disabled=true;document.getElementById('pgStatus').textContent='Watch...';
-      pattern.forEach((p,i)=>{setTimeout(()=>{const c=document.getElementById('pgc'+p);if(c){c.classList.add('lit');setTimeout(()=>c.classList.remove('lit'),500);}
-        if(i===pattern.length-1)setTimeout(()=>{gameState='playing';document.getElementById('pgStart').disabled=false;document.getElementById('pgStatus').textContent='Your turn!';},600+i*700);},700+i*700);});
-    };
-  };render();
-}
-
-function runWord(){
-  document.getElementById('exTitle').textContent='📝 Word Recall';
-  const wordList=['Apple','River','Doctor','Purple','Courage','Elephant','Whisper','Mountain','Library','Rainbow','Coffee','Silence','Journey','Thunder','Candle'];
-  const chosen=wordList.sort(()=>Math.random()-.5).slice(0,8);
-  let phase='study',userAns=[],timeLeft=30;
-  const render=()=>{
-    if(phase==='study'){
-      document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:10px">Memorise these words. You have <strong id="wrTimer">${timeLeft}</strong>s.</p><div class="wr-words">${chosen.map(w=>`<div class="wr-word">${w}</div>`).join('')}</div>`;
-      const ti=setInterval(()=>{timeLeft--;const el=document.getElementById('wrTimer');if(el)el.textContent=timeLeft;if(timeLeft<=0){clearInterval(ti);phase='recall';render();}},1000);
-    } else {
-      document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:10px">Type the words you remember (one at a time, press Enter):</p><div class="wr-words" id="wrAns"></div><input class="wr-input" id="wrInp" placeholder="Type a word and press Enter..."/><div style="margin-top:12px;font-size:12px;color:var(--t3)" id="wrScore"></div>`;
-      document.getElementById('wrInp').addEventListener('keydown',e=>{
-        if(e.key==='Enter'){const v=e.target.value.trim();if(!v)return;userAns.push(v.toLowerCase());e.target.value='';
-          document.getElementById('wrAns').innerHTML=userAns.map(w=>`<div class="wr-word" style="background:${chosen.map(c=>c.toLowerCase()).includes(w)?'rgba(16,185,129,0.15)':'rgba(244,63,94,0.12)'};border-color:${chosen.map(c=>c.toLowerCase()).includes(w)?'rgba(16,185,129,0.3)':'rgba(244,63,94,0.3)'};color:${chosen.map(c=>c.toLowerCase()).includes(w)?'#34d399':'#fb7185'}">${w}</div>`).join('');
-          const correct=userAns.filter(w=>chosen.map(c=>c.toLowerCase()).includes(w)).length;
-          document.getElementById('wrScore').textContent=`✅ ${correct}/${chosen.length} correct (${Math.round(correct/chosen.length*100)}%)`;
-          exScores.word=correct*100;document.getElementById('score-word').textContent='Best: '+exScores.word;updateTotalEx();}});
-    }
-  };render();
-}
-
-function runReaction(){
-  document.getElementById('exTitle').textContent='⚡ Reaction Time';
-  let times=[],waiting=false,start=0;
-  const render=()=>{document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:12px">Click the circle as fast as possible when it turns green! 5 rounds.</p><div id="rtBox" style="display:flex;justify-content:center;align-items:center;height:180px"><div id="rtCircle" style="width:120px;height:120px;border-radius:50%;background:var(--surf2);border:3px solid var(--brd);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;transition:all .2s" onclick="rtClick()">Wait...</div></div><div style="text-align:center;font-size:12px;color:var(--t3)" id="rtScore"></div>`;
-    window.rtClick=()=>{
-      const c=document.getElementById('rtCircle');
-      if(!waiting){if(times.length>=5)return;const delay=1000+Math.random()*2000;c.textContent='Waiting...';c.style.background='var(--surf2)';c.style.borderColor='var(--brd)';waiting=true;
-        setTimeout(()=>{c.style.background='rgba(16,185,129,0.4)';c.style.borderColor='#10b981';c.textContent='CLICK!';c.style.boxShadow='0 0 30px rgba(16,185,129,0.5)';start=Date.now();},delay);
-      } else {const rt=Date.now()-start;times.push(rt);waiting=false;c.style.background='rgba(14,165,233,0.2)';c.style.borderColor='var(--pri)';c.textContent=rt+'ms';c.style.boxShadow='none';
-        if(times.length>=5){const avg=Math.round(times.reduce((a,b)=>a+b,0)/times.length);document.getElementById('rtScore').innerHTML=`✅ Avg: <strong>${avg}ms</strong> (${avg<250?'Excellent':avg<350?'Good':'Slow'})`;exScores.reaction=Math.max(0,500-avg);document.getElementById('score-reaction').textContent='Best: '+exScores.reaction+'pts';updateTotalEx();}
-        else{c.textContent='Again ('+(5-times.length)+' left)';}}
-    };
-  };render();
-}
-
-function runStroop(){
-  document.getElementById('exTitle').textContent='🎨 Stroop Colour Test';
-  const colours=['Red','Blue','Green','Yellow','Purple'];const colMap={Red:'#f43f5e',Blue:'#0ea5e9',Green:'#10b981',Yellow:'#f59e0b',Purple:'#8b5cf6'};
-  let round=0,score=0,totalRounds=10;
-  const nextRound=()=>{
-    if(round>=totalRounds){document.getElementById('exContent').innerHTML=`<div style="text-align:center;padding:30px"><div style="font-size:48px;font-weight:900;color:var(--ok)">${score}/${totalRounds}</div><div style="font-size:14px;color:var(--t2);margin-top:8px">Score: ${Math.round(score/totalRounds*100)}%</div></div>`;exScores.stroop=Math.round(score/totalRounds*100);document.getElementById('score-stroop').textContent='Best: '+exScores.stroop+'%';updateTotalEx();return;}
-    const inkCol=colours[Math.floor(Math.random()*colours.length)];let textWord;do{textWord=colours[Math.floor(Math.random()*colours.length)];}while(textWord===inkCol);
-    document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:16px">What colour is the INK? (Round ${round+1}/${totalRounds}) Score: ${score}</p><div style="text-align:center;font-size:56px;font-weight:900;color:${colMap[inkCol]};margin:20px 0;text-shadow:0 0 20px ${colMap[inkCol]}44">${textWord}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${colours.map(c=>`<button onclick="stroopAns('${c}','${inkCol}')" class="btn" style="padding:9px 18px;border-radius:8px;background:${colMap[c]}22;border:2px solid ${colMap[c]}55;color:${colMap[c]};font-size:13px;font-weight:700;cursor:pointer">${c}</button>`).join('')}</div>`;
-    window.stroopAns=(chosen,correct)=>{if(chosen===correct)score++;round++;nextRound();};
-  };document.getElementById('exContent').innerHTML='<div style="text-align:center;padding:20px"><button class="btn bp" onclick="nextStroopRound()" style="font-size:14px;padding:12px 28px">▶ Start Stroop Test</button></div>';window.nextStroopRound=nextRound;
-}
-
-function updateTotalEx(){const t=Object.values(exScores).filter(v=>v!==null).length;const el=document.getElementById('totalEx');if(el)el.textContent=t;}
-
-// ══ ANALYTICS PAGE ══
-let _analyticsInit=false;
-function initAnalytics(){
-  if(_analyticsInit)return;_analyticsInit=true;
-  dc('analyticsRisk');
-  const ar=document.getElementById('analyticsRisk');
-  if(ar){CH.analyticsRisk=new Chart(ar,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'CRI Score',data:[12,14,13,18,24,32],borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.1)',fill:true,tension:.4,borderWidth:3,pointRadius:5,pointBackgroundColor:['#10b981','#10b981','#10b981','#f59e0b','#f59e0b','#f43f5e']},{label:'Safe Zone',data:[20,20,20,20,20,20],borderColor:'rgba(16,185,129,0.4)',borderDash:[6,4],borderWidth:1,pointRadius:0}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{min:0,max:50,grid:{color:'rgba(255,255,255,0.05)'}}}}});}
-  dc('analyticsEx');
-  const ae=document.getElementById('analyticsEx');
-  if(ae){CH.analyticsEx=new Chart(ae,{type:'bar',data:{labels:['Pattern','Word Recall','Reaction','Stroop'],datasets:[{label:'Last Score',data:[1200,600,320,80],backgroundColor:['rgba(14,165,233,0.7)','rgba(139,92,246,0.7)','rgba(16,185,129,0.7)','rgba(245,158,11,0.7)'],borderRadius:6}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}});}
-  dc('analyticsAnom');
-  const aa=document.getElementById('analyticsAnom');
-  if(aa){const labels=[...Array(30)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return d.getDate()+'/'+( d.getMonth()+1)});
-    const anom=labels.map((_,i)=>+(1.1+Math.sin(i*.4)*.4+(i>20?.3+Math.random()*.3:Math.random()*.2)).toFixed(2));
-    CH.analyticsAnom=new Chart(aa,{type:'line',data:{labels,datasets:[{label:'Anomaly Score',data:anom,borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.08)',fill:true,tension:.4,borderWidth:2,pointRadius:0},{label:'Alert Threshold',data:labels.map(()=>2.0),borderColor:'rgba(244,63,94,0.5)',borderDash:[6,4],borderWidth:1.5,pointRadius:0}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8}},y:{grid:{color:'rgba(255,255,255,0.05)'},min:0,max:3}}}});}
-}
-
-// ══ FLOATING CHAT ══
-let chatOpen=false;
-function toggleChat(){chatOpen=!chatOpen;document.getElementById('fcPanel').classList.toggle('open',chatOpen);}
-const chatResponses={'risk':'Your current risk score is computed from MMSE, CDR, APOE-ε4 status, and IoT behavioural features using the combined pipeline (AUC 0.9136). Scores above 60% warrant specialist referral.','mmse':'MMSE (Mini-Mental State Examination) scores range 0–30. Normal is ≥26, mild impairment is 20–25, moderate is 10–19, and severe is <10.','iot':'The IoT stream uses 42 features from the TIHM sensor network — PIR motion, door switches, bed mat, blood pressure, and smart plug data — to detect behavioural anomalies.','shap':'SHAP (SHapley Additive exPlanations) explains why the model made a prediction by computing each feature's contribution. Positive SHAP values push the score higher (more risk).','auc':'AUC (Area Under the ROC Curve) measures how well the model distinguishes between high and low risk patients. 0.5 = random, 1.0 = perfect. Our combined AUC of 0.9136 exceeds the clinical utility threshold of 0.9.','tihm':'TIHM (Technology Integrated Health Management) is a Nature Scientific Data dataset from 56 dementia patients monitored at home with IoT sensors for 91 days.','cri':'The Cognitive Risk Index (CRI) is a longitudinal score computed from repeated speech assessments. Lower is better. Scores above 20 indicate monitoring, above 40 indicate review needed.','exercise':'The cognitive exercises are evidence-based training tasks targeting working memory (Pattern Recall), episodic memory (Word Recall), psychomotor speed (Reaction Time), and executive function (Stroop).','hello':'Hello! I'm your AIDE research assistant. Ask me about risk scores, biomarkers, the TIHM dataset, SHAP explainability, or how to use the dashboard.','hi':'Hi there! Ask me about risk scores, models, IoT features, or anything about the dashboard.'};
-async function sendChat(e){
-  e.preventDefault();const inp=document.getElementById('fcInp');const msg=inp.value.trim();if(!msg)return;
-  inp.value='';
-  const msgs=document.getElementById('fcMsgs');
-  msgs.innerHTML+=`<div class="fc-msg user">${msg}</div>`;
-  msgs.scrollTop=msgs.scrollHeight;
-  document.getElementById('fcTyping').style.display='block';
-  await new Promise(r=>setTimeout(r,900));
-  document.getElementById('fcTyping').style.display='none';
-  const lc=msg.toLowerCase();
-  let reply='I can help you with: risk scores, MMSE/MoCA/CDR scores, IoT features, SHAP explainability, the TIHM dataset, AUC metrics, cognitive exercises, and CRI scores. What would you like to know?';
-  for(const [k,v] of Object.entries(chatResponses)){if(lc.includes(k)){reply=v;break;}}
-  msgs.innerHTML+=`<div class="fc-msg bot">${reply}</div>`;
-  msgs.scrollTop=msgs.scrollHeight;
-}
-
-// ══ EXTEND go() ══
-const _origGo=window.go||(()=>{});
-</script>
 <style>
 :root{--bg:#020617;--surf:#0f172a;--surf2:#1e293b;--pri:#0ea5e9;--sec:#8b5cf6;--acc:#22d3ee;--ok:#10b981;--err:#f43f5e;--warn:#f59e0b;--t1:#f1f5f9;--t2:#94a3b8;--t3:#475569;--brd:rgba(255,255,255,0.08);--brd2:rgba(255,255,255,0.14);--glass:rgba(255,255,255,0.03);--glass2:rgba(255,255,255,0.06);--r:12px;--sw:240px}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1654,7 +1418,243 @@ async function sendChat(e){
 }
 
 // ══ EXTEND go() ══
-const _origGo=window.go||(()=>{});
+
+</script>
+<script>
+
+// ══ NEURAL CANVAS ══
+(function(){
+  const cv=document.getElementById('neuralCanvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let raf,pts=[];
+  const resize=()=>{cv.width=window.innerWidth;cv.height=window.innerHeight;pts=[];for(let i=0;i<50;i++)pts.push({x:Math.random()*cv.width,y:Math.random()*cv.height,s:.5+Math.random(),sz:1+Math.random()*2,o:.1+Math.random()*.4})};
+  const draw=()=>{
+    ctx.clearRect(0,0,cv.width,cv.height);
+    const t=Date.now()*.001;
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.strokeStyle='rgba(14,165,233,0.04)';ctx.lineWidth=1;ctx.moveTo(0,cv.height*(.3+i*.2));for(let x=0;x<cv.width;x+=8){ctx.lineTo(x,cv.height*(.3+i*.2)+Math.sin(x*.002+t+i)*45);}ctx.stroke();}
+    pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,p.sz,0,Math.PI*2);ctx.fillStyle=`rgba(34,211,238,${p.o})`;ctx.fill();p.x+=p.s;if(p.x>cv.width)p.x=-10;});
+    raf=requestAnimationFrame(draw);};
+  resize();draw();window.addEventListener('resize',resize);
+})();
+
+// ══ NEURAL STREAM PAGE ══
+let _neuralInit=false;
+function initNeural(){
+  if(_neuralInit)return;_neuralInit=true;
+  // CRI gauge animation
+  const arc=document.getElementById('criArc'),score=32,circ=2*Math.PI*78;
+  arc.style.strokeDashoffset=circ-(circ*score/100);
+  // Activity feed
+  const acts=[
+    {ic:'🎙️',bg:'rgba(14,165,233,0.15)',title:'Speech Assessment',time:'Jun 12 · 10:32am',badge:'Elevated (32)',bc:'rgba(244,63,94,0.15)',tc:'#fb7185'},
+    {ic:'🧩',bg:'rgba(139,92,246,0.15)',title:'Pattern Recall Game',time:'Jun 10 · 3:14pm',badge:'Score: 1,400',bc:'rgba(14,165,233,0.15)',tc:'var(--pri)'},
+    {ic:'🎙️',bg:'rgba(14,165,233,0.15)',title:'Speech Assessment',time:'May 28 · 11:05am',badge:'Moderate (24)',bc:'rgba(245,158,11,0.15)',tc:'#fbbf24'},
+    {ic:'⚡',bg:'rgba(16,185,129,0.15)',title:'Reaction Time Test',time:'May 25 · 9:48am',badge:'241ms',bc:'rgba(16,185,129,0.15)',tc:'#34d399'},
+    {ic:'🏠',bg:'rgba(34,211,238,0.15)',title:'IoT Anomaly Flagged',time:'May 22 · 2:17am',badge:'Bathroom 4x',bc:'rgba(245,158,11,0.15)',tc:'#fbbf24'}
+  ];
+  document.getElementById('actFeed').innerHTML=acts.map(a=>`<div class="af-item"><div class="af-ic" style="background:${a.bg}">${a.ic}</div><div class="af-info"><div class="af-title">${a.title}</div><div class="af-time">${a.time}</div></div><div class="af-badge" style="background:${a.bc};color:${a.tc}">${a.badge}</div></div>`).join('');
+  // Radar chart
+  dc('radarC');
+  const rc=document.getElementById('radarC');
+  if(rc){CH.radar=new Chart(rc,{type:'radar',data:{labels:['Speech Rate','Pause Ratio','Vocab Richness','Semantic Density','Phonation Time'],datasets:[
+    {label:'Patient',data:[85,45,92,78,65],borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.2)',borderWidth:2,pointBackgroundColor:'#0ea5e9'},
+    {label:'Healthy Baseline',data:[100,20,100,100,100],borderColor:'rgba(255,255,255,0.15)',backgroundColor:'rgba(255,255,255,0.03)',borderWidth:1,borderDash:[4,4],pointRadius:0}
+  ]},options:{responsive:true,aspectRatio:1.4,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{r:{grid:{color:'rgba(255,255,255,0.08)'},ticks:{display:false},pointLabels:{font:{size:11},color:'rgba(148,163,184,0.8)'}}}}})}
+  // CRI Trend
+  dc('criTrend');
+  const ct=document.getElementById('criTrend');
+  if(ct){CH.criTrend=new Chart(ct,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'CRI Score',data:[12,14,13,18,24,32],borderColor:'#0ea5e9',backgroundColor:'rgba(14,165,233,0.1)',fill:true,tension:.4,borderWidth:3,pointRadius:5,pointBackgroundColor:['#10b981','#10b981','#10b981','#f59e0b','#f59e0b','#f43f5e']}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{min:0,max:50,grid:{color:'rgba(255,255,255,0.05)'},title:{display:true,text:'CRI (lower=better)'}}}}})}
+  // Live EEG
+  let eegX=0;
+  const ec=document.getElementById('liveEEG');
+  if(ec){const ectx=ec.getContext('2d');ec.width=ec.offsetWidth;ec.height=80;
+    setInterval(()=>{ectx.fillStyle='rgba(2,6,23,0.3)';ectx.fillRect(0,0,ec.width,ec.height);
+      ectx.strokeStyle='rgba(14,165,233,0.8)';ectx.lineWidth=1.5;ectx.beginPath();
+      const y=40+Math.sin(eegX*.15)*(18+Math.sin(eegX*.07)*10)+Math.random()*6-3;
+      if(eegX===0)ectx.moveTo(0,y);else ectx.lineTo(eegX%ec.width,y);ectx.stroke();
+      if(eegX%ec.width===0)ectx.clearRect(0,0,ec.width,ec.height);eegX++;},40);}
+  // Live feed ticker
+  const events=['[PIR-HAL] Motion detected — 03:14:22','[BP-MON] Systolic 148mmHg — elevated','[DOOR-FRT] Front door opened — 02:51:07','[BED-MAT] Bed exit #3 — 03:22:14','[PIR-BATH] Bathroom visit #4 — 03:35:51','[NLP] Pause ratio 0.38 — above threshold'];
+  let ei=0;
+  const lf=document.getElementById('liveFeed');
+  if(lf){setInterval(()=>{lf.innerHTML=`> ${events[ei%events.length]}
+`+lf.innerHTML.split('
+').slice(0,4).join('
+');ei++;},2200);}
+}
+
+// ══ SPEECH ASSESSMENT ══
+let saRecording=false,saRecog=null,saStart=0,saWords=[];
+function toggleSpeechRec(){
+  const btn=document.getElementById('saRecBtn');
+  if(!saRecording){
+    saRecording=true;saStart=Date.now();saWords=[];
+    btn.textContent='⏹ Stop Recording';btn.classList.add('recording');
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(SR){saRecog=new SR();saRecog.continuous=true;saRecog.interimResults=false;saRecog.lang='en-US';
+      saRecog.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal){saWords=saWords.concat(e.results[i][0].transcript.split(' ').filter(w=>w.trim()));}}};saRecog.start();}
+  } else {
+    saRecording=false;btn.textContent='🎤 Start Recording';btn.classList.remove('recording');
+    if(saRecog)saRecog.stop();
+    const dur=(Date.now()-saStart)/1000;
+    const wps=saWords.length>0?(saWords.length/Math.max(dur,1)).toFixed(2):((2.5+Math.random()).toFixed(2));
+    const unique=new Set(saWords.map(w=>w.toLowerCase())).size;
+    const ttr=saWords.length>0?Math.min(1,unique/saWords.length).toFixed(2):((.55+Math.random()*.35).toFixed(2));
+    const pauseRatio=(.28+Math.random()*.2).toFixed(2);
+    const disfluency=Math.floor(Math.random()*8+2);
+    const coherence=(.62+Math.random()*.3).toFixed(2);
+    const aucContrib=((.82+Math.random()*.1)).toFixed(3);
+    document.getElementById('sm-rate').textContent=wps+' WPS';document.getElementById('sm-rate').style.color=wps<2?'#fb7185':'#fbbf24';
+    document.getElementById('sm-pause').textContent=pauseRatio;document.getElementById('sm-pause').style.color=pauseRatio>.3?'#fb7185':'#fbbf24';
+    document.getElementById('sm-ttr').textContent=ttr;document.getElementById('sm-ttr').style.color=ttr>.7?'#34d399':'#fbbf24';
+    document.getElementById('sm-dis').textContent=disfluency+' events';document.getElementById('sm-dis').style.color=disfluency>5?'#fb7185':'#fbbf24';
+    document.getElementById('sm-coh').textContent=coherence;document.getElementById('sm-coh').style.color=coherence>.7?'#34d399':'#fbbf24';
+    document.getElementById('sm-auc').textContent=aucContrib;
+    document.getElementById('saResult').classList.add('show');
+    const flags=[];
+    if(wps<2.5)flags.push('⚠ Speaking rate '+wps+' WPS — below 2.5 threshold');
+    if(pauseRatio>.3)flags.push('⚠ Pause ratio '+pauseRatio+' — elevated hesitation');
+    if(ttr<.65)flags.push('⚠ Lexical diversity TTR '+ttr+' — reduced vocabulary range');
+    if(disfluency>5)flags.push('⚠ '+disfluency+' disfluency events detected');
+    document.getElementById('speechFlags').innerHTML=flags.length?flags.join('<br>'):('✅ No critical speech flags detected');
+    // Update speech radar
+    dc('speechRadar');
+    const src=document.getElementById('speechRadar');
+    if(src){CH.speechRadar=new Chart(src,{type:'radar',data:{labels:['Speech Rate','Lexical Div.','Semantic Coh.','Pause Ctrl','Phonation'],datasets:[
+      {label:'Current',data:[Math.round(wps/4*100),Math.round(ttr*100),Math.round(coherence*100),Math.round((1-pauseRatio)*100),75],borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.15)',borderWidth:2,pointBackgroundColor:'#f43f5e'},
+      {label:'Healthy',data:[100,100,100,100,100],borderColor:'rgba(255,255,255,0.1)',backgroundColor:'rgba(255,255,255,0.03)',borderWidth:1,borderDash:[4,4],pointRadius:0}
+    ]},options:{responsive:true,aspectRatio:1.3,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{r:{grid:{color:'rgba(255,255,255,0.08)'},ticks:{display:false},pointLabels:{font:{size:11},color:'rgba(148,163,184,0.8)'}}}}});}
+  }
+}
+
+// ══ COGNITIVE EXERCISES ══
+let exScores={pattern:null,word:null,reaction:null,stroop:null};
+let exTimer=null;
+function startEx(type){
+  document.getElementById('exPanel').style.display='block';
+  document.getElementById('exPanel').scrollIntoView({behavior:'smooth'});
+  if(type==='pattern')runPattern();
+  else if(type==='word')runWord();
+  else if(type==='reaction')runReaction();
+  else if(type==='stroop')runStroop();
+}
+function closeEx(){document.getElementById('exPanel').style.display='none';clearTimeout(exTimer);}
+
+function runPattern(){
+  document.getElementById('exTitle').textContent='🔵 Pattern Recall';
+  let level=1,pattern=[],userInput=[],gameState='idle';
+  const cells=['🔵','🟣','🟢','🟡','🔴','⚪','🟠','🔷','🌀'];
+  const render=()=>{
+    document.getElementById('exContent').innerHTML=`
+      <p style="font-size:13px;color:var(--t2);margin-bottom:12px">Level ${level} — Watch the sequence, then repeat it.</p>
+      <div class="pg-grid" id="pgGrid">${[...Array(9)].map((_,i)=>`<div class="pg-cell" id="pgc${i}" onclick="pgClick(${i})">${cells[i]}</div>`).join('')}</div>
+      <div style="text-align:center;margin-top:12px"><button class="btn bp" id="pgStart" onclick="pgStart()" style="font-size:12px;padding:9px 20px">▶ Start Level ${level}</button><span style="font-size:12px;color:var(--t3);margin-left:10px" id="pgStatus"></span></div>`;
+    window.pgClick=(i)=>{
+      if(gameState!=='playing')return;
+      userInput.push(i);
+      const c=document.getElementById('pgc'+i);
+      if(i!==pattern[userInput.length-1]){c.classList.add('wrong');gameState='fail';document.getElementById('pgStatus').textContent='❌ Wrong! Score: '+(level-1)*100;return;}
+      c.classList.add('correct');setTimeout(()=>c.classList.remove('correct'),300);
+      if(userInput.length===pattern.length){gameState='idle';level++;exScores.pattern=(level-1)*100;document.getElementById('score-pattern').textContent='Best: '+exScores.pattern;document.getElementById('pgStart').textContent='▶ Level '+level;document.getElementById('pgStatus').textContent='✅ Correct! Next level.';updateTotalEx();}
+    };
+    window.pgStart=()=>{
+      pattern=[...Array(level)].map(()=>Math.floor(Math.random()*9));userInput=[];gameState='showing';
+      document.getElementById('pgStart').disabled=true;document.getElementById('pgStatus').textContent='Watch...';
+      pattern.forEach((p,i)=>{setTimeout(()=>{const c=document.getElementById('pgc'+p);if(c){c.classList.add('lit');setTimeout(()=>c.classList.remove('lit'),500);}
+        if(i===pattern.length-1)setTimeout(()=>{gameState='playing';document.getElementById('pgStart').disabled=false;document.getElementById('pgStatus').textContent='Your turn!';},600+i*700);},700+i*700);});
+    };
+  };render();
+}
+
+function runWord(){
+  document.getElementById('exTitle').textContent='📝 Word Recall';
+  const wordList=['Apple','River','Doctor','Purple','Courage','Elephant','Whisper','Mountain','Library','Rainbow','Coffee','Silence','Journey','Thunder','Candle'];
+  const chosen=wordList.sort(()=>Math.random()-.5).slice(0,8);
+  let phase='study',userAns=[],timeLeft=30;
+  const render=()=>{
+    if(phase==='study'){
+      document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:10px">Memorise these words. You have <strong id="wrTimer">${timeLeft}</strong>s.</p><div class="wr-words">${chosen.map(w=>`<div class="wr-word">${w}</div>`).join('')}</div>`;
+      const ti=setInterval(()=>{timeLeft--;const el=document.getElementById('wrTimer');if(el)el.textContent=timeLeft;if(timeLeft<=0){clearInterval(ti);phase='recall';render();}},1000);
+    } else {
+      document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:10px">Type the words you remember (one at a time, press Enter):</p><div class="wr-words" id="wrAns"></div><input class="wr-input" id="wrInp" placeholder="Type a word and press Enter..."/><div style="margin-top:12px;font-size:12px;color:var(--t3)" id="wrScore"></div>`;
+      document.getElementById('wrInp').addEventListener('keydown',e=>{
+        if(e.key==='Enter'){const v=e.target.value.trim();if(!v)return;userAns.push(v.toLowerCase());e.target.value='';
+          document.getElementById('wrAns').innerHTML=userAns.map(w=>`<div class="wr-word" style="background:${chosen.map(c=>c.toLowerCase()).includes(w)?'rgba(16,185,129,0.15)':'rgba(244,63,94,0.12)'};border-color:${chosen.map(c=>c.toLowerCase()).includes(w)?'rgba(16,185,129,0.3)':'rgba(244,63,94,0.3)'};color:${chosen.map(c=>c.toLowerCase()).includes(w)?'#34d399':'#fb7185'}">${w}</div>`).join('');
+          const correct=userAns.filter(w=>chosen.map(c=>c.toLowerCase()).includes(w)).length;
+          document.getElementById('wrScore').textContent=`✅ ${correct}/${chosen.length} correct (${Math.round(correct/chosen.length*100)}%)`;
+          exScores.word=correct*100;document.getElementById('score-word').textContent='Best: '+exScores.word;updateTotalEx();}});
+    }
+  };render();
+}
+
+function runReaction(){
+  document.getElementById('exTitle').textContent='⚡ Reaction Time';
+  let times=[],waiting=false,start=0;
+  const render=()=>{document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:12px">Click the circle as fast as possible when it turns green! 5 rounds.</p><div id="rtBox" style="display:flex;justify-content:center;align-items:center;height:180px"><div id="rtCircle" style="width:120px;height:120px;border-radius:50%;background:var(--surf2);border:3px solid var(--brd);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;transition:all .2s" onclick="rtClick()">Wait...</div></div><div style="text-align:center;font-size:12px;color:var(--t3)" id="rtScore"></div>`;
+    window.rtClick=()=>{
+      const c=document.getElementById('rtCircle');
+      if(!waiting){if(times.length>=5)return;const delay=1000+Math.random()*2000;c.textContent='Waiting...';c.style.background='var(--surf2)';c.style.borderColor='var(--brd)';waiting=true;
+        setTimeout(()=>{c.style.background='rgba(16,185,129,0.4)';c.style.borderColor='#10b981';c.textContent='CLICK!';c.style.boxShadow='0 0 30px rgba(16,185,129,0.5)';start=Date.now();},delay);
+      } else {const rt=Date.now()-start;times.push(rt);waiting=false;c.style.background='rgba(14,165,233,0.2)';c.style.borderColor='var(--pri)';c.textContent=rt+'ms';c.style.boxShadow='none';
+        if(times.length>=5){const avg=Math.round(times.reduce((a,b)=>a+b,0)/times.length);document.getElementById('rtScore').innerHTML=`✅ Avg: <strong>${avg}ms</strong> (${avg<250?'Excellent':avg<350?'Good':'Slow'})`;exScores.reaction=Math.max(0,500-avg);document.getElementById('score-reaction').textContent='Best: '+exScores.reaction+'pts';updateTotalEx();}
+        else{c.textContent='Again ('+(5-times.length)+' left)';}}
+    };
+  };render();
+}
+
+function runStroop(){
+  document.getElementById('exTitle').textContent='🎨 Stroop Colour Test';
+  const colours=['Red','Blue','Green','Yellow','Purple'];const colMap={Red:'#f43f5e',Blue:'#0ea5e9',Green:'#10b981',Yellow:'#f59e0b',Purple:'#8b5cf6'};
+  let round=0,score=0,totalRounds=10;
+  const nextRound=()=>{
+    if(round>=totalRounds){document.getElementById('exContent').innerHTML=`<div style="text-align:center;padding:30px"><div style="font-size:48px;font-weight:900;color:var(--ok)">${score}/${totalRounds}</div><div style="font-size:14px;color:var(--t2);margin-top:8px">Score: ${Math.round(score/totalRounds*100)}%</div></div>`;exScores.stroop=Math.round(score/totalRounds*100);document.getElementById('score-stroop').textContent='Best: '+exScores.stroop+'%';updateTotalEx();return;}
+    const inkCol=colours[Math.floor(Math.random()*colours.length)];let textWord;do{textWord=colours[Math.floor(Math.random()*colours.length)];}while(textWord===inkCol);
+    document.getElementById('exContent').innerHTML=`<p style="font-size:13px;color:var(--t2);margin-bottom:16px">What colour is the INK? (Round ${round+1}/${totalRounds}) Score: ${score}</p><div style="text-align:center;font-size:56px;font-weight:900;color:${colMap[inkCol]};margin:20px 0;text-shadow:0 0 20px ${colMap[inkCol]}44">${textWord}</div><div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">${colours.map(c=>`<button onclick="stroopAns('${c}','${inkCol}')" class="btn" style="padding:9px 18px;border-radius:8px;background:${colMap[c]}22;border:2px solid ${colMap[c]}55;color:${colMap[c]};font-size:13px;font-weight:700;cursor:pointer">${c}</button>`).join('')}</div>`;
+    window.stroopAns=(chosen,correct)=>{if(chosen===correct)score++;round++;nextRound();};
+  };document.getElementById('exContent').innerHTML='<div style="text-align:center;padding:20px"><button class="btn bp" onclick="nextStroopRound()" style="font-size:14px;padding:12px 28px">▶ Start Stroop Test</button></div>';window.nextStroopRound=nextRound;
+}
+
+function updateTotalEx(){const t=Object.values(exScores).filter(v=>v!==null).length;const el=document.getElementById('totalEx');if(el)el.textContent=t;}
+
+// ══ ANALYTICS PAGE ══
+let _analyticsInit=false;
+function initAnalytics(){
+  if(_analyticsInit)return;_analyticsInit=true;
+  dc('analyticsRisk');
+  const ar=document.getElementById('analyticsRisk');
+  if(ar){CH.analyticsRisk=new Chart(ar,{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'CRI Score',data:[12,14,13,18,24,32],borderColor:'#f43f5e',backgroundColor:'rgba(244,63,94,0.1)',fill:true,tension:.4,borderWidth:3,pointRadius:5,pointBackgroundColor:['#10b981','#10b981','#10b981','#f59e0b','#f59e0b','#f43f5e']},{label:'Safe Zone',data:[20,20,20,20,20,20],borderColor:'rgba(16,185,129,0.4)',borderDash:[6,4],borderWidth:1,pointRadius:0}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false}},y:{min:0,max:50,grid:{color:'rgba(255,255,255,0.05)'}}}}});}
+  dc('analyticsEx');
+  const ae=document.getElementById('analyticsEx');
+  if(ae){CH.analyticsEx=new Chart(ae,{type:'bar',data:{labels:['Pattern','Word Recall','Reaction','Stroop'],datasets:[{label:'Last Score',data:[1200,600,320,80],backgroundColor:['rgba(14,165,233,0.7)','rgba(139,92,246,0.7)','rgba(16,185,129,0.7)','rgba(245,158,11,0.7)'],borderRadius:6}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.05)'}}}}});}
+  dc('analyticsAnom');
+  const aa=document.getElementById('analyticsAnom');
+  if(aa){const labels=[...Array(30)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-29+i);return d.getDate()+'/'+( d.getMonth()+1)});
+    const anom=labels.map((_,i)=>+(1.1+Math.sin(i*.4)*.4+(i>20?.3+Math.random()*.3:Math.random()*.2)).toFixed(2));
+    CH.analyticsAnom=new Chart(aa,{type:'line',data:{labels,datasets:[{label:'Anomaly Score',data:anom,borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.08)',fill:true,tension:.4,borderWidth:2,pointRadius:0},{label:'Alert Threshold',data:labels.map(()=>2.0),borderColor:'rgba(244,63,94,0.5)',borderDash:[6,4],borderWidth:1.5,pointRadius:0}]},options:{responsive:true,aspectRatio:1.6,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}},scales:{x:{grid:{display:false},ticks:{maxTicksLimit:8}},y:{grid:{color:'rgba(255,255,255,0.05)'},min:0,max:3}}}});}
+}
+
+// ══ FLOATING CHAT ══
+let chatOpen=false;
+function toggleChat(){chatOpen=!chatOpen;document.getElementById('fcPanel').classList.toggle('open',chatOpen);}
+const chatResponses={'risk':'Your current risk score is computed from MMSE, CDR, APOE-ε4 status, and IoT behavioural features using the combined pipeline (AUC 0.9136). Scores above 60% warrant specialist referral.','mmse':'MMSE (Mini-Mental State Examination) scores range 0–30. Normal is ≥26, mild impairment is 20–25, moderate is 10–19, and severe is <10.','iot':'The IoT stream uses 42 features from the TIHM sensor network — PIR motion, door switches, bed mat, blood pressure, and smart plug data — to detect behavioural anomalies.','shap':'SHAP (SHapley Additive exPlanations) explains why the model made a prediction by computing each feature's contribution. Positive SHAP values push the score higher (more risk).','auc':'AUC (Area Under the ROC Curve) measures how well the model distinguishes between high and low risk patients. 0.5 = random, 1.0 = perfect. Our combined AUC of 0.9136 exceeds the clinical utility threshold of 0.9.','tihm':'TIHM (Technology Integrated Health Management) is a Nature Scientific Data dataset from 56 dementia patients monitored at home with IoT sensors for 91 days.','cri':'The Cognitive Risk Index (CRI) is a longitudinal score computed from repeated speech assessments. Lower is better. Scores above 20 indicate monitoring, above 40 indicate review needed.','exercise':'The cognitive exercises are evidence-based training tasks targeting working memory (Pattern Recall), episodic memory (Word Recall), psychomotor speed (Reaction Time), and executive function (Stroop).','hello':'Hello! I'm your AIDE research assistant. Ask me about risk scores, biomarkers, the TIHM dataset, SHAP explainability, or how to use the dashboard.','hi':'Hi there! Ask me about risk scores, models, IoT features, or anything about the dashboard.'};
+async function sendChat(e){
+  e.preventDefault();const inp=document.getElementById('fcInp');const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  const msgs=document.getElementById('fcMsgs');
+  msgs.innerHTML+=`<div class="fc-msg user">${msg}</div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+  document.getElementById('fcTyping').style.display='block';
+  await new Promise(r=>setTimeout(r,900));
+  document.getElementById('fcTyping').style.display='none';
+  const lc=msg.toLowerCase();
+  let reply='I can help you with: risk scores, MMSE/MoCA/CDR scores, IoT features, SHAP explainability, the TIHM dataset, AUC metrics, cognitive exercises, and CRI scores. What would you like to know?';
+  for(const [k,v] of Object.entries(chatResponses)){if(lc.includes(k)){reply=v;break;}}
+  msgs.innerHTML+=`<div class="fc-msg bot">${reply}</div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+}
+
+// ══ EXTEND go() ══
 
 </script>
 </body>
