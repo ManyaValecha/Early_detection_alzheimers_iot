@@ -319,9 +319,137 @@ table.dt tbody tr:hover{background:var(--glass2)}
 /* Analytics */
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 @media(max-width:700px){.stat-row{grid-template-columns:1fr}}
+
+/* ── LANDING & REGISTRATION OVERLAYS ── */
+.overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .5s ease}
+.overlay.hide{opacity:0;pointer-events:none}
+/* Landing */
+.lp-bg{position:absolute;inset:0;overflow:hidden}
+.lp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(14,165,233,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(14,165,233,0.04) 1px,transparent 1px);background-size:50px 50px}
+.lp-glow1{position:absolute;top:-20%;left:-10%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(14,165,233,0.12),transparent 70%)}
+.lp-glow2{position:absolute;bottom:-20%;right:-10%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.1),transparent 70%)}
+.lp-content{position:relative;z-index:1;text-align:center;max-width:700px;padding:40px 24px}
+.lp-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:100px;border:1px solid rgba(14,165,233,0.3);background:rgba(14,165,233,0.06);font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.08em;margin-bottom:28px;animation:fu .6s ease}
+.lp-title{font-size:clamp(36px,7vw,80px);font-weight:900;line-height:1;letter-spacing:-.04em;margin-bottom:20px}
+.lp-title .dim{color:var(--t3);font-weight:400}
+.lp-sub{font-size:clamp(14px,2vw,20px);color:var(--t2);line-height:1.6;margin-bottom:40px;max-width:520px;margin-left:auto;margin-right:auto}
+.lp-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.lp-btn-pri{padding:14px 36px;border-radius:100px;border:none;background:linear-gradient(135deg,var(--pri),var(--acc));color:#000;font-size:15px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;box-shadow:0 0 30px rgba(14,165,233,0.3)}
+.lp-btn-pri:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(14,165,233,0.5)}
+.lp-btn-sec{padding:14px 36px;border-radius:100px;border:1px solid var(--brd);background:transparent;color:var(--t1);font-size:15px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
+.lp-btn-sec:hover{border-color:var(--pri);color:var(--pri)}
+.lp-stats{display:flex;gap:40px;justify-content:center;margin-top:52px;flex-wrap:wrap}
+.lp-stat-v{font-size:clamp(22px,4vw,36px);font-weight:900;font-family:'JetBrains Mono',monospace}
+.lp-stat-l{font-size:12px;color:var(--t3);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+.lp-neural{position:absolute;bottom:0;left:0;right:0;height:140px;overflow:hidden;opacity:.4}
+/* Registration */
+.rg-wrap{background:var(--surf);border:1px solid var(--brd);border-radius:20px;width:100%;max-width:460px;padding:36px;box-shadow:0 40px 80px rgba(0,0,0,0.5);animation:fu .4s ease}
+.rg-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px;justify-content:center}
+.rg-logo-ic{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--pri),var(--sec));display:flex;align-items:center;justify-content:center;font-size:18px}
+.rg-logo-name{font-size:16px;font-weight:900;letter-spacing:-.02em}
+.rg-logo-name span{color:var(--pri)}
+.rg-title{font-size:20px;font-weight:800;text-align:center;margin-bottom:4px}
+.rg-sub{font-size:12px;color:var(--t3);text-align:center;letter-spacing:.05em;text-transform:uppercase;margin-bottom:28px}
+.rg-field{margin-bottom:18px}
+.rg-label{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;display:block}
+.rg-input{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--brd);background:var(--bg);color:var(--t1);font-size:14px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .2s;box-sizing:border-box}
+.rg-input:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(14,165,233,0.1)}
+.rg-seg{display:flex;border-radius:10px;border:1px solid var(--brd);overflow:hidden;background:var(--bg)}
+.rg-seg-opt{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--t3);font-family:'Outfit',sans-serif;border:none;background:transparent}
+.rg-seg-opt.on{background:var(--pri);color:#000}
+.rg-slider-row{display:flex;align-items:center;gap:12px}
+.rg-slider{flex:1;accent-color:var(--pri);height:5px}
+.rg-slider-val{font-size:16px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--pri);min-width:30px}
+.rg-btn{width:100%;padding:13px;border-radius:100px;border:none;background:linear-gradient(135deg,var(--pri),var(--sec));color:#000;font-size:14px;font-weight:800;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:8px;transition:all .2s;letter-spacing:.02em}
+.rg-btn:hover{opacity:.9;transform:scale(1.01)}
+.rg-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.rg-back{background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:'Outfit',sans-serif;width:100%;text-align:center;margin-top:12px;padding:6px;transition:color .2s}
+.rg-back:hover{color:var(--pri)}
+.rg-err{font-size:12px;color:var(--err);text-align:center;min-height:18px;margin-top:-10px;margin-bottom:4px}
+/* Patient name in topbar */
+.pt-chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:100px;background:rgba(14,165,233,0.1);border:1px solid rgba(14,165,233,0.2);font-size:12px;font-weight:600;color:var(--pri);cursor:pointer;transition:all .2s}
+.pt-chip:hover{background:rgba(14,165,233,0.18)}
+/* Landing neural waves canvas */
+#lpNeural{position:absolute;bottom:0;left:0;width:100%;height:140px}
+@keyframes floatBadge{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.lp-badge{animation:floatBadge 3s ease infinite}
 </style>
 </head>
 <body>
+
+
+<!-- LANDING PAGE OVERLAY -->
+<div class="overlay" id="landingOverlay">
+  <div class="lp-bg">
+    <div class="lp-grid"></div>
+    <div class="lp-glow1"></div>
+    <div class="lp-glow2"></div>
+  </div>
+  <div class="lp-content">
+    <div class="lp-badge">🧠 AI-Powered · Early Detection · AUC 0.9136</div>
+    <div class="lp-title">
+      Next Gen<br>
+      <span class="grad">Cognitive Analytics</span>
+      <div style="font-size:clamp(18px,3vw,32px);font-weight:400;color:var(--t3);margin-top:8px">Predictive Neural Health.</div>
+    </div>
+    <div class="lp-sub">Advanced biomarkers for early neurodegenerative detection. Combining clinical psychometrics and IoT ambient telemetry — from the TIHM dataset — for a combined AUC of <strong style="color:var(--pri)">0.9136</strong>, surpassing the clinical utility threshold.</div>
+    <div class="lp-btns">
+      <button class="lp-btn-pri" onclick="showReg()">🚀 Get Started</button>
+      <button class="lp-btn-sec" onclick="skipReg()">View Demo →</button>
+    </div>
+    <div class="lp-stats">
+      <div><div class="lp-stat-v grad">0.9136</div><div class="lp-stat-l">Combined AUC</div></div>
+      <div><div class="lp-stat-v" style="color:var(--ok)">56</div><div class="lp-stat-l">TIHM Patients</div></div>
+      <div><div class="lp-stat-v" style="color:var(--sec)">1M+</div><div class="lp-stat-l">IoT Events</div></div>
+      <div><div class="lp-stat-v" style="color:var(--warn)">8</div><div class="lp-stat-l">ML Models</div></div>
+    </div>
+  </div>
+  <canvas id="lpNeural"></canvas>
+</div>
+
+<!-- REGISTRATION OVERLAY -->
+<div class="overlay hide" id="regOverlay">
+  <div class="rg-wrap">
+    <div class="rg-logo">
+      <div class="rg-logo-ic">🧠</div>
+      <div class="rg-logo-name">AIDE<span>-TIHM</span></div>
+    </div>
+    <div class="rg-title">Clinical Registration</div>
+    <div class="rg-sub">Initialize Clinical Profile</div>
+    <div class="rg-field">
+      <label class="rg-label">Full Legal Name</label>
+      <input class="rg-input" id="rgName" placeholder="e.g. Sarah Chen" autocomplete="off" oninput="rgValidate()"/>
+    </div>
+    <div class="rg-field">
+      <label class="rg-label">Account Type</label>
+      <div class="rg-seg">
+        <button class="rg-seg-opt on" id="rgt-patient" onclick="rgType('patient')">🏥 Patient</button>
+        <button class="rg-seg-opt" id="rgt-clinician" onclick="rgType('clinician')">👨‍⚕️ Clinician</button>
+        <button class="rg-seg-opt" id="rgt-researcher" onclick="rgType('researcher')">🔬 Researcher</button>
+      </div>
+    </div>
+    <div class="rg-field">
+      <label class="rg-label">Age — <span id="rgAgeVal" style="color:var(--pri)">65</span></label>
+      <div class="rg-slider-row">
+        <span style="font-size:12px;color:var(--t3)">18</span>
+        <input class="rg-slider" type="range" min="18" max="99" value="65" id="rgAge" oninput="document.getElementById('rgAgeVal').textContent=this.value"/>
+        <span style="font-size:12px;color:var(--t3)">99</span>
+        <span class="rg-slider-val" id="rgAgeVal2">65</span>
+      </div>
+    </div>
+    <div class="rg-field">
+      <label class="rg-label">Biological Gender</label>
+      <div class="rg-seg">
+        <button class="rg-seg-opt on" id="rgg-male" onclick="rgGender('male')">♂ Male</button>
+        <button class="rg-seg-opt" id="rgg-female" onclick="rgGender('female')">♀ Female</button>
+        <button class="rg-seg-opt" id="rgg-other" onclick="rgGender('other')">⊕ Other</button>
+      </div>
+    </div>
+    <div class="rg-err" id="rgErr"></div>
+    <button class="rg-btn" id="rgSubmit" onclick="rgSubmit()">⚡ Initialize Clinical Profile</button>
+    <button class="rg-back" onclick="backToLanding()">← Back to Landing</button>
+  </div>
+</div>
 
 <canvas id="neuralCanvas"></canvas>
 <aside class="sb" id="sb">
@@ -1027,7 +1155,142 @@ function initShap(){
   const c=document.getElementById('shapBar');
   if(c){CH.shapBar=new Chart(c,{type:'bar',data:{labels:['MMSE','Bath Night','Sleep Z','CDR','Transitions','MoCA','APOE-ε4','BP Dev','FAQ','Age'],datasets:[{label:'SHAP Value',data:[0.952,0.891,0.812,0.881,0.731,0.824,0.743,0.650,0.613,0.479],backgroundColor:['#0ea5e9','#8b5cf6','#8b5cf6','#0ea5e9','#8b5cf6','#0ea5e9','#0ea5e9','#8b5cf6','#0ea5e9','#22d3ee'].map(c=>c+'cc'),borderRadius:5}]},options:{indexAxis:'y',responsive:true,aspectRatio:1.8,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'}},y:{grid:{display:false}}}}})}
 }
-document.addEventListener('DOMContentLoaded',()=>{initHome();calc()});
+document.addEventListener('DOMContentLoaded',()=>{/* App launched via registration flow */});
+// ══ LANDING & REGISTRATION ══
+let _rgType='patient', _rgGender='male', _ptData={};
+
+// Landing neural waves animation
+(function(){
+  const cv=document.getElementById('lpNeural');
+  if(!cv)return;
+  cv.width=window.innerWidth;cv.height=140;
+  const ctx=cv.getContext('2d');
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(let i=0;i<4;i++){
+      ctx.beginPath();
+      ctx.strokeStyle=`rgba(${i%2===0?'14,165,233':'139,92,246'},${0.15-i*0.03})`;
+      ctx.lineWidth=1.5-i*0.3;
+      for(let x=0;x<cv.width;x+=3){
+        const y=70+Math.sin(x*0.008+t+i*0.8)*25+Math.sin(x*0.02+t*1.3+i)*10;
+        x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    t+=0.015;requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',()=>{cv.width=window.innerWidth;});
+})();
+
+function showReg(){
+  document.getElementById('landingOverlay').classList.add('hide');
+  setTimeout(()=>{
+    document.getElementById('landingOverlay').style.display='none';
+    const ro=document.getElementById('regOverlay');
+    ro.style.display='flex';
+    setTimeout(()=>ro.classList.remove('hide'),10);
+    document.getElementById('rgName').focus();
+  },400);
+}
+
+function backToLanding(){
+  document.getElementById('regOverlay').classList.add('hide');
+  setTimeout(()=>{
+    document.getElementById('regOverlay').style.display='none';
+    const lo=document.getElementById('landingOverlay');
+    lo.style.display='flex';
+    setTimeout(()=>lo.classList.remove('hide'),10);
+  },400);
+}
+
+function skipReg(){
+  document.getElementById('landingOverlay').classList.add('hide');
+  setTimeout(()=>{
+    document.getElementById('landingOverlay').style.display='none';
+    _ptData={name:'Demo Patient',type:'patient',age:65,gender:'male'};
+    launchApp();
+  },400);
+}
+
+function rgType(t){
+  _rgType=t;
+  ['patient','clinician','researcher'].forEach(x=>{
+    const el=document.getElementById('rgt-'+x);
+    if(el)el.classList.toggle('on',x===t);
+  });
+}
+
+function rgGender(g){
+  _rgGender=g;
+  ['male','female','other'].forEach(x=>{
+    const el=document.getElementById('rgg-'+x);
+    if(el)el.classList.toggle('on',x===g);
+  });
+}
+
+function rgValidate(){
+  const name=document.getElementById('rgName').value.trim();
+  const btn=document.getElementById('rgSubmit');
+  btn.disabled=name.length<2;
+  document.getElementById('rgErr').textContent='';
+  // sync age displays
+  const age=document.getElementById('rgAge').value;
+  document.getElementById('rgAgeVal').textContent=age;
+  document.getElementById('rgAgeVal2').textContent=age;
+}
+
+// Sync age slider value
+document.getElementById('rgAge').addEventListener('input',function(){
+  document.getElementById('rgAgeVal').textContent=this.value;
+  document.getElementById('rgAgeVal2').textContent=this.value;
+});
+
+function rgSubmit(){
+  const name=document.getElementById('rgName').value.trim();
+  if(name.length<2){
+    document.getElementById('rgErr').textContent='Please enter your full legal name.';
+    document.getElementById('rgName').focus();
+    return;
+  }
+  const age=parseInt(document.getElementById('rgAge').value)||65;
+  _ptData={name,type:_rgType,age,gender:_rgGender};
+
+  // Animate button
+  const btn=document.getElementById('rgSubmit');
+  btn.textContent='Initializing...';btn.disabled=true;
+  setTimeout(()=>{
+    document.getElementById('regOverlay').classList.add('hide');
+    setTimeout(()=>{
+      document.getElementById('regOverlay').style.display='none';
+      launchApp();
+    },400);
+  },800);
+}
+
+function launchApp(){
+  // Show patient chip in topbar
+  const chip=document.getElementById('ptChip');
+  const nameEl=document.getElementById('ptName');
+  if(chip&&nameEl){
+    nameEl.textContent=_ptData.name||'Patient';
+    chip.style.display='inline-flex';
+  }
+  // Update dashboard patient info if available
+  const pt=document.getElementById('ptInfoBadge');
+  if(pt){pt.textContent=(_ptData.name||'Patient')+' · Age '+(_ptData.age||65);}
+  // Pre-fill age slider in risk detection
+  const ageSlider=document.getElementById('age');
+  if(ageSlider&&_ptData.age){ageSlider.value=_ptData.age;document.getElementById('ageV').textContent=_ptData.age;calc();}
+  initHome();calc();
+}
+
+function showProfile(){
+  if(!_ptData.name)return;
+  alert('Patient Profile\n\nName: '+_ptData.name+'\nType: '+_ptData.type+'\nAge: '+_ptData.age+'\nGender: '+_ptData.gender+'\n\nAUC: 0.9136 | Dataset: TIHM');
+}
+
 
 function go_insights_init(){
   if(window._insightsInit)return;window._insightsInit=true;
