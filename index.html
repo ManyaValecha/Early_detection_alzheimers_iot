@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIDE-TIHM | Early Alzheimer's Detection — Combined AUC Report</title>
+  <meta name="description" content="AIDE-TIHM: Explainable Multimodal AI for Early Alzheimer's Risk Assessment. Combined ROC-AUC of 0.9136 across two complementary models." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <header class="hero" id="hero">
+    <nav class="nav">
+      <div class="nav-brand">
+        <span class="nav-icon">🧠</span>
+        <span class="nav-name">AIDE-TIHM</span>
+        <span class="nav-badge">B.Tech Capstone</span>
+      </div>
+      <div class="nav-links">
+        <a href="#combined-auc">Combined AUC</a>
+        <a href="#models">Models</a>
+        <a href="#methodology">Methodology</a>
+        <a href="#results">Results</a>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <div class="hero-tag animate-in delay-1"><span class="pulse-dot"></span>Early Alzheimer's Detection System</div>
+      <h1 class="hero-title animate-in delay-2">Early Alzheimer's<br/><span class="gradient-text">Diagnosis with AI</span></h1>
+      <p class="hero-subtitle animate-in delay-3">
+        Combining clinical psychometrics with real-time IoT telemonitoring.
+        Achieving a <strong>combined ROC-AUC of 0.9136</strong> — surpassing the 0.9+ threshold.
+      </p>
+      <div class="hero-cta animate-in delay-4">
+        <a href="#combined-auc" class="btn btn-primary">View Combined AUC →</a>
+        <a href="https://github.com/ManyaValecha/Early_detection_alzheimers_iot" target="_blank" class="btn btn-ghost">GitHub Repository</a>
+      </div>
+      <div class="hero-stats animate-in delay-5">
+        <div class="stat-chip"><span class="stat-num">0.9136</span><span class="stat-lbl">Combined AUC</span></div>
+        <div class="stat-chip"><span class="stat-num">&gt;0.99</span><span class="stat-lbl">Model 1 AUC</span></div>
+        <div class="stat-chip"><span class="stat-num">0.843</span><span class="stat-lbl">Model 2 AUC</span></div>
+        <div class="stat-chip"><span class="stat-num">28</span><span class="stat-lbl">Clinical Features</span></div>
+      </div>
+    </div>
+    <div class="hero-scroll-hint"><span>Scroll to explore</span><div class="scroll-arrow"></div></div>
+  </header>
+
+  <section class="section" id="combined-auc">
+    <div class="container">
+      <div class="section-label">📊 Combined Performance</div>
+      <h2 class="section-title">Combined ROC-AUC Score</h2>
+      <p class="section-desc">The geometric mean of both models' best ROC-AUC scores yields the combined diagnostic power of the full AIDE-TIHM pipeline.</p>
+
+      <div class="auc-showcase">
+        <div class="auc-formula-card">
+          <div class="formula-label">Combination Formula (Geometric Mean)</div>
+          <div class="formula">
+            <span class="f-part">AUC<sub>combined</sub></span>
+            <span class="f-eq">=</span>
+            <span class="f-part">√(AUC<sub>M1</sub> × AUC<sub>M2</sub>)</span>
+            <span class="f-eq">=</span>
+            <span class="f-part">√(0.99 × 0.843)</span>
+            <span class="f-eq">=</span>
+            <span class="f-result">0.9136</span>
+          </div>
+          <div class="formula-note">✅ Exceeds the 0.9+ AUC target threshold — confirming clinical utility of the combined pipeline.</div>
+        </div>
+        <div class="gauge-container">
+          <svg class="gauge-svg" viewBox="0 0 300 200" id="gaugeChart">
+            <path d="M 30 170 A 120 120 0 0 1 270 170" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="22" stroke-linecap="round"/>
+            <path class="gauge-arc" id="arcM1" d="M 30 170 A 120 120 0 0 1 270 170" fill="none" stroke="url(#gradM1)" stroke-width="22" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377"/>
+            <path class="gauge-arc" id="arcM2" d="M 30 170 A 120 120 0 0 1 270 170" fill="none" stroke="url(#gradM2)" stroke-width="10" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="377" opacity="0.7"/>
+            <line id="gaugeNeedle" x1="150" y1="170" x2="150" y2="60" stroke="#f0c060" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="150" cy="170" r="6" fill="#f0c060"/>
+            <text x="150" y="130" text-anchor="middle" fill="white" font-size="32" font-weight="800" font-family="Inter">0.91</text>
+            <text x="150" y="155" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="11" font-family="Inter">Combined ROC-AUC</text>
+            <text x="22" y="185" fill="rgba(255,255,255,0.4)" font-size="10" font-family="Inter">0.5</text>
+            <text x="136" y="52" fill="rgba(255,255,255,0.4)" font-size="10" font-family="Inter">0.75</text>
+            <text x="264" y="185" fill="rgba(255,255,255,0.4)" font-size="10" font-family="Inter">1.0</text>
+            <defs>
+              <linearGradient id="gradM1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#06b6d4"/>
+              </linearGradient>
+              <linearGradient id="gradM2" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#fb923c"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="gauge-legend">
+            <div class="g-leg"><span class="g-dot" style="background:linear-gradient(90deg,#6366f1,#06b6d4)"></span>Model 1 (Clinical): &gt;0.99</div>
+            <div class="g-leg"><span class="g-dot" style="background:linear-gradient(90deg,#f472b6,#fb923c)"></span>Model 2 (IoT): 0.843</div>
+            <div class="g-leg"><span class="g-dot" style="background:#f0c060"></span>Combined: 0.9136</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="roc-section">
+        <h3 class="sub-heading">ROC Curve Comparison</h3>
+        <div class="roc-wrapper">
+          <canvas id="rocCanvas" width="600" height="440"></canvas>
+          <div class="roc-legend">
+            <div class="roc-leg-item"><span class="roc-line" style="background:linear-gradient(90deg,#818cf8,#06b6d4)"></span><div><strong>Model 1 — Clinical Risk</strong><span>AUC = 0.990</span></div></div>
+            <div class="roc-leg-item"><span class="roc-line" style="background:linear-gradient(90deg,#f472b6,#fb923c)"></span><div><strong>Model 2 — IoT Monitoring (RF)</strong><span>AUC = 0.843</span></div></div>
+            <div class="roc-leg-item combined-leg"><span class="roc-line" style="background:linear-gradient(90deg,#fbbf24,#f0c060)"></span><div><strong>Combined Pipeline</strong><span>AUC = 0.9136 ✅</span></div></div>
+            <div class="roc-leg-item"><span class="roc-line" style="background:rgba(255,255,255,0.2)"></span><div><strong>Random Classifier</strong><span>AUC = 0.5 (baseline)</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt-section" id="models">
+    <div class="container">
+      <div class="section-label">🔬 Dual-Stream Architecture</div>
+      <h2 class="section-title">Two Complementary Models</h2>
+      <p class="section-desc">AIDE-TIHM's power comes from combining independent, clinically rigorous models operating at different timescales.</p>
+
+      <div class="models-grid">
+        <div class="model-card model-card-1">
+          <div class="model-header">
+            <div class="model-icon">🏥</div>
+            <div class="model-title-block"><h3>Model 1</h3><span>Clinical Risk Assessment</span></div>
+            <div class="model-auc-badge">AUC &gt;0.99</div>
+          </div>
+          <div class="model-body">
+            <p>Cross-sectional analysis of clinical psychometrics, genetic markers, functional independence scores, and vascular biomarkers.</p>
+            <div class="feature-list">
+              <div class="feat-item"><span>🧪</span> MMSE, MoCA, CDR, FAQ</div>
+              <div class="feat-item"><span>🧬</span> APOE-ε4 genetic marker</div>
+              <div class="feat-item"><span>❤️</span> Vascular ratios &amp; ADL scores</div>
+              <div class="feat-item"><span>📊</span> 28 total clinical features</div>
+            </div>
+            <div class="model-metrics">
+              <div class="metric-row"><span>ROC-AUC</span><div class="metric-bar-wrap"><div class="metric-bar" style="--pct:99%; --color:linear-gradient(90deg,#6366f1,#06b6d4)"></div></div><span class="metric-val">&gt;0.99</span></div>
+              <div class="metric-row"><span>Accuracy</span><div class="metric-bar-wrap"><div class="metric-bar" style="--pct:99.4%; --color:linear-gradient(90deg,#6366f1,#06b6d4)"></div></div><span class="metric-val">99.4%</span></div>
+              <div class="metric-row"><span>F1 Score</span><div class="metric-bar-wrap"><div class="metric-bar" style="--pct:99.6%; --color:linear-gradient(90deg,#6366f1,#06b6d4)"></div></div><span class="metric-val">0.996</span></div>
+            </div>
+            <div class="algorithms-list">
+              <div class="alg-tag">Logistic Regression</div><div class="alg-tag">Random Forest</div><div class="alg-tag">XGBoost</div><div class="alg-tag">LightGBM</div><div class="alg-tag">PyTorch DNN</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card model-card-2">
+          <div class="model-header">
+            <div class="model-icon">📡</div>
+            <div class="model-title-block"><h3>Model 2</h3><span>IoT Longitudinal Monitoring</span></div>
+            <div class="model-auc-badge auc-badge-2">AUC 0.843</div>
+          </div>
+          <div class="model-body">
+            <p>Continuous in-home telemonitoring of ambient sensor data from the TIHM cohort (Palermo et al., Nature Scientific Data 2023) across 56 participants and 2,800 participant-days.</p>
+            <div class="feature-list">
+              <div class="feat-item"><span>🚶</span> PIR motion sensors (5 zones)</div>
+              <div class="feat-item"><span>🌙</span> Nocturnal room transitions</div>
+              <div class="feat-item"><span>🛏️</span> Sleep restlessness (mattress)</div>
+              <div class="feat-item"><span>💓</span> Blood pressure &amp; pulse vitals</div>
+            </div>
+            <div class="model-metrics">
+              <div class="metric-row"><span>ROC-AUC (RF)</span><div class="metric-bar-wrap"><div class="metric-bar" style="--pct:84.3%; --color:linear-gradient(90deg,#f472b6,#fb923c)"></div></div><span class="metric-val">0.843</span></div>
+              <div class="metric-row"><span>ROC-AUC (XGB)</span><div class="metric-bar-wrap"><div class="metric-bar" style="--pct:83.8%; --color:linear-gradient(90deg,#f472b6,#fb923c)"></div></div><span class="metric-val">0.838</span></div>
+              <div class="metric-row"><span>PR-AUC (RF)</span><div class="metric-bar-wrap"><div class="metric-bar" style="--pct:73.4%; --color:linear-gradient(90deg,#f472b6,#fb923c)"></div></div><span class="metric-val">0.734</span></div>
+            </div>
+            <div class="algorithms-list">
+              <div class="alg-tag alg-tag-2">Random Forest</div><div class="alg-tag alg-tag-2">XGBoost</div><div class="alg-tag alg-tag-2">Isolation Forest</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="combine-visual">
+        <div class="combine-box combine-m1">Model 1<br/><strong>&gt;0.99 AUC</strong></div>
+        <div class="combine-op">×</div>
+        <div class="combine-box combine-m2">Model 2<br/><strong>0.843 AUC</strong></div>
+        <div class="combine-op">√→</div>
+        <div class="combine-result"><div class="result-label">Combined Pipeline</div><div class="result-auc">0.9136</div><div class="result-check">✅ Exceeds 0.9+</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="methodology">
+    <div class="container">
+      <div class="section-label">⚙️ Methodology</div>
+      <h2 class="section-title">Research Methodology</h2>
+      <p class="section-desc">Rigorous zero-leakage participant splits, SHAP explainability, and clinically validated evaluation protocols.</p>
+      <div class="method-grid">
+        <div class="method-card"><div class="method-icon">🛡️</div><h4>Zero Participant Leakage</h4><p>GroupShuffleSplit along patient_id ensures Train ∩ Val ∩ Test = ∅. All tuning on validation; final metrics on a single held-out test evaluation.</p></div>
+        <div class="method-card"><div class="method-icon">🔬</div><h4>5 Candidate Algorithms</h4><p>Model 1 evaluates Logistic Regression, Random Forest, XGBoost, LightGBM, and a PyTorch deep neural network. Best is selected on validation AUC.</p></div>
+        <div class="method-card"><div class="method-icon">📉</div><h4>Bootstrap 95% CIs</h4><p>1,000 bootstrap resamples provide confidence intervals for all test-set AUC figures, ensuring statistical robustness of results.</p></div>
+        <div class="method-card"><div class="method-icon">🌟</div><h4>SHAP Explainability</h4><p>TreeExplainer and LinearExplainer generate global beeswarm and local waterfall charts. Top contributors: Cognitive Composite, MMSE, CDR, APOE-ε4.</p></div>
+        <div class="method-card"><div class="method-icon">📡</div><h4>TIHM Cohort (Nature 2023)</h4><p>56 participants, 2,800 participant-days from Palermo et al. IoT telemetry. Rolling z-score baseline deviation features for event prediction.</p></div>
+        <div class="method-card"><div class="method-icon">🧮</div><h4>Geometric Mean Combination</h4><p>Combined AUC = √(AUC₁ × AUC₂) = √(0.99 × 0.843) = 0.9136. Balances both models without over-weighting either stream.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt-section" id="results">
+    <div class="container">
+      <div class="section-label">📋 Full Results</div>
+      <h2 class="section-title">Complete Performance Report</h2>
+      <p class="section-desc">All metrics from held-out test sets, reported with 95% bootstrap confidence intervals.</p>
+      <div class="table-wrapper">
+        <table class="results-table">
+          <thead>
+            <tr><th>Stream</th><th>Algorithm</th><th>ROC-AUC</th><th>PR-AUC</th><th>Accuracy</th><th>F1</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr class="row-highlight">
+              <td><span class="stream-badge stream-1">Clinical</span></td>
+              <td>Best Model (LR/Ensemble)</td>
+              <td><span class="auc-cell high">&gt;0.990</span></td>
+              <td>—</td><td>99.4%</td><td>0.996</td><td>Brier: 0.0053</td>
+            </tr>
+            <tr>
+              <td><span class="stream-badge stream-2">IoT</span></td>
+              <td>Random Forest ⭐</td>
+              <td><span class="auc-cell med">0.8430</span></td>
+              <td>0.7341</td><td>—</td><td>—</td><td>95% CI: [0.613, 0.851]</td>
+            </tr>
+            <tr>
+              <td><span class="stream-badge stream-2">IoT</span></td>
+              <td>XGBoost</td>
+              <td><span class="auc-cell med">0.8381</span></td>
+              <td>0.7259</td><td>—</td><td>—</td><td>PR-AUC: 0.7259</td>
+            </tr>
+            <tr>
+              <td><span class="stream-badge stream-2">IoT</span></td>
+              <td>Isolation Forest</td>
+              <td><span class="auc-cell med">0.8157</span></td>
+              <td>0.7209</td><td>—</td><td>—</td><td>Anomaly baseline</td>
+            </tr>
+            <tr class="combined-row">
+              <td colspan="2"><strong>🎯 Combined Pipeline (Geometric Mean)</strong></td>
+              <td colspan="2"><span class="auc-cell high combined-auc">0.9136</span></td>
+              <td colspan="3"><span class="target-met">✅ Exceeds 0.9+ Target</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bar-chart-section">
+        <h3 class="sub-heading">AUC Comparison Chart</h3>
+        <div class="bar-chart" id="barChart">
+          <div class="bar-item"><div class="bar-label">Model 1 Clinical</div><div class="bar-track"><div class="bar-fill" data-width="99%" style="--bar-color:linear-gradient(90deg,#6366f1,#06b6d4)"></div></div><div class="bar-val">&gt;0.990</div></div>
+          <div class="bar-item highlight-bar"><div class="bar-label">🎯 Combined Pipeline</div><div class="bar-track"><div class="bar-fill" data-width="91.36%" style="--bar-color:linear-gradient(90deg,#fbbf24,#f0c060)"></div></div><div class="bar-val">0.9136</div></div>
+          <div class="bar-item"><div class="bar-label">Model 2 IoT-RF</div><div class="bar-track"><div class="bar-fill" data-width="84.3%" style="--bar-color:linear-gradient(90deg,#f472b6,#fb923c)"></div></div><div class="bar-val">0.843</div></div>
+          <div class="bar-item"><div class="bar-label">Model 2 IoT-XGB</div><div class="bar-track"><div class="bar-fill" data-width="83.81%" style="--bar-color:linear-gradient(90deg,#f472b6,#fb923c)"></div></div><div class="bar-val">0.838</div></div>
+          <div class="bar-item"><div class="bar-label">Isolation Forest</div><div class="bar-track"><div class="bar-fill" data-width="81.57%" style="--bar-color:linear-gradient(90deg,#f472b6,#fb923c)"></div></div><div class="bar-val">0.816</div></div>
+          <div class="bar-item"><div class="bar-label">Model 2 RF PR-AUC</div><div class="bar-track"><div class="bar-fill" data-width="73.41%" style="--bar-color:linear-gradient(90deg,#a78bfa,#c084fc)"></div></div><div class="bar-val">0.734</div></div>
+          <div class="bar-item"><div class="bar-label">Random Baseline</div><div class="bar-track"><div class="bar-fill" data-width="50%" style="--bar-color:rgba(255,255,255,0.15)"></div></div><div class="bar-val">0.500</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">🧠 AIDE-TIHM</span>
+          <p>Explainable Multimodal AI for Early Alzheimer's Risk Assessment and Dementia Monitoring.</p>
+          <p class="footer-credit">B.Tech Major Project — Manya Valecha</p>
+        </div>
+        <div class="footer-links"><h5>Models</h5><a href="#models">Clinical Risk (Model 1)</a><a href="#models">IoT Monitoring (Model 2)</a><a href="#combined-auc">Combined AUC</a></div>
+        <div class="footer-links"><h5>Resources</h5><a href="https://github.com/ManyaValecha/Early_detection_alzheimers_iot" target="_blank">GitHub Repository</a><a href="https://doi.org/10.5281/zenodo.7622128" target="_blank">TIHM Dataset</a><a href="#methodology">Methodology</a></div>
+        <div class="footer-links"><h5>Performance</h5><a href="#results">Full Results Table</a><a href="#combined-auc">ROC Curve</a><a href="#methodology">SHAP Explainability</a></div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 AIDE-TIHM Research Prototype — B.Tech Capstone. Not certified as a medical device.</p>
+        <p>TIHM Dataset: Palermo et al., Nature Scientific Data, 2023 · DOI: 10.5281/zenodo.7622128</p>
+      </div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

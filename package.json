@@ -1,0 +1,12 @@
+{
+  "name": "aide-tihm-alzheimers-dashboard",
+  "version": "1.0.0",
+  "description": "AIDE-TIHM: Explainable Multimodal AI for Early Alzheimer's Risk Assessment - Combined AUC Dashboard",
+  "scripts": {
+    "dev": "python3 -m http.server 3000",
+    "start": "python3 -m http.server 3000"
+  },
+  "keywords": ["alzheimers", "AI", "IoT", "healthcare", "AUC", "machine-learning"],
+  "author": "Manya Valecha",
+  "license": "MIT"
+}
