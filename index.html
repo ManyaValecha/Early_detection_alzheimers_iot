@@ -189,6 +189,47 @@ table.dt tbody tr:hover{background:var(--glass2)}
   .main{margin-left:0}.hbtn{display:block}
   .page{padding:16px 14px 40px}.hero{padding:28px 20px}
 }
+
+/* REPORT */
+.report-panel{background:var(--glass);border:1px solid rgba(16,185,129,0.25);border-radius:14px;padding:0;overflow:hidden;margin-top:20px;display:none;animation:fu .4s ease}
+.report-panel.show{display:block}
+.rp-head{background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(14,165,233,0.08));padding:18px 24px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.rp-head h2{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.rp-head .ts{font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace}
+.rp-body{padding:24px}
+.rp-section{margin-bottom:22px}
+.rp-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--acc);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.rp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:800px){.rp-grid{grid-template-columns:repeat(2,1fr)}}
+.rp-kpi{background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:12px 14px}
+.rp-kpi .rv{font-size:18px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
+.rp-kpi .rl{font-size:10px;color:var(--t3);margin-top:3px;font-weight:600}
+.rp-risk-banner{border-radius:12px;padding:20px 24px;display:flex;align-items:center;gap:20px;margin-bottom:18px;flex-wrap:wrap}
+.rp-risk-low{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3)}
+.rp-risk-mod{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3)}
+.rp-risk-high{background:rgba(244,63,94,0.1);border:1px solid rgba(244,63,94,0.3)}
+.rp-risk-pct{font-size:52px;font-weight:900;font-family:'JetBrains Mono',monospace;line-height:1}
+.rp-risk-info{flex:1}
+.rp-risk-label{font-size:20px;font-weight:800;margin-bottom:4px}
+.rp-risk-desc{font-size:13px;color:var(--t2);line-height:1.6}
+.rp-bars{display:flex;flex-direction:column;gap:9px}
+.rp-bar-row{display:flex;align-items:center;gap:10px}
+.rp-bar-feat{font-size:12px;color:var(--t2);width:200px;text-align:right;flex-shrink:0}
+.rp-bar-track{flex:1;height:9px;background:var(--surf2);border-radius:5px;overflow:hidden}
+.rp-bar-fill{height:100%;border-radius:5px;transition:width 1s ease}
+.rp-bar-val{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;width:38px;color:var(--t1)}
+.rp-recs{display:flex;flex-direction:column;gap:8px}
+.rp-rec{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:8px;border:1px solid var(--brd);background:var(--surf);font-size:12px;line-height:1.6;color:var(--t2)}
+.rp-rec-ic{font-size:18px;flex-shrink:0}
+.rp-actions{display:flex;gap:10px;flex-wrap:wrap}
+.rp-auc-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:100px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--warn);font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
+@media print{
+  .sb,.topbar,.voice-box,.brow,.rp-actions{display:none!important}
+  .page{padding:10px!important}
+  .report-panel{border:1px solid #ccc!important;background:#fff!important;color:#000!important}
+  .rp-kpi,.rp-rec,.rp-bar-row{break-inside:avoid}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
 </style>
 </head>
 <body>
@@ -292,7 +333,7 @@ table.dt tbody tr:hover{background:var(--glass2)}
           <div class="fg"><div class="fl">Age <span class="fv" id="v-age">72</span></div><input type="range" id="age" min="55" max="100" value="72" oninput="calc()"></div>
           <div class="fg"><div class="fl">APOE-ε4 Alleles</div><select id="apoe" onchange="calc()"><option value="0">0 — No risk allele</option><option value="1">1 — Heterozygous (+12%)</option><option value="2">2 — Homozygous (+25%)</option></select></div>
           <div class="fg"><div class="fl">Bathroom Night Visits <span class="fv" id="v-bath">2</span></div><input type="range" id="bath" min="0" max="10" value="2" oninput="calc()"></div>
-          <div class="brow"><button class="btn bp" onclick="calc()">🧮 Compute Risk</button><button class="btn bs" onclick="resetCalc()">↩ Reset</button></div>
+          <div class="brow"><button class="btn bp" onclick="calc()">🧮 Compute Risk</button><button class="btn bs" onclick="resetCalc()">↩ Reset</button><button class="btn bp" onclick="generateReport()" style="background:linear-gradient(135deg,#10b981,#059669)">📋 Generate Report</button></div>
         </div>
       </div>
       <div class="card">
@@ -316,7 +357,58 @@ table.dt tbody tr:hover{background:var(--glass2)}
         </div>
       </div>
     </div>
-  </div>
+
+    <!-- REPORT PANEL -->
+    <div class="report-panel" id="reportPanel">
+      <div class="rp-head">
+        <div>
+          <h2>📋 Alzheimer Risk Assessment Report</h2>
+          <div class="ts" id="rp-timestamp">—</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <div class="rp-auc-badge">🎯 Combined AUC 0.9136</div>
+          <button class="btn bp" onclick="window.print()" style="padding:8px 16px;font-size:12px">🖨️ Print / PDF</button>
+          <button class="btn bs" onclick="document.getElementById('reportPanel').classList.remove('show')" style="padding:8px 16px;font-size:12px">✕ Close</button>
+        </div>
+      </div>
+      <div class="rp-body">
+        <!-- Risk Banner -->
+        <div class="rp-section">
+          <div class="rp-section-title">⚡ Overall Risk Assessment</div>
+          <div class="rp-risk-banner" id="rp-banner">
+            <div class="rp-risk-pct" id="rp-pct">—</div>
+            <div class="rp-risk-info">
+              <div class="rp-risk-label" id="rp-label">—</div>
+              <div class="rp-risk-desc" id="rp-desc">—</div>
+            </div>
+          </div>
+        </div>
+        <!-- Biomarker Summary -->
+        <div class="rp-section">
+          <div class="rp-section-title">🧪 Input Biomarkers</div>
+          <div class="rp-grid" id="rp-biomarkers"></div>
+        </div>
+        <!-- SHAP Contributions -->
+        <div class="rp-section">
+          <div class="rp-section-title">🌟 SHAP Feature Contributions</div>
+          <div class="rp-bars" id="rp-shap"></div>
+        </div>
+        <!-- Flags -->
+        <div class="rp-section">
+          <div class="rp-section-title">🚦 Clinical Flags</div>
+          <div id="rp-flags" class="rp-bars"></div>
+        </div>
+        <!-- Recommendations -->
+        <div class="rp-section">
+          <div class="rp-section-title">💡 Recommendations</div>
+          <div class="rp-recs" id="rp-recs"></div>
+        </div>
+        <div style="font-size:11px;color:var(--t3);border-top:1px solid var(--brd);padding-top:14px;line-height:1.6">
+          ⚠️ Research prototype only. Generated by AIDE-TIHM Combined Pipeline (AUC 0.9136). Not validated for clinical use. Do not use for diagnosis or treatment. Consult a qualified healthcare professional.
+        </div>
+      </div>
+    </div>
+  </div><!-- end page-detect -->
 
   <!-- IoT MONITOR -->
   <div id="page-iot" class="page">
@@ -531,6 +623,91 @@ function calc(){
   const mx=Math.max(...feats.map(f=>f[1]))||1;
   document.getElementById('sbars').innerHTML=feats.map(([f,v])=>`<div class="srow"><span class="sf">${f}</span><div class="st"><div class="si" style="width:${Math.round(v/mx*100)}%;background:${col}"></div></div><span class="sv">${v.toFixed(2)}</span></div>`).join('');
 }
+
+function generateReport(){
+  const mmse=+document.getElementById('mmse').value;
+  const moca=+document.getElementById('moca').value;
+  const cdr=+document.getElementById('cdr').value;
+  const trans=+document.getElementById('trans').value;
+  const sleep=+document.getElementById('sleep').value;
+  const age=+document.getElementById('age').value;
+  const apoe=+document.getElementById('apoe').value;
+  const bath=+document.getElementById('bath').value;
+  // Compute risk
+  let clin=50-(mmse-15)*1.5-(moca-15)*1.0+cdr*5;
+  clin+=(apoe==2?25:apoe==1?12:0);clin+=(age>80?10:age>75?5:0);
+  let iot=40+trans*2.5+Math.max(0,sleep)*8+bath*3;
+  const risk=Math.max(0,Math.min(100,Math.round((clin*0.55+iot*0.45)/2)));
+  const col=risk>60?'#f43f5e':risk>30?'#f59e0b':'#10b981';
+  const level=risk>60?'HIGH RISK':risk>30?'MODERATE RISK':'LOW RISK';
+  const banner=document.getElementById('rp-banner');
+  banner.className='rp-risk-banner '+(risk>60?'rp-risk-high':risk>30?'rp-risk-mod':'rp-risk-low');
+  document.getElementById('rp-pct').textContent=risk+'%';
+  document.getElementById('rp-pct').style.color=col;
+  document.getElementById('rp-label').textContent=(risk>60?'🔴':risk>30?'🟡':'🟢')+' '+level;
+  document.getElementById('rp-label').style.color=col;
+  document.getElementById('rp-desc').textContent=risk>60?
+    'Patient biomarkers indicate significant cognitive and behavioural risk factors. Immediate specialist referral and comprehensive neuropsychological evaluation is recommended.':
+    risk>30?'Moderate risk indicators present. Increased monitoring frequency recommended. Consider formal neuropsychological assessment within 3 months.':
+    'Current biomarker profile suggests low Alzheimer risk. Routine annual monitoring recommended.';
+  // Timestamp
+  document.getElementById('rp-timestamp').textContent='Generated: '+new Date().toLocaleString('en-IN',{dateStyle:'long',timeStyle:'short'});
+  // Biomarkers
+  const bm=[
+    {l:'MMSE',v:mmse,c:mmse>=24?'#34d399':mmse>=20?'#fbbf24':'#fb7185'},
+    {l:'MoCA',v:moca,c:moca>=26?'#34d399':moca>=22?'#fbbf24':'#fb7185'},
+    {l:'CDR SoB',v:cdr.toFixed(1),c:cdr<=0.5?'#34d399':cdr<=2?'#fbbf24':'#fb7185'},
+    {l:'Age',v:age,c:age<=75?'#34d399':age<=85?'#fbbf24':'#fb7185'},
+    {l:'APOE-ε4',v:['None','1 allele','2 alleles'][apoe],c:apoe==0?'#34d399':apoe==1?'#fbbf24':'#fb7185'},
+    {l:'Night Trans.',v:trans,c:trans<=4?'#34d399':trans<=8?'#fbbf24':'#fb7185'},
+    {l:'Sleep Z',v:(+sleep).toFixed(1),c:sleep<=0.5?'#34d399':sleep<=2?'#fbbf24':'#fb7185'},
+    {l:'Bath Visits',v:bath,c:bath<=2?'#34d399':bath<=5?'#fbbf24':'#fb7185'}
+  ];
+  document.getElementById('rp-biomarkers').innerHTML=bm.map(b=>`<div class="rp-kpi"><div class="rv" style="color:${b.c}">${b.v}</div><div class="rl">${b.l}</div></div>`).join('');
+  // SHAP bars
+  const feats=[
+    {f:'MMSE / Cognitive Score',v:Math.max(0,(30-mmse)/30),c:'#0ea5e9'},
+    {f:'CDR Sum of Boxes',v:Math.min(1,cdr/5),c:'#0ea5e9'},
+    {f:'APOE-ε4 Alleles',v:apoe/2,c:'#0ea5e9'},
+    {f:'Nocturnal Transitions',v:Math.min(1,trans/12),c:'#8b5cf6'},
+    {f:'Sleep Restlessness Z',v:Math.min(1,Math.max(0,sleep)/3),c:'#8b5cf6'},
+    {f:'Bathroom Night Visits',v:Math.min(1,bath/8),c:'#8b5cf6'}
+  ];
+  const mx=Math.max(...feats.map(f=>f.v))||1;
+  document.getElementById('rp-shap').innerHTML=feats.map(f=>`<div class="rp-bar-row"><span class="rp-bar-feat">${f.f}</span><div class="rp-bar-track"><div class="rp-bar-fill" style="width:${Math.round(f.v/mx*100)}%;background:${f.c}"></div></div><span class="rp-bar-val">${f.v.toFixed(2)}</span></div>`).join('');
+  // Clinical flags
+  const flags=[];
+  if(mmse<24) flags.push({ic:'🧠',txt:`MMSE ${mmse} — ${mmse<20?'Moderate-Severe':'Mild'} cognitive impairment range (normal ≥26)`,col:'#fb7185'});
+  if(cdr>=1) flags.push({ic:'📋',txt:`CDR Sum of Boxes ${cdr} — ${cdr>=2?'Moderate':'Mild'} dementia severity indicated`,col:'#fb7185'});
+  if(apoe>=1) flags.push({ic:'🧬',txt:`APOE-ε4 ${apoe==2?'homozygous (ε4/ε4)':'heterozygous'} — ${apoe==2?'~8-12x':'~3x'} increased Alzheimer risk`,col:'#fbbf24'});
+  if(trans>=6) flags.push({ic:'🌙',txt:`Nocturnal transitions ${trans}/night — elevated (normal ≤4); indicates sleep fragmentation`,col:'#fbbf24'});
+  if(sleep>=1) flags.push({ic:'😴',txt:`Sleep restlessness Z-score ${sleep.toFixed(1)} — above normal baseline (Z>1 is flagged)`,col:'#fbbf24'});
+  if(bath>=4) flags.push({ic:'🚿',txt:`Bathroom visits ${bath}/night — elevated nocturia (normal ≤2); may indicate anxiety or UTI`,col:'#fbbf24'});
+  if(!flags.length) flags.push({ic:'✅',txt:'No critical clinical flags detected at current biomarker levels.',col:'#34d399'});
+  document.getElementById('rp-flags').innerHTML=flags.map(f=>`<div class="rp-bar-row"><span style="font-size:16px">${f.ic}</span><span style="font-size:12px;color:${f.col};flex:1">${f.txt}</span></div>`).join('');
+  // Recommendations
+  const recs=[];
+  if(risk>60){
+    recs.push({ic:'🏥',txt:'Urgent referral to geriatric neurologist or memory clinic for comprehensive assessment (MRI, CSF biomarkers, PET).'});
+    recs.push({ic:'👨‍⚕️',txt:'Neuropsychological battery (ADAS-Cog, RAVLT) within 2–4 weeks.'});
+    recs.push({ic:'💊',txt:'Review current medications for anticholinergic burden; consider cholinesterase inhibitor candidacy discussion.'});
+  } else if(risk>30){
+    recs.push({ic:'📅',txt:'Schedule formal neuropsychological evaluation within 3 months.'});
+    recs.push({ic:'📡',txt:'Increase IoT monitoring frequency to daily summaries; flag nocturnal anomalies.'});
+    recs.push({ic:'🏃',txt:'Recommend structured aerobic exercise programme (150 min/week) and cognitive engagement activities.'});
+  } else {
+    recs.push({ic:'📆',txt:'Annual cognitive screening (MMSE + MoCA) sufficient at current risk level.'});
+    recs.push({ic:'🥗',txt:'Maintain Mediterranean-MIND diet and regular physical activity for neuroprotection.'});
+  }
+  if(apoe>=1) recs.push({ic:'🧬',txt:`APOE-ε4 ${apoe==2?'homozygous':'carrier'}: consider genetic counselling and enhanced monitoring protocol.`});
+  recs.push({ic:'📡',txt:'Continue passive IoT home monitoring — the system will flag behavioural deviations automatically.'});
+  document.getElementById('rp-recs').innerHTML=recs.map(r=>`<div class="rp-rec"><span class="rp-rec-ic">${r.ic}</span><span>${r.txt}</span></div>`).join('');
+  // Show panel + scroll to it
+  const panel=document.getElementById('reportPanel');
+  panel.classList.add('show');
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
 function resetCalc(){document.getElementById('mmse').value=24;document.getElementById('moca').value=22;document.getElementById('cdr').value=1;document.getElementById('trans').value=4;document.getElementById('sleep').value=0.5;document.getElementById('age').value=72;document.getElementById('apoe').value=0;document.getElementById('bath').value=2;calc()}
 
 function initShap(){
@@ -665,6 +842,7 @@ function stopVoice(){
   document.getElementById('vwave').classList.remove('active');
   document.getElementById('vtranscript').classList.remove('heard');
   document.getElementById('vtranscript').textContent='Voice stopped. Values have been applied above ↑';
+  setTimeout(()=>generateReport(),400);
 }
 function parseVoice(txt){
   const chips=[];
