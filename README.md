@@ -481,7 +481,50 @@ $$\text{AUC}\_{\text{combined}} = \sqrt{\text{AUC}\_{\text{clinical}} \times \te
 The system auto-fills all sliders and generates a full clinical report instantly.
 
 ---
-
+All 42 IoT Feature Names
+1. Fifteen explicitly named features
+1. nocturnal_wakefulness_ratio
+2. circadian_stability_IS
+3. room_transition_entropy
+4. bathroom_night_frequency
+5. kitchen_prep_duration_mean
+6. gait_speed_corridor_est
+7. hallway_pir_bursts_night
+8. bp_systolic_z_score
+9. bed_exit_count_night
+10. morning_waking_variance
+11. pir_motion_entropy_day
+12. fridge_access_frequency
+13. living_room_dwell_time
+14. kettle_activation_regularity
+15. door_open_anomalies_count
+16. 16	sleep_duration_hours
+17	sleep_onset_time
+18	sleep_efficiency_ratio
+19	nocturnal_activity_count
+20	sleep_fragmentation_index
+21	heart_rate_mean
+22	heart_rate_variability
+23	respiratory_rate_mean
+24	daily_step_count
+25	physical_activity_duration
+26	sedentary_time_ratio
+27	walking_speed_variance
+28	daily_room_visits
+29	bedroom_dwell_time
+30	bathroom_dwell_time
+31	kitchen_activity_count
+32	doorway_transition_count
+33	daily_motion_frequency
+34	nighttime_motion_frequency
+35	wake_after_sleep_onset
+36	sleep_schedule_deviation
+37	daily_routine_consistency
+38	medication_adherence_frequency
+39	hydration_activity_frequency
+40	cognitive_activity_duration
+41	daily_activity_regularity
+42	behavioral_change_score
 ## 9. Project Structure
 
 ```
